@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "naiveconsole.h": "c",
+        "moduleloader.h": "c",
+        "shell.h": "c",
+        "lib.h": "c",
+        "commands.h": "c",
+        "interrupts.h": "c",
+        "naivekeyboard.h": "c",
+        "stdint.h": "c",
+        "sys_calls.h": "c",
+        "keyboard.h": "c",
+        "int80.h": "c",
+        "idtloader.h": "c",
+        "time.h": "c",
+        "screen.h": "c",
+        "lib_user.h": "c",
+        "video_vm.h": "c",
+        "exceptions.h": "c"
+    }
+}
