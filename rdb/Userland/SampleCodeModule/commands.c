@@ -20,6 +20,7 @@ void printUserManual(){
     println("- aracnoid --> A classic brick breaker like game.");
     println("- clock    --> Information about the local time in Buenos Aires.");
     println("- inforeg  --> Prints registers status.");
+
     println("- printmem --> Prints RAM status, starting at some value.");
     println("- clear    --> Clear shell screen.");
     println("- set      --> Sets some properties of the shell.");
@@ -122,9 +123,20 @@ void test(char * option) {
         testDivException();
     else if (strcmp(option, "inv_op_code") == 0)
         testInvOpCode();
+    else if (strcmp(option, "mem") == 0)
+        testMem();
     else
         println("Invalid testing.");
 }
+
+void testMem(){
+    printf("mem before: %d\n", getFreeHeapSize());
+    char * aux = malloc (100);
+    printf("mem after: %d\n", getFreeHeapSize());
+    free((void*)aux); 
+    printf("mem after: %d\n", getFreeHeapSize()); 
+}
+
 
 void testInvOpCode() {
 	__asm__("ud2");

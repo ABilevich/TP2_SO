@@ -1,10 +1,3 @@
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
 make all
 make clean
 make all
@@ -498,3 +491,10 @@ make all
 make clean
 make all
 make clean
+ls
+cd roon
+cd root
+make all
+make all
+ls
+exit
