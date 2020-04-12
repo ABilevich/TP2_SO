@@ -2,7 +2,6 @@
 
 #include <lib_user.h>
 #include <shell.h>
-#include <malloc.h>
 
 int main() {
 	
