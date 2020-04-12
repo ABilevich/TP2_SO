@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include <lib_user.h>
 
 static char buffer[64] = { '0' };
@@ -14,7 +13,7 @@ int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim) {
 
 void * malloc(int size){
 	void ** resp;
-	_sys_system((void *) 1, (void*)(uint64_t)size, resp, (void*) 0);
+	_sys_system((void *) 1, (void*)(size_t)size, resp, (void*) 0);
 	return *resp;
 }
 
@@ -24,7 +23,7 @@ void free(void* pos){
 
 
 int getFreeHeapSize(void){
-	uint64_t * resp = 0;
+	size_t * resp = 0;
 	_sys_system((void *) 3, (void*) resp,(void*) 0, (void*) 0);
 	return (int)(*resp);
 }

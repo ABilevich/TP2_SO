@@ -9,7 +9,7 @@
 
 typedef struct block_link{
 	struct block_link *next_free_block;	    /*<< The next free block in the list. */
-	int block_size;						/*<< The size of the free block. */
+	size_t  block_size;						/*<< The size of the free block. */
 } block_link;
 
 static void insertBlockIntoFreeList(block_link* block_to_insert);
@@ -17,33 +17,39 @@ static void HeapInit();
 void _t_printFreeMem();
 
 static const uint16_t heap_struct_size	= sizeof(block_link);
-#define HEAP_MINIMUM_BLOCK_SIZE	( ( int ) ( heap_struct_size * 2 ) )
+#define HEAP_MINIMUM_BLOCK_SIZE	( ( size_t  ) ( heap_struct_size * 2 ) )
 
-static block_link Start, End;
-static int free_bytes_remaining = TOTAL_HEAP_SIZE;
-static int minimum_ever_free_bytes_remaining = 0U;
-static int number_of_successful_allocations = 0;
-static int number_0f_successful_frees = 0;
+static block_link Start, *End = NULL;
+static size_t  free_bytes_remaining = TOTAL_HEAP_SIZE;
+static size_t  number_of_successful_allocations = 0;
+static size_t  number_of_successful_frees = 0;
 
 
-void malloc(int  wanted_size, void ** ret_val){
+void malloc(size_t wanted_size, void ** ret_val){
+
+    //--------TEST----------
     printString("M", 1);
     printNewLine();	
-    
+    //--------TEST----------
+
     block_link *block, *previous_block, *new_block_link;
-    static int HeapHasBeenInitialised = 0;
    
-    if( HeapHasBeenInitialised == 0 ){
+    if( End == NULL ){
         HeapInit();
-        HeapHasBeenInitialised = 1;
     }
+
+    //--------TEST----------
     _t_printFreeMem();
+    //--------TEST----------
+
+    /* The wanted size is increased so it can contain a BlockLink_t
+	structure in addition to the requested amount of bytes. */
     if( wanted_size > 0 ){
 		wanted_size += heap_struct_size;
     }
-    if( ( wanted_size > 0 ) && ( wanted_size < TOTAL_HEAP_SIZE ) ){
-        /* Blocks are stored in byte order - traverse the list from the start
-        (smallest) block until one of adequate size is found. */
+    if( ( wanted_size > 0 ) && ( wanted_size <= free_bytes_remaining ) ){
+        /* Traverse the list from the start	(lowest address) block until
+		one	of adequate size is found. */
         previous_block = &Start;
         block = Start.next_free_block;
         while( ( block->block_size < wanted_size ) && ( block->next_free_block != NULL ) )
@@ -53,7 +59,7 @@ void malloc(int  wanted_size, void ** ret_val){
         }
 
         /* If we found the end marker then a block of adequate size was not found. */
-        if( block != &End )
+        if( block != End )
         {
             /* Return the memory space - jumping over the BlockLink_t structure
             at its start. */
@@ -81,18 +87,27 @@ void malloc(int  wanted_size, void ** ret_val){
             }
 
             free_bytes_remaining -= block->block_size;
+            number_of_successful_allocations++;
 
         }else{
             *ret_val = NULL;
         }
+
+        //--------TEST----------
         _t_printFreeMem();
+        //--------TEST----------
+
 	}
 }
 
 void free(void * p){
+
+    //--------TEST----------
     printString("F", 1);
     printNewLine();
     _t_printFreeMem();
+    //--------TEST----------
+
     uint8_t *puc = ( uint8_t * ) p;
     block_link *link;
 
@@ -105,51 +120,66 @@ void free(void * p){
 		/* This unexpected casting is to keep some compilers from issuing
 		byte alignment warnings. */
 		link = ( void * ) puc;
-        printDec(link->block_size);
-        printNewLine();
+
         /* Add this block to the list of free blocks. */
-        insertBlockIntoFreeList( ( ( block_link * ) link ) );
         free_bytes_remaining += link->block_size;
+        insertBlockIntoFreeList( ( ( block_link * ) link ) );
+        number_of_successful_frees++;
 	}
+
+    //--------TEST----------
     _t_printFreeMem();
+    //--------TEST----------
+
 }
 
-void getFreeHeapSize(int * resp){
+void getFreeHeapSize(size_t * resp){
     //printDec(free_bytes_remaining);
 	*resp = free_bytes_remaining;
 }
 
+//--------TEST----------
 void _t_printFreeMem(){
     block_link *aux_block;
+
     printString("start", 5);
-    printNewLine();	
+    printNewLine();	  
     for( aux_block = &Start; aux_block->next_free_block != NULL; aux_block = aux_block->next_free_block )	{		
-        printString("block size: ", 12);																	
+        printString("block size: ", 12);																	  
         printDec(aux_block->block_size);
         printNewLine();
-    }	
+    }
     printString("end", 3);
     printNewLine();
-	
 }
+ //--------TEST----------
+
 
 static void HeapInit(){
-block_link * first_free_block;
+    block_link * first_free_block;
+    size_t  address;
 
-    /* Start is used to hold a pointer to the first item in the list of free
+    /* xStart is used to hold a pointer to the first item in the list of free
 	blocks.  The void cast is used to prevent compiler warnings. */
 	Start.next_free_block = ( void * ) HEAP_START;
-	Start.block_size = ( int ) 0;
+	Start.block_size = ( size_t  ) 0;
 
-	/* xEnd is used to mark the end of the list of free blocks. */
-	End.block_size = TOTAL_HEAP_SIZE;
-	End.next_free_block = NULL;
+	/* pxEnd is used to mark the end of the list of free blocks and is inserted
+	at the end of the heap space. */
+    address = ((size_t) HEAP_START) + TOTAL_HEAP_SIZE;
+    address -= heap_struct_size;
+    End = (void *) address;
+	End->block_size = 0;
+	End->next_free_block = NULL;
 
 	/* To start with there is a single free block that is sized to take up the
-	entire heap space. */
+	entire heap space, minus the space taken by pxEnd. */
 	first_free_block = ( void * ) HEAP_START;
-	first_free_block->block_size = TOTAL_HEAP_SIZE;
-	first_free_block->next_free_block = &End;
+	first_free_block->block_size = address - (size_t) first_free_block;
+	first_free_block->next_free_block = End;
+    
+    /* Only one block exists - and it covers the entire usable heap space. */
+    free_bytes_remaining = first_free_block->block_size;
 }
 
 
@@ -157,19 +187,58 @@ block_link * first_free_block;
 
 
 static void insertBlockIntoFreeList(block_link* block_to_insert){
-    block_link *iterator;															
-    int block_size = block_to_insert->block_size;										
+    block_link *iterator;
+    uint8_t *puc;																								
                                                                                     
-    /* Iterate through the list until a block is found that has a larger size */	
-    /* than the block we are inserting. */											
-    for( iterator = &Start; iterator->next_free_block->block_size < block_size; iterator = iterator->next_free_block )	{																				
+    /* Iterate through the list until a block is found that has a higher address
+	than the block being inserted. */											
+    for( iterator = &Start; iterator->next_free_block < block_to_insert; iterator = iterator->next_free_block )	{																				
         /* There is nothing to do here - just iterate to the correct position. */	
-    }																				
+    }	
+
+    /* Do the block being inserted, and the block it is being inserted after
+	make a contiguous block of memory? */
+	puc = ( uint8_t * ) iterator;
+	if( ( puc + iterator->block_size ) == ( uint8_t * ) block_to_insert )
+	{
+		iterator->block_size += block_to_insert->block_size;
+		block_to_insert = iterator;
+	}
+
+
+    /* Do the block being inserted, and the block it is being inserted before
+	make a contiguous block of memory? */
+	puc = ( uint8_t * ) block_to_insert;
+	if( ( puc + block_to_insert->block_size ) == ( uint8_t * ) iterator->next_free_block )
+	{
+		if( iterator->next_free_block != End )
+		{
+			/* Form one big block from the two blocks. */
+			block_to_insert->block_size += iterator->next_free_block->block_size;
+			block_to_insert->next_free_block = iterator->next_free_block->next_free_block;
+		}
+		else
+		{
+			block_to_insert->next_free_block = End;
+		}
+	}
+	else
+	{
+		block_to_insert->next_free_block = iterator->next_free_block;
+	}
+
                                                                                     
     /* Update the list to include the block being inserted in the correct */		
-    /* position. */																	
-    block_to_insert->next_free_block = iterator->next_free_block;					
-    iterator->next_free_block = block_to_insert;
+    /* position. */	
+    /* If the block being inserted plugged a gab, so was merged with the block
+	before and the block after, then it's pxNextFreeBlock pointer will have
+	already been set, and should not be set here as that would make it point
+	to itself. */
+	if( iterator != block_to_insert )
+	{
+		iterator->next_free_block = block_to_insert;
+	}																				
+    
 }
 
 

@@ -1,5 +1,6 @@
 #include <commands.h>
 #include <stdint.h>
+#include <stddef.h>
 #include <shell.h>
 #include <lib_user.h>
 
@@ -132,13 +133,16 @@ void test(char * option) {
 void testMem(){
     printf("mem before: %d\n", getFreeHeapSize());
     char * aux1 = malloc (100);
-    char * aux2 = malloc (8);
-    char * aux3 = malloc (1000);
-    char * aux4 = malloc (50);
+    char * aux2 = malloc (100);
+    char * aux3 = malloc (100);
     free((void*)aux2);
     free((void*)aux3);
-    char * aux5 = malloc (800); 
+    free((void*)aux1);
+    printf("mem after: %d\n", getFreeHeapSize());
     printf("mem after: %d\n", getFreeHeapSize()); 
+    printf("mem after: %d\n", getFreeHeapSize());  
+    printf("mem after: %d\n", getFreeHeapSize()); 
+    
 }
 
 
