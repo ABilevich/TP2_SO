@@ -14,7 +14,7 @@ int sys_system(void * option, void * arg1, void * arg2, void * arg3) {
 		getMemory((uint64_t *) arg1, (uint64_t *) arg2, (uint64_t) arg3);
 		break;
 	case 1:
-		malloc( (int) arg1, (void *) arg2);
+		malloc( (int) arg1, (void **) arg2);
 		break; 
 	case 2:	
 		free( (void *) arg1);

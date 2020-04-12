@@ -131,9 +131,13 @@ void test(char * option) {
 
 void testMem(){
     printf("mem before: %d\n", getFreeHeapSize());
-    char * aux = malloc (100);
-    printf("mem after: %d\n", getFreeHeapSize());
-    free((void*)aux); 
+    char * aux1 = malloc (100);
+    char * aux2 = malloc (8);
+    char * aux3 = malloc (1000);
+    char * aux4 = malloc (50);
+    free((void*)aux2);
+    free((void*)aux3);
+    char * aux5 = malloc (800); 
     printf("mem after: %d\n", getFreeHeapSize()); 
 }
 

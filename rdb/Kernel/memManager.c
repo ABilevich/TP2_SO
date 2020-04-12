@@ -21,11 +21,12 @@ static const uint16_t heap_struct_size	= sizeof(block_link);
 
 static block_link Start, End;
 static int free_bytes_remaining = TOTAL_HEAP_SIZE;
+static int minimum_ever_free_bytes_remaining = 0U;
+static int number_of_successful_allocations = 0;
+static int number_0f_successful_frees = 0;
 
 
-
-
-void malloc(int  wanted_size, void * ret_val){
+void malloc(int  wanted_size, void ** ret_val){
     printString("M", 1);
     printNewLine();	
     
@@ -56,8 +57,8 @@ void malloc(int  wanted_size, void * ret_val){
         {
             /* Return the memory space - jumping over the BlockLink_t structure
             at its start. */
-            ret_val = ( void * ) ( ( ( uint8_t * ) previous_block->next_free_block ) + heap_struct_size );
-            printDec( ((uint8_t *)previous_block->next_free_block)+heap_struct_size );
+            *ret_val = ( void * ) ( ( ( uint8_t * ) previous_block->next_free_block ) + heap_struct_size );
+            
             /* This block is being returned for use so must be taken out of the
             list of free blocks. */
             previous_block->next_free_block = block->next_free_block;
@@ -82,7 +83,7 @@ void malloc(int  wanted_size, void * ret_val){
             free_bytes_remaining -= block->block_size;
 
         }else{
-            ret_val = NULL;
+            *ret_val = NULL;
         }
         _t_printFreeMem();
 	}
@@ -104,7 +105,6 @@ void free(void * p){
 		/* This unexpected casting is to keep some compilers from issuing
 		byte alignment warnings. */
 		link = ( void * ) puc;
-        printString("asdf", 4);
         printDec(link->block_size);
         printNewLine();
         /* Add this block to the list of free blocks. */

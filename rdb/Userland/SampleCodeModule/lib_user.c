@@ -13,9 +13,9 @@ int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim) {
 }
 
 void * malloc(int size){
-	void * resp = 0;
+	void ** resp;
 	_sys_system((void *) 1, (void*)(uint64_t)size, resp, (void*) 0);
-	return resp;
+	return *resp;
 }
 
 void free(void* pos){
