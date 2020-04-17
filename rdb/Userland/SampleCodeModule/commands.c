@@ -6,6 +6,8 @@
 
 static int findColor(char * color);
 
+
+
 char * color_names[] = {"black", "red", "green", "yellow", "blue", "pink", "light_blue", "white"};
 uint32_t color_rgb[] = {0x000000, 0xFF0000, 0x00FF00, 0xFFFF00, 0x0000FF, 0xFF00FF, 0x00FFFF, 0xFFFFFF};
 
@@ -131,21 +133,135 @@ void test(char * option) {
 }
 
 void testMem(){
-    printf("mem before: %d\n", getFreeHeapSize());
+    printf("Heap size: %d \n", getTotalHeapSize());
+    testMem1();
+    testMem2();
+    testMem3();
+    testMem4();
+    testMem5();
+}
+
+
+/*
+ *  TestMem1 allocates all the memory and then makes a free three times in a row.
+ */
+static void testMem1(){
+    printf("Initializing Test-1: \n");
+    printf("free mem before: %d\n", getFreeHeapSize());
+    printf("taken mem before: %d\n", getTakenHeapSize());
+
+    char * aux1 = malloc((1 << 20) - 8);
+    if(aux1 == NULL){
+        printf("ERROR(1) in Test-1\n");
+    }
+    free((void*)aux1);
+    char * aux2 = malloc((1 << 20) - 8);
+    if(aux2 == NULL){
+        printf("ERROR(2) in Test-1\n");
+    }
+    free((void*)aux2);
+    char * aux3 = malloc((1 << 20) - 8);
+    if(aux3 == NULL){
+        printf("ERROR(3) in Test-1\n");
+    }
+    free((void*)aux3);
+
+    printf("taken mem after: %d\n", getTakenHeapSize());
+    printf("free mem after: %d\n", getFreeHeapSize());
+    printf("Test-1 completed.\n");
+}
+
+/* 
+ *   TestMem2 is a stress test, allocates up to 2^10 bytes then frees all of them
+ */
+static void testMem2(){
+    printf("Initializing Test-2: \n");
+    printf("free mem before: %d\n", getFreeHeapSize());
+    printf("taken mem before: %d\n", getTakenHeapSize());
+
+    char * aux[10];
+    int i,j;
+    for(i = 0; i < 10; i++){
+        aux[i] = malloc(1 << (i + 1));
+        if(aux[i] == NULL){
+            printf("ERROR(4)[%d] in Test-2: \n",i);
+        }
+    }
+    for(j = 0; j < 10; j++){
+        free((void*)aux[j]);
+    }
+
+    printf("taken mem after: %d\n", getTakenHeapSize());
+    printf("free mem after: %d\n", getFreeHeapSize());
+    printf("Test-2 completed.\n");
+}
+
+
+/* 
+ * TestMem3 is a stress test, alocates and frees chuncks of memory increasing in size 40 times. 
+ */
+static void testMem3(){
+    printf("Initializing Test-3: \n");
+    printf("free mem before: %d\n", getFreeHeapSize());
+    printf("taken mem before: %d\n", getTakenHeapSize());
+
+    char * aux[40];
+    for(int i = 0; i < 40 ; i++){
+        aux[i] = malloc(i);
+        if(aux[i] == NULL){
+            printf("ERROR(5)[%d] in Test-3: \n",i);
+        }
+    }
+    
+    for(int i = 39; i >=0  ; i--){
+        free((void * )aux[i]);
+    }
+
+    printf("taken mem after: %d\n", getTakenHeapSize());
+    printf("free mem after: %d\n", getFreeHeapSize());
+    printf("Test-3 completed.\n");
+}
+
+/*
+ * TestMem4 is a simple test, alocates and frees 20 bytes
+ */
+static void testMem4(){
+    printf("Initializing Test-4: \n");
+    printf("free mem before: %d\n", getFreeHeapSize());
+    printf("taken mem before: %d\n", getTakenHeapSize());
+
+    char * aux1 = malloc( 20 );
+    if(aux1 == NULL){
+        printf("ERROR(6) in Test-4\n");
+    }
+    free((void*)aux1);
+
+    printf("taken mem after: %d\n", getTakenHeapSize());
+    printf("free mem after: %d\n", getFreeHeapSize());
+    printf("Test-4 completed.\n");    
+}
+
+static void testMem5(){
+    printf("Initializing Test-5: \n");
+    printf("free mem before: %d\n", getFreeHeapSize());
+    printf("taken mem before: %d\n", getTakenHeapSize());
+
     char * aux1 = malloc (100);
     char * aux2 = malloc (100);
     char * aux3 = malloc (100);
     free((void*)aux2);
     free((void*)aux3);
     free((void*)aux1);
-    printf("mem after: %d\n", getFreeHeapSize());
-    printf("mem after: %d\n", getFreeHeapSize()); 
-    printf("mem after: %d\n", getFreeHeapSize());  
-    printf("mem after: %d\n", getFreeHeapSize()); 
-    
+
+    printf("taken mem after: %d\n", getTakenHeapSize());
+    printf("free mem after: %d\n", getFreeHeapSize());
+    printf("Test-5 completed.\n");
 }
 
 
 void testInvOpCode() {
 	__asm__("ud2");
 }
+
+
+

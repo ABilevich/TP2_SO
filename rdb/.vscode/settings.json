@@ -16,6 +16,7 @@
         "screen.h": "c",
         "lib_user.h": "c",
         "video_vm.h": "c",
-        "exceptions.h": "c"
+        "exceptions.h": "c",
+        "mm_interface.h": "c"
     }
 }

@@ -1,7 +1,7 @@
 #include <system.h>
 #include <stdint.h>
 #include <stddef.h>
-#include <memInter.h>
+#include <mm_interface.h>
 
 static void getMemory(uint64_t * pos, uint64_t * mem_buffer, unsigned int dim) {
     for (int i = 0; i < dim; i++)
@@ -22,6 +22,12 @@ int sys_system(void * option, void * arg1, void * arg2, void * arg3) {
 		break;	
 	case 3:
 		getFreeHeapSize( (size_t*) arg1 );
+		break;	
+	case 4:
+		getTotalHeapSize( (size_t*) arg1 );
+		break;
+	case 5:
+		getTakenHeapSize( (size_t*) arg1 );
 		break;	
 	return 0;
 	}

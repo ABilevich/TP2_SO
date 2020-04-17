@@ -28,6 +28,18 @@ int getFreeHeapSize(void){
 	return (int)(*resp);
 }
 
+int getTotalHeapSize(void){
+	size_t * resp = 0;
+	_sys_system((void *) 4, (void*) resp,(void*) 0, (void*) 0);
+	return (int)(*resp);
+}
+
+int getTakenHeapSize(void){
+	size_t * resp = 0;
+	_sys_system((void *) 5, (void*) resp,(void*) 0, (void*) 0);
+	return (int)(*resp);
+}
+
 // ----------- Timet ------------
 
 unsigned long getTicks() {

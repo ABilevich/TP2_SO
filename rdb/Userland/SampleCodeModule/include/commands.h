@@ -12,6 +12,12 @@ void test(char * option);
 void command_set(char * option, char * color);
 void testDivException(void);
 void testInvOpCode(void);
+
 void testMem(void);
+static void testMem1(void);
+static void testMem2(void);
+static void testMem3(void);
+static void testMem4(void);
+static void testMem5(void);
 
 #endif

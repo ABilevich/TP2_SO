@@ -35,6 +35,8 @@ int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim);
 void * malloc(int size);
 void free(void* por);
 int getFreeHeapSize(void);
+int getTotalHeapSize(void);
+int getTakenHeapSize(void);
 
 // ----------- Timet ------------
 unsigned long getTicks(void);

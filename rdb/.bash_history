@@ -15,20 +15,6 @@ make clean
 make all
 make clean
 make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
 cd root
 make clean
 make all
@@ -497,4 +483,18 @@ cd root
 make all
 make all
 ls
+exit
+/cd root/
+cd root/
+ls
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+exit
 exit
