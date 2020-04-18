@@ -177,17 +177,17 @@ void getTakenHeapSize(size_t * resp){
 
 //--------TEST----------
 void _t_printFreeMem(){
-    // block_link *aux_block;
+    block_link *aux_block;
 
-    // printString("start", 5);
-    // printNewLine();	  
-    // for( aux_block = &Start; aux_block->next_free_block != NULL; aux_block = aux_block->next_free_block )	{		
-    //     printString("block size: ", 12);																	  
-    //     printDec(aux_block->block_size);
-    //     printNewLine();
-    // }
-    // printString("end", 3);
-    // printNewLine();
+    printString("start", 5);
+    printNewLine();	  
+    for( aux_block = &Start; aux_block->next_free_block != NULL; aux_block = aux_block->next_free_block )	{		
+        printString("block size: ", 12);																	  
+        printDec(aux_block->block_size);
+        printNewLine();
+    }
+    printString("end", 3);
+    printNewLine();
 }
  //--------TEST----------
 
@@ -274,8 +274,7 @@ static void insertBlockIntoFreeList(block_link* block_to_insert){
 	else{
 		block_to_insert->next_free_block = iterator->next_free_block;
 	}
-
-                                                                                    
+                                                                          
     /* Update the list to include the block being inserted in the correct */		
     /* position. */	
     /* If the block being inserted plugged a gab, so was merged with the block

@@ -1,90 +1,4 @@
 make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-cd root
-make clean
-make all
-exit
-cd root
-make all
-make clean
-make all
-make all
-exit
-cd root
-make all
-exit
-cd root
-make all
-exit
-CD ROOT
-cd root
-make clean
-make all
-exit
-exit
-cd root
-make all
-exit
-cd root
-make clean
-make all
-make all
-make all
-make all
-make clean
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make all
 make all
 make all
 make all
@@ -497,4 +411,90 @@ make all
 make all
 make all
 exit
+exit
+cd /root/
+ls
+make all
+clear
+make all
+make all
+clear
+make all
+clear
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make ll
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+char * aux1 = malloc((1 << 20) - 8);
+    if(aux1 == NULL){
+        printf("ERROR(1) in Test-1\n");
+    }
+    free((void*)aux1
+clear
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make ll
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make clean 
+make all
+make clean
+make all
 exit
