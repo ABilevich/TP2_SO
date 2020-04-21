@@ -26,3 +26,4 @@ typedef struct point {
 } point;
 
 #endif
+

@@ -122,8 +122,9 @@ picSlaveMask:
 _irq00Handler:
 	pushState
 
-	mov rdi, %1 ; pasaje de parametro
+	mov rdi, rsp ; pasaje de parametro
 	call int_20
+	mov rsp, rdi
 
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h

@@ -1,5 +1,6 @@
 #include <timet.h>
 #include <keyboard.h>
+#include <scheduler.h>
 #include <stdint.h>
 #include <interrupts.h>
 
@@ -15,8 +16,10 @@ void irqDispatcher(uint64_t irq) {
 	return;
 }
 
-void int_20() {
+void * int_20(void * rsp) {
+	void * new_rsp = scheduler(rsp);
 	timer_handler();
+	return new_rsp;
 }
 
 void int_21() {
