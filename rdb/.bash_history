@@ -1,40 +1,3 @@
-make all
-make all
-make all
-make all
-make all
-make all
-make clean
-make all
-make all
-make all
-make all
-make all
-make all
-make all
-make clean
-make clean
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-cd root
 ls
 make clean
 make all
@@ -497,4 +460,41 @@ make clean
 make all
 make clean
 make all
+exit
+make all
+cd
+cd .ro
+cd /root/
+make all
+make all
+clear
+make all
+make all
+clear
+make all
+make clean
+clear
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make all
+make alal
+make all
+exit
+cd /root/
+ls
+make all
+make clean
 exit

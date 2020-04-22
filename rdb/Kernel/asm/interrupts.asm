@@ -18,6 +18,7 @@ GLOBAL _exception6Handler
 GLOBAL _int80Handler
 
 EXTERN int80_handler
+EXTERN int_20
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -124,7 +125,7 @@ _irq00Handler:
 
 	mov rdi, rsp ; pasaje de parametro
 	call int_20
-	mov rsp, rdi
+	mov rsp, rax
 
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
