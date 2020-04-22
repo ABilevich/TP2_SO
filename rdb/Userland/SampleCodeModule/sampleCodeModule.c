@@ -5,7 +5,10 @@
 
 int main() {
 	
-	startShell();
+	//startShell();
+	void (*shell)(void);
+    shell = &startShell;
+ 	createProcess(shell, 27);
 	
 	return 0;
 }

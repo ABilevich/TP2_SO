@@ -18,13 +18,7 @@ void irqDispatcher(uint64_t irq) {
 }
 
 void * int_20(void * rsp) {
-
-	// printString("printing: ", 10);
-	// print64Hex((uint64_t)rsp);
-	// printNewLine();
-
 	void * new_rsp = scheduler(rsp);
-	//print64Hex((uint64_t)new_rsp);
 	timer_handler();
 	return new_rsp;
 }
