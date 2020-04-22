@@ -1,4 +1,3 @@
-ls
 make clean
 make all
 make clean
@@ -497,4 +496,5 @@ cd /root/
 ls
 make all
 make clean
+exit
 exit

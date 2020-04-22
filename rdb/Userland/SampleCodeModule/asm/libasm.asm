@@ -5,6 +5,7 @@ GLOBAL _sys_read
 GLOBAL _sys_screen
 GLOBAL _sys_video
 GLOBAL _sys_sound
+GLOBAL _sys_process
 
 GLOBAL getRegisters
 GLOBAL testDivException
@@ -90,6 +91,15 @@ _sys_sound:
     int 80h
     ret
 
+_sys_process:
+    mov r8, rcx   ; Arguments Shifting
+    mov rcx, rdx
+    mov rdx, rsi
+    mov rsi, rdi
+    mov rdi, SYS_PROCESS_CODE
+    int 80h
+    ret  
+
 getRegisters:
     mov [array], rax
     mov [array + 8], rbx
@@ -128,3 +138,4 @@ SYS_READ_CODE equ 3
 SYS_SCREEN_CODE equ 4
 SYS_VIDEO_CODE equ 5
 SYS_SOUND_CODE equ 6
+SYS_PROCESS_CODE equ 7

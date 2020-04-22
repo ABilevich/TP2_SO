@@ -29,6 +29,7 @@ int _sys_read(void * arg1);
 int _sys_screen(void * arg1, void * arg2, void * arg3, void * arg4);
 int _sys_video(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 int _sys_sound(void * arg1, void * arg2, void * arg3);
+int _sys_process(void * arg1, void * arg2, void * arg3, void * arg4);
 
 // ----------- System ------------
 int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim);
@@ -98,6 +99,10 @@ int strcmp (const char * s1, const char * s2);
 int strncmp(const char *s1, const char *s2, unsigned int n);
 int strcpy (char *dst, const char *src);
 long int strtoint(char* s);
+
+// ----------- Process ------------
+int createProcess(void * rip, size_t priority);
+
 
 // Importados de naiveConsole
 

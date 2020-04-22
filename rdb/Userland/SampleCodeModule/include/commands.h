@@ -20,4 +20,6 @@ static void testMem3(void);
 static void testMem4(void);
 static void testMem5(void);
 
+void testProcess(void);
+
 #endif

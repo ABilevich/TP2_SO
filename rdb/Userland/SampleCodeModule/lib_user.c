@@ -397,3 +397,11 @@ long int strtoint(char* s){
 
     return num; 
 }
+
+
+// ----------- Process ------------
+
+int createProcess(void * rip, uint64_t priority) {
+	_sys_process(0, rip, (void *)(uint64_t) priority, 0);
+	return 0;
+}

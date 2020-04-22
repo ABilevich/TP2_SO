@@ -128,6 +128,8 @@ void test(char * option) {
         testInvOpCode();
     else if (strcmp(option, "mem") == 0)
         testMem();
+    else if (strcmp(option, "proc") == 0)
+        testProcess();
     else
         println("Invalid testing.");
 }
@@ -261,6 +263,11 @@ static void testMem5(){
 
 void testInvOpCode() {
 	__asm__("ud2");
+}
+
+
+void testProcess(){
+    createProcess((void *)0x1234, 420);
 }
 
 
