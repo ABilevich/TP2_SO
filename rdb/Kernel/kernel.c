@@ -50,13 +50,13 @@ void * initializeKernelBinary() {
 
 	clearBSS(&bss, &endOfKernel - &bss);
 
-	ncPrintHex((uint64_t)&text);
+	//ncPrintHex((uint64_t)&text);
 	
-	ncPrintHex((uint64_t)&rodata);
+	//ncPrintHex((uint64_t)&rodata);
 	
-	ncPrintHex((uint64_t)&data);
+	//ncPrintHex((uint64_t)&data);
 	
-	ncPrintHex((uint64_t)&bss);
+	//ncPrintHex((uint64_t)&bss);
 	
 	return getStackBase();
 }
@@ -64,16 +64,25 @@ void * initializeKernelBinary() {
 int main()
 {
 	init_VM_Driver();
-
 	init_screen();
-
 	load_idt();
 
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
+	//ncPrintHex((uint64_t)sampleCodeModuleAddress);
+
+	// void (*scm)(void);
+    // scm = &sampleCodeModuleAddress;
+	// printString("asd1", 4);
+    // printNewLine();
+ 	// void * rsp = createProcess(scm, 27);
+	// printString("asd2", 4);
+    // printNewLine();
+	// _set_rsp_and_halt(rsp);
+	// printString("asd3", 4);
+    // printNewLine();
 
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	
-	ncPrint((char*)sampleDataModuleAddress);
+	//ncPrint((char*)sampleDataModuleAddress);
 
 	return 0;
 }

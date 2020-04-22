@@ -1,17 +1,4 @@
 make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-make all
-make all
-make clean
-make all
-make all
-make clean
 cd ...
 cd root
 l
@@ -497,4 +484,17 @@ ls
 make all
 make clean
 exit
+exit
+cd /ro
+cd /root/
+ls
+make all
+make all
+make clena
+make clean
+make all
+make all
+make all
+gdb
+q
 exit

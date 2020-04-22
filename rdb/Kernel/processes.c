@@ -5,38 +5,38 @@
 int sys_process(void * option, void * arg1, void * arg2, void * arg3) {
     switch ((uint64_t) option) {
 	case 0:
-		createProcess((void *) arg1, (uint64_t) arg2);
+		createProcess((void *) arg1, (uint64_t) arg2, (char) arg3);
 		break;
 	return 0;
 	}
 }
 
-void createProcess(void * rip, uint64_t priority){
+void * createProcess(void * rip, uint64_t priority, char fg){
 
-	printString("New Process: ", 13);
-    printNewLine();
+	// printString("New Process: ", 13);
+    // printNewLine();
 	void * stack_start;
-	void * rsp;
+	void * bp;
 	malloc(STACK_SIZE, &stack_start);
 
-	printString("stack start: ", 13);
-	print64Hex((uint64_t)stack_start);
-	printNewLine();
+	// printString("stack start: ", 13);
+	// print64Hex((uint64_t)stack_start);
+	// printNewLine();
 
-	rsp =  (void *) ( (uint64_t * )stack_start + STACK_SIZE + 1);
+	bp =  (void *) ( (uint64_t * )stack_start + STACK_SIZE + 1);
 
-	printString("rsp b: ", 7);
-	print64Hex((uint64_t)rsp);
-	printNewLine();
+	// printString("base pointer: ", 14);
+	// print64Hex((uint64_t)bp);
+	// printNewLine();
 	
-	void * new_rsp = (void*)( (uint64_t *)rsp - 20 );
+	void * rsp = (void*)( (uint64_t *)bp - 20 );
 
 	void * argc = 0;
 	void * argv = 0xABCD;
 
-	_fillstack(rsp, rip, argc, argv);
+	_fillstack(bp, rip, argc, argv);
 
-	addPCB(new_rsp , priority, stack_start);
+	addPCB(rsp , priority, stack_start, fg);
 
 
 	// for(int i = 0; i < 30; i++){
@@ -49,28 +49,16 @@ void createProcess(void * rip, uint64_t priority){
 	// 	printNewLine();
 	// }
 	
-	printString("new_rsp: ", 9);
-	print64Hex( (uint64_t)new_rsp );
-	printNewLine();
+	// printString("stack pointer: ",15);
+	// print64Hex( (uint64_t)rsp );
+	// printNewLine();
 
-	printString("rip: ", 5);
-	print64Hex((uint64_t)rip);
-	printNewLine();
-    printString("priority: ", 10);
-	printDec(priority);
-	printNewLine();
+	// printString("rip: ", 5);
+	// print64Hex((uint64_t)rip);
+	// printNewLine();
+    // printString("priority: ", 10);
+	// printDec(priority);
+	// printNewLine();
+
+	return rsp;
 }
-
-
-
-
-// | SS	| -> 0x0
-// | RSP	| -> BP
-// | RFLAGS| -> 0x202
-// | CS	| -> 0x8
-// | RIP	| -> main
-// | Regs	| -> 0
-// | ...	| -> (rdi) argc
-// | uso	| -> 0
-// | ...	| -> (rsi) argv
-// | gene	| -> 0

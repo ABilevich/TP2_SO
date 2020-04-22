@@ -401,7 +401,7 @@ long int strtoint(char* s){
 
 // ----------- Process ------------
 
-int createProcess(void * rip, uint64_t priority) {
-	_sys_process(0, rip, (void *)(uint64_t) priority, 0);
+int createProcess(void * rip, uint64_t priority, char fg) {
+	_sys_process(0, rip, (void *)(uint64_t) priority, (void*)(char)fg);
 	return 0;
 }

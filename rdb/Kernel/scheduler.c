@@ -11,23 +11,38 @@ void * scheduler(void * old_rsp){
     // printString("Entering", 8);
     // printNewLine();
     
+    // printString("pid: ", 5);
+	// printDec( pcb->pid );
+	// printNewLine();
+
     if(started == 0){
         printString("ERROR", 5);
         printNewLine();
         return old_rsp;
     }
-    
-    //curr->pcb->rsp = old_rsp;
+
+    if((uint64_t)old_rsp > 0x400000){
+        curr->pcb->rsp = old_rsp;
+    }
 
     curr->pcb->p_counter--;
     if(curr->pcb->p_counter == 0){
         curr->pcb->p_counter = curr->pcb->priority;
-        curr = curr->next;
+        // printString("current pid: ", 13);
+        // printDec(curr->pcb->pid);
+        // printNewLine();
+        curr = findNextReady();
+        // printString("new pid: ", 9);
+        // printDec(curr->pcb->pid);
+        // printNewLine();
+        //printString("C", 1);
+    }else{
+       //printString("S", 1);
     }
 
     void * new_rsp = curr->pcb->rsp;
 
-    // printString("asd1: ", 6);
+    // printString("asdf: ", 6);
 	// print64Hex( ( (uint64_t *)curr->pcb->rsp) );
 	// printNewLine();
 
@@ -38,8 +53,21 @@ void * scheduler(void * old_rsp){
     return new_rsp;
 }
 
+s_node * findNextReady(){
+    int counter = 0;
+    s_node * aux = curr->next;
+    while (counter < proc_counter){
+        if(aux->pcb->state == READY){
+            return aux;
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return NULL;
+}
 
-int addPCB(void * rsp, size_t priority, void * stack_start){
+
+int addPCB(void * rsp, size_t priority, void * stack_start, char fg){
 
     //s_pcb new_pcb = {rsp, stack_start, next_pid, priority, priority, 1};
     s_pcb * new_pcb;
@@ -51,10 +79,14 @@ int addPCB(void * rsp, size_t priority, void * stack_start){
     new_pcb->priority = priority;
     new_pcb->p_counter = priority;
     new_pcb->is_deletable = 1;
- 
+    new_pcb->fg = fg;
+    new_pcb->state = READY;
+
     next_pid++;
     
     if(started == 0){
+        new_pcb->caller_pid = new_pcb->pid;
+
         printString("Initializing...", 15);
         printNewLine();
 
@@ -63,20 +95,26 @@ int addPCB(void * rsp, size_t priority, void * stack_start){
         printPCB(new_pcb);
 
         init(new_pcb);
-        
     }else{
+        new_pcb->caller_pid = curr->pcb->pid;
+
         printString("Adding process...", 17);
         printNewLine();
-        //printPCB(&new_pcb);
+
+        printPCB(new_pcb);
 
         addProcess(new_pcb);
     }
     proc_counter++;
+
+    if(fg == 1 && curr->pcb->pid != curr->pcb->caller_pid){
+        blockCurrentProcess(); 
+    }
+
     return 0; 
 }
 
 void init(s_pcb * new_pcb){
-
     s_node * aux;
     malloc(sizeof(s_node), &aux);
 
@@ -86,17 +124,13 @@ void init(s_pcb * new_pcb){
 
     curr = aux;
 
-    printString("asd2: ", 6);
-	print64Hex( ( (uint64_t *)curr->pcb->rsp) );
-	printNewLine();
     started = 1;
-
-    //printPCB(new_pcb);
-
 }
 
 void addProcess(s_pcb * new_pcb){
     s_node * new_node;
+    malloc(sizeof(s_node), &new_node);
+
     new_node->pcb = new_pcb;
     new_node->next = curr;
     new_node->prev = curr->prev;
@@ -109,6 +143,9 @@ int kill(uint64_t pid){
     s_node * aux = curr;
     while (counter < proc_counter){
         if(aux->pcb->pid == pid){
+            if(aux->pcb->fg == 1){
+                changeState(aux->pcb->caller_pid, READY);
+            }
             free(aux->pcb->stack_start);
             aux->prev->next = aux->next;
             aux->next->prev = aux->prev;
@@ -119,6 +156,24 @@ int kill(uint64_t pid){
         counter++;
     }
     return -1;
+}
+
+int changeState(uint64_t pid, char state){
+    int counter = 0;
+    s_node * aux = curr;
+    while (counter < proc_counter){
+        if(aux->pcb->pid == pid){
+            aux->pcb->state = state;
+            return 0;
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return -1;
+}   
+
+void blockCurrentProcess(){
+    curr->pcb->state = BLOCKED;
 }
 
 void printPCB(s_pcb * pcb){
@@ -133,6 +188,9 @@ void printPCB(s_pcb * pcb){
     printString("pid: ", 5);
 	printDec( pcb->pid );
 	printNewLine();
+    printString("caller pid: ", 12);
+	printDec( pcb->caller_pid );
+	printNewLine();
     printString("priority: ", 10);
 	printDec( pcb->priority );
 	printNewLine();
@@ -141,6 +199,12 @@ void printPCB(s_pcb * pcb){
 	printNewLine();
     printString("is deletable: ", 14);
 	printDec( pcb->is_deletable );
+	printNewLine();
+    printString("is on foreground: ", 18);
+	printDec( pcb->fg );
+	printNewLine();
+    printString("state: ", 7);
+	printDec( pcb->state );
 	printNewLine();
     printString("------------------------------", 30);
     printNewLine();

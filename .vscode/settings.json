@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "scheduler.h": "c",
-        "shell.h": "c"
+        "shell.h": "c",
+        "lib_user.h": "c"
     }
 }

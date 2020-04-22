@@ -6,6 +6,7 @@ GLOBAL _sys_screen
 GLOBAL _sys_video
 GLOBAL _sys_sound
 GLOBAL _sys_process
+GLOBAL _get_rsp
 
 GLOBAL getRegisters
 GLOBAL testDivException
@@ -125,6 +126,11 @@ testDivException:
     mov rax, 3
     mov rbx, 0
     DIV rbx
+    ret
+
+
+_get_rsp:
+    mov rax, rsp
     ret
 
 section .bss

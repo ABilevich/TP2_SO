@@ -7,6 +7,7 @@ GLOBAL _outportb
 GLOBAL _set_rsp
 GLOBAL getRegisters
 GLOBAL _fillstack
+GLOBAL _set_rsp_and_halt
 
 section .text
 	
@@ -117,3 +118,9 @@ _fillstack:
     pop rbp
     ret
 
+
+_set_rsp_and_halt:
+    mov rsp, rdi
+    cli
+    hlt
+    ret

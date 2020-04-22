@@ -101,7 +101,7 @@ int strcpy (char *dst, const char *src);
 long int strtoint(char* s);
 
 // ----------- Process ------------
-int createProcess(void * rip, size_t priority);
+int createProcess(void * rip, size_t priority, char fg);
 
 
 // Importados de naiveConsole

@@ -3,4 +3,4 @@
 #include <scheduler.h>
 #include <mm_interface.h>
 
-void createProcess(void * rip, uint64_t priority);
+void * createProcess(void * rip, uint64_t priority, char fg);

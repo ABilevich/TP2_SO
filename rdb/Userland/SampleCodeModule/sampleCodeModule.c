@@ -8,7 +8,7 @@ int main() {
 	//startShell();
 	void (*shell)(void);
     shell = &startShell;
- 	createProcess(shell, 27);
+ 	createProcess(shell, 2, 1);
 	
 	return 0;
 }

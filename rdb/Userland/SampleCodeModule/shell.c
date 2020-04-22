@@ -53,7 +53,11 @@ void startShell(){
     setBackgroundColor(USER_BACKGROUND_COLOR);
     int real_buff_size = BUFFER_SIZE - strlen(user) - strlen(syst_name);
     //welcomeMessage();
-    printColored("aguante la merca", 0x00ff00);
+
+    printf("rsp es: ");
+    print64Hex(_get_rsp());
+    println("");
+
     while (1) {
         showCursor(1);
         printColored(user, 0xFFC550);

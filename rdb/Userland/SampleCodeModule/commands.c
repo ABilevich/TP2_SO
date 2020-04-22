@@ -3,6 +3,8 @@
 #include <stddef.h>
 #include <shell.h>
 #include <lib_user.h>
+#include <a.h>
+#include <b.h>
 
 static int findColor(char * color);
 
@@ -267,7 +269,17 @@ void testInvOpCode() {
 
 
 void testProcess(){
-    createProcess((void *)0x1234, 420);
+    void (*a)(void);
+    a = &start_a;
+
+    void (*b)(void);
+    b = &start_b;
+
+    createProcess(a, 5, 0);
+    createProcess(b, 1, 0);
+
+    wait(5);
+    
 }
 
 
