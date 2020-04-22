@@ -46,13 +46,14 @@ static int c;
 
 static gameState aracnoid_save;
 static int aracnoid_saved;
-
 void startShell(){
+    
     setCursor(0, getScreenHeight());
     user_writing_color = USER_COLOR;
     setBackgroundColor(USER_BACKGROUND_COLOR);
     int real_buff_size = BUFFER_SIZE - strlen(user) - strlen(syst_name);
     //welcomeMessage();
+    printColored("aguante la merca", 0x00ff00);
     while (1) {
         showCursor(1);
         printColored(user, 0xFFC550);
