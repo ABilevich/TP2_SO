@@ -13,6 +13,7 @@
 
 enum SPECIAL_KEYS {SHIFT_IN = -20, SHIFT_OUT, CAPS, BACKS, ENTER, ESC,CTRL, ALT,F1, F2, ARROW_UP, ARROW_LEFT,ARROW_RIGHT, ARROW_DOWN, INS, DEL};
 enum REG_POS {RAX = 0, RBX, RCX, RDX, RBP, RDI, RSI, R8, R9, R10, R11, R12, R13, R14, R15, RIP, TOTAL_REGS};
+enum states {READY = 0, BLOCKED};
 
 typedef void (*function)(void);
 
@@ -29,7 +30,7 @@ int _sys_read(void * arg1);
 int _sys_screen(void * arg1, void * arg2, void * arg3, void * arg4);
 int _sys_video(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 int _sys_sound(void * arg1, void * arg2, void * arg3);
-int _sys_process(void * arg1, void * arg2, void * arg3, void * arg4);
+int _sys_process(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 
 // ----------- System ------------
 int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim);
@@ -101,7 +102,29 @@ int strcpy (char *dst, const char *src);
 long int strtoint(char* s);
 
 // ----------- Process ------------
-int createProcess(void * rip, size_t priority, char fg);
+
+typedef struct s_pcb{
+    void * rsp;
+    void * stack_start;
+    char * name;
+    uint64_t pid;
+    uint64_t caller_pid;	
+    uint64_t priority;
+    uint64_t p_counter;
+    char is_deletable;
+    char fg;
+    char state;
+} s_pcb;
+
+
+
+int createProcess(void * rip, uint64_t priority, char fg, char * name);
+int changeProcessPriority(uint64_t pid, uint64_t priority);
+int changeProcessState(uint64_t pid, char state);
+int kill(uint64_t pid);
+void printProcessInfo(uint64_t pid);
+void printAllProcessInfo();
+int getPid();
 
 
 // Importados de naiveConsole

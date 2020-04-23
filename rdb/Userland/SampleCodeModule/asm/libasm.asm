@@ -93,6 +93,7 @@ _sys_sound:
     ret
 
 _sys_process:
+    mov r9, r8
     mov r8, rcx   ; Arguments Shifting
     mov rcx, rdx
     mov rdx, rsi

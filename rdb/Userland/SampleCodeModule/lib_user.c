@@ -1,5 +1,7 @@
 #include <lib_user.h>
 
+
+
 static char buffer[64] = { '0' };
 
 static void _64Hexfill(int n, char * buffer);
@@ -401,7 +403,41 @@ long int strtoint(char* s){
 
 // ----------- Process ------------
 
-int createProcess(void * rip, uint64_t priority, char fg) {
-	_sys_process(0, rip, (void *)(uint64_t) priority, (void*)(char)fg);
+int createProcess(void * rip, uint64_t priority, char fg, char * name) {
+	_sys_process(0, rip, (void *)(uint64_t) priority, (void*)(char)fg, (void *)name);
 	return 0;
+}
+
+int changeProcessPriority(uint64_t pid, uint64_t priority) {
+	int resp;
+	_sys_process((void *)1, (void *)(uint64_t)pid, (void *)(uint64_t)priority, (void *)&resp, 0);
+	return 0;
+}
+
+int changeProcessState(uint64_t pid, char state) {
+	int resp;
+	_sys_process((void *)2, (void *)(uint64_t)pid, (void *)(uint64_t)state, (void *)&resp, 0);
+	return 0;
+}
+
+int kill(uint64_t pid) {
+	int resp;
+	_sys_process((void *)3, (void *)(uint64_t)pid, (void *)&resp, 0, 0);
+	return 0;
+}
+
+void printProcessInfo(uint64_t pid) {
+	_sys_process((void *)4, (void *)(uint64_t)pid, 0, 0, 0);
+	return;
+}
+
+void printAllProcessInfo() {
+	_sys_process((void *)5, 0, 0, 0, 0);
+	return;
+}
+
+int getPid() {
+	int resp;
+	_sys_process((void *)6, (void *)&resp, 0, 0, 0);
+	return resp;
 }

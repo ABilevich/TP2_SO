@@ -67,7 +67,7 @@ s_node * findNextReady(){
 }
 
 
-int addPCB(void * rsp, size_t priority, void * stack_start, char fg){
+int addPCB(void * rsp, size_t priority, void * stack_start, char fg, char * name){
 
     //s_pcb new_pcb = {rsp, stack_start, next_pid, priority, priority, 1};
     s_pcb * new_pcb;
@@ -75,6 +75,7 @@ int addPCB(void * rsp, size_t priority, void * stack_start, char fg){
 
     new_pcb->rsp = rsp;
     new_pcb->stack_start = stack_start;
+    new_pcb->name = name;
     new_pcb->pid = next_pid;
     new_pcb->priority = priority;
     new_pcb->p_counter = priority;
@@ -86,12 +87,10 @@ int addPCB(void * rsp, size_t priority, void * stack_start, char fg){
     
     if(started == 0){
         new_pcb->caller_pid = new_pcb->pid;
+        new_pcb->is_deletable = 0;
 
         printString("Initializing...", 15);
         printNewLine();
-
-        new_pcb->is_deletable = 0;
-
         printPCB(new_pcb);
 
         init(new_pcb);
@@ -100,7 +99,6 @@ int addPCB(void * rsp, size_t priority, void * stack_start, char fg){
 
         printString("Adding process...", 17);
         printNewLine();
-
         printPCB(new_pcb);
 
         addProcess(new_pcb);
@@ -138,6 +136,37 @@ void addProcess(s_pcb * new_pcb){
     curr->prev = new_node;
 }
 
+
+int changePriority(uint64_t pid, char priority){
+    int counter = 0;
+    s_node * aux = curr;
+    while (counter < proc_counter){
+        if(aux->pcb->pid == pid){
+            aux->pcb->priority = priority;
+            return 0;
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return -1;
+} 
+
+
+int changeState(uint64_t pid, char state){
+    int counter = 0;
+    s_node * aux = curr;
+    while (counter < proc_counter){
+        if(aux->pcb->pid == pid){
+            aux->pcb->state = state;
+            return 0;
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return -1;
+}   
+
+
 int kill(uint64_t pid){
     int counter = 0;
     s_node * aux = curr;
@@ -158,56 +187,85 @@ int kill(uint64_t pid){
     return -1;
 }
 
-int changeState(uint64_t pid, char state){
+s_pcb *  getProcessInfo(uint64_t pid){
     int counter = 0;
     s_node * aux = curr;
     while (counter < proc_counter){
         if(aux->pcb->pid == pid){
-            aux->pcb->state = state;
-            return 0;
+            return aux->pcb;
         }
         aux = aux->next;
         counter++;
     }
-    return -1;
-}   
+    return NULL;
+} 
+
+uint64_t getCurrentPid(){
+    return curr->pcb->pid;
+}
+
 
 void blockCurrentProcess(){
     curr->pcb->state = BLOCKED;
 }
 
-void printPCB(s_pcb * pcb){
-    printString("--------------PROCESS------------", 33);
+void printProcessInfo(uint64_t pid){ 
+    int counter = 0;
+    s_node * aux = curr;
+    while (counter < proc_counter){
+        if(aux->pcb->pid == pid){
+            printString("--------------------PROCESS--------------------", 47);
+            printNewLine();
+            printPCB(aux->pcb);
+            printString("-----------------------------------------------", 47);
+            printNewLine();
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return; 
+}
+void printAllProcessInfo(){
+    printString("--------------------PROCESS--------------------", 47);
     printNewLine();
-    printString("rsp: ", 5);
-	print64Hex( ( (uint64_t *)pcb->rsp) );
-	printNewLine();
-    printString("stack start: ", 13);
-	print64Hex( ( (uint64_t *)pcb->stack_start ) );
-	printNewLine();
+    int counter = 0;
+        s_node * aux = curr;
+        while (counter < proc_counter){
+            printPCB(aux->pcb);
+            aux = aux->next;
+            counter++;
+        }
+    printString("-----------------------------------------------", 47);
+    printNewLine();
+    return; 
+}
+
+void printPCB(s_pcb * pcb){
+    printString("name: ", 6);
+	printString(pcb->name, 20);
+    printString("  |  ", 5);
     printString("pid: ", 5);
 	printDec( pcb->pid );
-	printNewLine();
-    printString("caller pid: ", 12);
-	printDec( pcb->caller_pid );
-	printNewLine();
-    printString("priority: ", 10);
-	printDec( pcb->priority );
-	printNewLine();
-    printString("priority counter: ", 18);
-	printDec( pcb->p_counter );
-	printNewLine();
-    printString("is deletable: ", 14);
-	printDec( pcb->is_deletable );
-	printNewLine();
-    printString("is on foreground: ", 18);
-	printDec( pcb->fg );
-	printNewLine();
-    printString("state: ", 7);
+    printString("  |  ", 5);
+    printString("st: ", 7);
 	printDec( pcb->state );
-	printNewLine();
-    printString("------------------------------", 30);
+    printString("  |  ", 5);
+    printString("fg: ", 3);
+	printDec( pcb->fg );
+    printString("  |  ", 5);
+    printString("prty: ", 10);
+	printDec( pcb->priority );
+    printString("  |  ", 5);
+    printString("cpid: ", 12);
+	printDec( pcb->caller_pid );
+    printString("  |  ", 5);
+    printString("sp: ", 5);
+	print64Hex( ( (uint64_t *)pcb->rsp) );
+	printString("  |  ", 5);
+    printString("bp: ", 13);
+	print64Hex( ( (uint64_t *)pcb->stack_start ) );
     printNewLine();
 }
+
 
 //inicia el primer proceso

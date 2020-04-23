@@ -154,17 +154,17 @@ static void testMem1(){
     printf("free mem before: %d\n", getFreeHeapSize());
     printf("taken mem before: %d\n", getTakenHeapSize());
 
-    char * aux1 = malloc((1 << 20) - 8);
+    char * aux1 = malloc((1 << 19) - 8);
     if(aux1 == NULL){
         printf("ERROR(1) in Test-1\n");
     }
     free((void*)aux1);
-    char * aux2 = malloc((1 << 20) - 8);
+    char * aux2 = malloc((1 << 19) - 8);
     if(aux2 == NULL){
         printf("ERROR(2) in Test-1\n");
     }
     free((void*)aux2);
-    char * aux3 = malloc((1 << 20) - 8);
+    char * aux3 = malloc((1 << 19) - 8);
     if(aux3 == NULL){
         printf("ERROR(3) in Test-1\n");
     }
@@ -275,12 +275,17 @@ void testProcess(){
     void (*b)(void);
     b = &start_b;
 
-    createProcess(a, 5, 0);
-    createProcess(b, 1, 0);
+    printAllProcessInfo();
+    createProcess(a, 5, 0, "a.c");
+    printAllProcessInfo();
+    createProcess(b, 1, 0, "b.c");
+    printAllProcessInfo();
 
-    wait(5);
-    
+    // wait(5);
+    // kill(2);
+    // printAllProcessInfo();
 }
+
 
 
 

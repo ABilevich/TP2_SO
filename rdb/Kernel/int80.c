@@ -35,8 +35,8 @@ uint64_t int80_handler(void * sysCallCode, void * arg1, void * arg2, void * arg3
         case SYS_SOUND_CODE: //syscall Sound
             return sys_sound(arg1, arg2, arg3);
 
-        case SYS_PROCESS_CODE: //syscall Sound
-            return sys_process(arg1, arg2, arg3, arg4);
+        case SYS_PROCESS_CODE: //syscall process
+            return sys_process(arg1, arg2, arg3, arg4, arg5);
         
     }
     return 0;
