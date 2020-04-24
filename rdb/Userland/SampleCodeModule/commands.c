@@ -280,7 +280,9 @@ void testProcess(){
     printAllProcessInfo();
     createProcess(b, 1, 0, "b.c");
     printAllProcessInfo();
-
+    kill(1);
+    kill(2);
+    printAllProcessInfo();
     // wait(5);
     // kill(2);
     // printAllProcessInfo();

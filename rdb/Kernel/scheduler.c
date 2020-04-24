@@ -102,12 +102,12 @@ int addPCB(void * rsp, size_t priority, void * stack_start, char fg, char * name
         printPCB(new_pcb);
 
         addProcess(new_pcb);
+
+        if(fg == 1){
+            blockCurrentProcess(); 
+        }
     }
     proc_counter++;
-
-    if(fg == 1 && curr->pcb->pid != curr->pcb->caller_pid){
-        blockCurrentProcess(); 
-    }
 
     return 0; 
 }

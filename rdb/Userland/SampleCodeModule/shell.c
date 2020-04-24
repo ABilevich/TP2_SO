@@ -47,12 +47,14 @@ static int c;
 static gameState aracnoid_save;
 static int aracnoid_saved;
 void startShell(){
-    
+    // setCursor(0,0);
+    // welcomeMessage();
+
     setCursor(0, getScreenHeight());
     user_writing_color = USER_COLOR;
     setBackgroundColor(USER_BACKGROUND_COLOR);
     int real_buff_size = BUFFER_SIZE - strlen(user) - strlen(syst_name);
-    //welcomeMessage();
+    
 
     printf("rsp es: ");
     print64Hex(_get_rsp());
