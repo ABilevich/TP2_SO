@@ -27,8 +27,8 @@ static void welcomeMessage(void);
 static char inputBuffer[BUFFER_SIZE];
 static char commandsHistory[COMMANDS_BUFFER_SIZE][BUFFER_SIZE];
 static char * commands[] = {"aracnoid", "clear", "clock",  "help", "inforeg", "printmem", "set", "set writing_color", "test", "test zero_div", "test inv_op_code", "test mem","test proc"};
-static char * void_func[] = {"help", "clock", "inforeg", "clear"};
-static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear};
+static char * void_func[] = {"help", "clock", "inforeg", "clear", "ps"};
+static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps};
 
 static char * user = "dummie_user";
 static char * syst_name = "@rdb: ";
@@ -247,6 +247,11 @@ static void instructionHandler() {
                 }
                 else if (strcmp(cmd, "test") == 0)
                     test(params[0]);
+                else if (strcmp(cmd, "kill") == 0){
+                    uint64_t aux = strtoint(params[0]);
+                    p_kill(aux);
+                }
+                    
                 else
                     executed = 1;
                 break;

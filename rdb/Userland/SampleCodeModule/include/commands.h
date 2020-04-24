@@ -13,6 +13,9 @@ void command_set(char * option, char * color);
 void testDivException(void);
 void testInvOpCode(void);
 
+void p_kill(uint64_t pid);
+void ps();
+
 void testMem(void);
 static void testMem1(void);
 static void testMem2(void);

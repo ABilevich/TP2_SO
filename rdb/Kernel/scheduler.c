@@ -8,12 +8,6 @@ int started = 0;
 s_node * curr;
 
 void * scheduler(void * old_rsp){
-    // printString("Entering", 8);
-    // printNewLine();
-    
-    // printString("pid: ", 5);
-	// printDec( pcb->pid );
-	// printNewLine();
 
     if(started == 0){
         printString("ERROR", 5);
@@ -28,27 +22,11 @@ void * scheduler(void * old_rsp){
     curr->pcb->p_counter--;
     if(curr->pcb->p_counter == 0){
         curr->pcb->p_counter = curr->pcb->priority;
-        // printString("current pid: ", 13);
-        // printDec(curr->pcb->pid);
-        // printNewLine();
+
         curr = findNextReady();
-        // printString("new pid: ", 9);
-        // printDec(curr->pcb->pid);
-        // printNewLine();
-        //printString("C", 1);
-    }else{
-       //printString("S", 1);
     }
 
     void * new_rsp = curr->pcb->rsp;
-
-    // printString("asdf: ", 6);
-	// print64Hex( ( (uint64_t *)curr->pcb->rsp) );
-	// printNewLine();
-
-    //printPCB(curr->pcb);
-
-    //while(1);
 
     return new_rsp;
 }
@@ -204,7 +182,6 @@ uint64_t getCurrentPid(){
     return curr->pcb->pid;
 }
 
-
 void blockCurrentProcess(){
     curr->pcb->state = BLOCKED;
 }
@@ -225,6 +202,7 @@ void printProcessInfo(uint64_t pid){
     }
     return; 
 }
+
 void printAllProcessInfo(){
     printString("--------------------PROCESS--------------------", 47);
     printNewLine();
