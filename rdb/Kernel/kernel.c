@@ -80,7 +80,7 @@ int main()
 	// printString("asd3", 4);
     // printNewLine();
 
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+	((EntryPoint)sampleCodeModuleAddress)();
 	
 	//ncPrint((char*)sampleDataModuleAddress);
 
