@@ -100,7 +100,11 @@ void p_kill(uint64_t pid, int * resp){
 }
 
 void p_killCurrent(){
-	killCurrent();
+	int aux = killCurrent();
+	if(aux == -2){
+		printString("p_killCurrent ERROR (processes.c): process can't be killed!", 59);
+		printNewLine();
+	}
 	return;
 }
 

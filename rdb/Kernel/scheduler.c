@@ -149,7 +149,10 @@ int kill(uint64_t pid){
     int counter = 0;
     s_node * aux = curr;
     while (counter < proc_counter){
-        if(aux->pcb->pid == pid && aux->pcb->is_deletable == 1){
+        if(aux->pcb->pid == pid){
+            if(aux->pcb->is_deletable == 0){
+                return -2;
+            }
             if(aux->pcb->fg == 1){
                 changeState(aux->pcb->caller_pid, READY);
             }
@@ -176,7 +179,7 @@ int killCurrent(){
         proc_counter--;
         return 0;
     }
-    return -1;
+    return -2;
 }
 
 s_pcb *  getProcessInfo(uint64_t pid){

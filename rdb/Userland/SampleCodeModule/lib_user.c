@@ -411,18 +411,29 @@ int createProcess(void * rip, uint64_t priority, char fg, char * name) {
 int changeProcessPriority(uint64_t pid, uint64_t priority) {
 	int resp;
 	_sys_process((void *)1, (void *)(uint64_t)pid, (void *)(uint64_t)priority, (void *)&resp, 0);
+	if(resp == -1){
+		printf("nice ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
+	}
 	return 0;
 }
 
 int changeProcessState(uint64_t pid, char state) {
 	int resp;
 	_sys_process((void *)2, (void *)(uint64_t)pid, (void *)(uint64_t)state, (void *)&resp, 0);
+	if(resp == -1){
+		printf("chstate ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
+	}
 	return 0;
 }
 
 int kill(uint64_t pid) {
 	int resp;
 	_sys_process((void *)3, (void *)(uint64_t)pid, (void *)&resp, 0, 0);
+	if(resp == -1){
+		printf("kill ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
+	}else if(resp == -2){
+		printf("kill ERROR: Process with pid %d cant be killed!\n", pid);
+	}
 	return 0;
 }
 

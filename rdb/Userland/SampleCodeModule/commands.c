@@ -293,7 +293,7 @@ void ps(){
 }
 
 void run(void (*func)(void), char * name, char fg){
-    createProcess(func, 2, fg, name);
+    createProcess(func, 1, fg, name);
 }
 
 void nice(uint64_t pid, uint64_t priority){

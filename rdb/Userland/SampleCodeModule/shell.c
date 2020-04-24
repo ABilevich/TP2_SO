@@ -35,8 +35,8 @@ static char * commands[] = {"aracnoid", "clear", "clock",  "help", "inforeg", "p
 static char * void_func[] = {"help", "clock", "inforeg", "clear", "ps", "run", "nice", "chstate"};
 static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps, run, nice, chstate};
 
-static char * runable_name[] = {"a", "b"};
-static void (*runable_func[])(void) = {start_a, start_b};
+static char * runable_name[] = {"a", "b", "testmm"};
+static void (*runable_func[])(void) = {start_a, start_b, test_mm};
 
 static char * user = "dummie_user";
 static char * syst_name = "@rdb: ";
@@ -261,9 +261,13 @@ static void instructionHandler() {
                 }
                 else if (strcmp(cmd, "run") == 0){
                     int i = getRunableIndex(params[0]);
-                    fn func = runable_func[i];
-                    char * name = runable_name[i];
-                    run(func, name, 1);
+                    if(i == -1){
+                        printf("run ERROR: no runable with that tame found!\n");
+                    }else{
+                        fn func = runable_func[i];
+                        char * name = runable_name[i];
+                        run(func, name, 1);
+                    }
                 }    
                 else
                     executed = 1;
@@ -283,10 +287,14 @@ static void instructionHandler() {
                 }
                 else if (strcmp(cmd, "run") == 0){
                     int i = getRunableIndex(params[0]);
-                    fn func = runable_func[i];
-                    char * name = runable_name[i];
-                    char fg = strcmp(params[1], "&") == 0 ? 0 : 1;
-                    run(func, name, fg);
+                    if(i == -1){
+                        printf("run ERROR: no runable with that tame found!\n");
+                    }else{
+                        fn func = runable_func[i];
+                        char * name = runable_name[i];
+                        char fg = strcmp(params[1], "&") == 0 ? 0 : 1;
+                        run(func, name, fg);
+                    }
                 }  
                 else
                     executed = 1;
@@ -359,7 +367,7 @@ static int getRunableIndex(char * cmd) {
             }
         }
 
-    return 1;
+    return -1;
 }
 
 void setUserWritingColor(uint32_t color) {

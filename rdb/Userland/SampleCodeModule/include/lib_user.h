@@ -103,19 +103,6 @@ long int strtoint(char* s);
 
 // ----------- Process ------------
 
-typedef struct s_pcb{
-    void * rsp;
-    void * stack_start;
-    char * name;
-    uint64_t pid;
-    uint64_t caller_pid;	
-    uint64_t priority;
-    uint64_t p_counter;
-    char is_deletable;
-    char fg;
-    char state;
-} s_pcb;
-
 
 
 int createProcess(void * rip, uint64_t priority, char fg, char * name);
