@@ -52,9 +52,12 @@ void p_createProcess(void * rip, uint64_t priority, char fg, char * name){
 	void * argc = 0;
 	void * argv = 0xABCD;
 
-	_fillstack(bp, rip, argc, argv);
+	fn func_wrapper;
+	func_wrapper = &wrapper;
 
-	addPCB(rsp , priority, stack_start, fg, name);
+	_fillstack(bp, func_wrapper, argc, argv, rip);
+
+	addPCB(rsp , priority, stack_start, bp, fg, name);
 
 
 	// for(int i = 0; i < 30; i++){
@@ -96,6 +99,11 @@ void p_kill(uint64_t pid, int * resp){
 	return;
 }
 
+void p_killCurrent(){
+	killCurrent();
+	return;
+}
+
 void p_printProcessInfo(uint64_t pid){
 	printProcessInfo(pid);
 	return;
@@ -109,4 +117,16 @@ void p_printAllProcessInfo(){
 void p_getPid(int * resp){
 	* resp = getCurrentPid();
 	return;
+}
+
+
+void wrapper(int argc, char * argv[], fn to_be_run){
+
+	to_be_run();
+
+	printString("killing", 7);
+	printNewLine();
+
+	p_killCurrent();
+	_sti_and_halt();
 }

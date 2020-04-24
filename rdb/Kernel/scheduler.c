@@ -44,8 +44,7 @@ s_node * findNextReady(){
     return NULL;
 }
 
-
-int addPCB(void * rsp, size_t priority, void * stack_start, char fg, char * name){
+int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, char * name){
 
     //s_pcb new_pcb = {rsp, stack_start, next_pid, priority, priority, 1};
     s_pcb * new_pcb;
@@ -53,6 +52,7 @@ int addPCB(void * rsp, size_t priority, void * stack_start, char fg, char * name
 
     new_pcb->rsp = rsp;
     new_pcb->stack_start = stack_start;
+    new_pcb->bp = bp;
     new_pcb->name = name;
     new_pcb->pid = next_pid;
     new_pcb->priority = priority;
@@ -165,6 +165,20 @@ int kill(uint64_t pid){
     return -1;
 }
 
+int killCurrent(){
+    if(curr->pcb->is_deletable == 1){
+        if(curr->pcb->fg == 1){
+            changeState(curr->pcb->caller_pid, READY);
+        }
+        free(curr->pcb->stack_start);
+        curr->prev->next = curr->next;
+        curr->next->prev = curr->prev;
+        proc_counter--;
+        return 0;
+    }
+    return -1;
+}
+
 s_pcb *  getProcessInfo(uint64_t pid){
     int counter = 0;
     s_node * aux = curr;
@@ -241,6 +255,9 @@ void printPCB(s_pcb * pcb){
 	print64Hex( ( (uint64_t *)pcb->rsp) );
 	printString("  |  ", 5);
     printString("bp: ", 13);
+	print64Hex( ( (uint64_t *)pcb->bp ) );
+    printNewLine();
+    printString("ss: ", 13);
 	print64Hex( ( (uint64_t *)pcb->stack_start ) );
     printNewLine();
 }

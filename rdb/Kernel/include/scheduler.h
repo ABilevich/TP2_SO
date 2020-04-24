@@ -10,6 +10,7 @@ enum states {READY = 0, BLOCKED};
 typedef struct s_pcb{
     void * rsp;
     void * stack_start;
+    void * bp;
     char * name;
     uint64_t pid;
     uint64_t caller_pid;	
@@ -27,10 +28,11 @@ typedef struct s_node{
 } s_node;
 
 void * scheduler(void * old_rsp);
-int addPCB(void * rsp, size_t priority, void * stack_start, char fg, char * name);
+int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, char * name);
 void init(s_pcb * new_pcb);
 void addProcess(s_pcb * new_pcb);
 int kill(uint64_t pid);
+int killCurrent();
 void printPCB(s_pcb * pcb);
 void blockCurrentProcess();
 int changeState(uint64_t pid, char state);

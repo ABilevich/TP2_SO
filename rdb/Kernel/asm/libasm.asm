@@ -7,7 +7,8 @@ GLOBAL _outportb
 GLOBAL _set_rsp
 GLOBAL getRegisters
 GLOBAL _fillstack
-GLOBAL _set_rsp_and_halt
+GLOBAL _sti_and_halt
+GLOBAL _halt
 
 section .text
 	
@@ -101,7 +102,7 @@ _fillstack:
     push 0x1       ;rax
     push 0x2       ;rbx
     push 0x3       ;rcx
-    push 0x4       ;rdx
+    push r8        ;rdx
     push 0x5       ;rbp
     push rdx       ;rdi
     push rcx       ;rsi
@@ -119,8 +120,7 @@ _fillstack:
     ret
 
 
-_set_rsp_and_halt:
-    mov rsp, rdi
-    cli
+_sti_and_halt:
+    sti
     hlt
     ret
