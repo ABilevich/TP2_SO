@@ -2,6 +2,7 @@
 #include <aracnoid.h>
 #include <commands.h>
 #include <shell.h>
+#include <runable.h>
 
 #define BUFFER_SIZE 2000
 #define COMMANDS_BUFFER_SIZE 50
@@ -14,7 +15,10 @@
 
 #define TAB '\t'
 
+typedef void (*fn)();
+
 static int command_launch(char * cmd);
+static int getRunableIndex(char * cmd);
 static int instructionReader(char * cmd, char params[][LONGEST_PARAM]);
 static void specialKeyHandler(void);
 static void userWritingHandler(void);
@@ -24,11 +28,15 @@ static int findCommand(void);
 static void instructionHandler(void);
 static void welcomeMessage(void);
 
+
 static char inputBuffer[BUFFER_SIZE];
 static char commandsHistory[COMMANDS_BUFFER_SIZE][BUFFER_SIZE];
 static char * commands[] = {"aracnoid", "clear", "clock",  "help", "inforeg", "printmem", "set", "set writing_color", "test", "test zero_div", "test inv_op_code", "test mem","test proc"};
-static char * void_func[] = {"help", "clock", "inforeg", "clear", "ps"};
-static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps};
+static char * void_func[] = {"help", "clock", "inforeg", "clear", "ps", "run", "nice", "chstate"};
+static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps, run, nice, chstate};
+
+static char * runable_name[] = {"a", "b"};
+static void (*runable_func[])(void) = {start_a, start_b};
 
 static char * user = "dummie_user";
 static char * syst_name = "@rdb: ";
@@ -56,9 +64,9 @@ void startShell(){
     int real_buff_size = BUFFER_SIZE - strlen(user) - strlen(syst_name);
     
 
-    printf("rsp es: ");
-    print64Hex(_get_rsp());
-    println("");
+    // printf("rsp es: ");
+    // print64Hex(_get_rsp());
+    // println("");
 
     while (1) {
         showCursor(1);
@@ -251,13 +259,35 @@ static void instructionHandler() {
                     uint64_t aux = strtoint(params[0]);
                     p_kill(aux);
                 }
-                    
+                else if (strcmp(cmd, "run") == 0){
+                    int i = getRunableIndex(params[0]);
+                    fn func = runable_func[i];
+                    char * name = runable_name[i];
+                    run(func, name, 1);
+                }    
                 else
                     executed = 1;
                 break;
             case 2:
                 if(strcmp(cmd, "set") == 0)
                     command_set(params[0], params[1]);
+                else if (strcmp(cmd, "chstate") == 0){
+                    uint64_t aux1 = strtoint(params[0]);
+                    uint64_t aux2 = strtoint(params[1]);
+                    chstate(aux1,aux2);
+                } 
+                else if (strcmp(cmd, "nice") == 0){
+                    uint64_t aux1 = strtoint(params[0]);
+                    uint64_t aux2 = strtoint(params[1]);
+                    nice(aux1,aux2);
+                }
+                else if (strcmp(cmd, "run") == 0){
+                    int i = getRunableIndex(params[0]);
+                    fn func = runable_func[i];
+                    char * name = runable_name[i];
+                    char fg = strcmp(params[1], "&") == 0 ? 0 : 1;
+                    run(func, name, fg);
+                }  
                 else
                     executed = 1;
                 break;
@@ -312,6 +342,20 @@ static int command_launch(char * cmd) {
             if(strcmp(cmd, void_func[i]) == 0) {
                 void_commands_func[i]();
                 return 0;
+            }
+        }
+
+    return 1;
+}
+
+
+static int getRunableIndex(char * cmd) {
+
+    int i, dim = sizeof(runable_func)/sizeof(runable_func[0]);
+
+        for(i = 0; i < dim ; i++) {
+            if(strcmp(cmd, runable_name[i]) == 0) {
+                return i;
             }
         }
 

@@ -4,6 +4,7 @@
         "shell.h": "c",
         "lib_user.h": "c",
         "processes.h": "c",
-        "mm_interface.h": "c"
+        "mm_interface.h": "c",
+        "b.h": "c"
     }
 }

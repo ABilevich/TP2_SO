@@ -15,6 +15,9 @@ void testInvOpCode(void);
 
 void p_kill(uint64_t pid);
 void ps();
+void run(void (*func)(void), char * name, char fg);
+void nice(uint64_t pid, uint64_t priority);
+void chstate(uint64_t pid, char state);
 
 void testMem(void);
 static void testMem1(void);

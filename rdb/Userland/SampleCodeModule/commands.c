@@ -274,17 +274,14 @@ void testProcess(){
     void (*a)(void);
     a = &start_a;
 
-    void (*b)(void);
-    b = &start_b;
-
-    printAllProcessInfo();
+    //printAllProcessInfo();
     createProcess(a, 5, 0, "a.c");
     printAllProcessInfo();
-    createProcess(b, 1, 0, "b.c");
-    printAllProcessInfo();
-    kill(1);
-    kill(2);
-    printAllProcessInfo();
+    // createProcess(b, 1, 0, "b.c");
+    // printAllProcessInfo();
+    // kill(1);
+    // kill(2);
+    // printAllProcessInfo();
 }
 
 void p_kill(uint64_t pid){
@@ -295,3 +292,14 @@ void ps(){
     printAllProcessInfo();
 }
 
+void run(void (*func)(void), char * name, char fg){
+    createProcess(func, 2, fg, name);
+}
+
+void nice(uint64_t pid, uint64_t priority){
+    changeProcessPriority(pid, priority);
+}
+
+void chstate(uint64_t pid, char state){
+    changeProcessState(pid, state);
+}

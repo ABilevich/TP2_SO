@@ -10,8 +10,8 @@ s_node * curr;
 void * scheduler(void * old_rsp){
 
     if(started == 0){
-        printString("ERROR", 5);
-        printNewLine();
+        // printString("ERROR", 5);
+        // printNewLine();
         return old_rsp;
     }
 
@@ -67,17 +67,17 @@ int addPCB(void * rsp, size_t priority, void * stack_start, char fg, char * name
         new_pcb->caller_pid = new_pcb->pid;
         new_pcb->is_deletable = 0;
 
-        printString("Initializing...", 15);
-        printNewLine();
-        printPCB(new_pcb);
+        // printString("Initializing...", 15);
+        // printNewLine();
+        // printPCB(new_pcb);
 
         init(new_pcb);
     }else{
         new_pcb->caller_pid = curr->pcb->pid;
 
-        printString("Adding process...", 17);
-        printNewLine();
-        printPCB(new_pcb);
+        // printString("Adding process...", 17);
+        // printNewLine();
+        // printPCB(new_pcb);
 
         addProcess(new_pcb);
 
@@ -149,7 +149,7 @@ int kill(uint64_t pid){
     int counter = 0;
     s_node * aux = curr;
     while (counter < proc_counter){
-        if(aux->pcb->pid == pid){
+        if(aux->pcb->pid == pid && aux->pcb->is_deletable == 1){
             if(aux->pcb->fg == 1){
                 changeState(aux->pcb->caller_pid, READY);
             }
