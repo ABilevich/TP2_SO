@@ -35,7 +35,7 @@ void p_createProcess(void * rip, uint64_t priority, char fg, char * name){
     // printNewLine();
 	void * stack_start;
 	void * bp;
-	malloc(STACK_SIZE, &stack_start);
+	malloc(STACK_SIZE * 8, &stack_start);
 
 	// printString("stack start: ", 13);
 	// print64Hex((uint64_t)stack_start);
@@ -64,14 +64,14 @@ void p_createProcess(void * rip, uint64_t priority, char fg, char * name){
 	// 	printString("when i= ", 8);
 	// 	printDec(i);
 	// 	printString(" rsp = ", 7);
-	// 	print64Hex( (uint64_t *)rsp - i );
+	// 	print64Hex( (uint64_t *)bp - i );
 	// 	printString(" has: ", 6);
-	// 	print64Hex( * ( (uint64_t *)rsp - i ) );
+	// 	print64Hex( * ( (uint64_t *)bp - i ) );
 	// 	printNewLine();
 	// }
 	
 	// printString("stack pointer: ",15);
-	// print64Hex( (uint64_t)rsp );
+	// print64Hex( (uint64_t)bp );
 	// printNewLine();
 
 	// printString("rip: ", 5);
@@ -127,10 +127,7 @@ void p_getPid(int * resp){
 void wrapper(int argc, char * argv[], fn to_be_run){
 
 	to_be_run();
-
-	printString("killing", 7);
-	printNewLine();
-
 	p_killCurrent();
 	_sti_and_halt();
+	
 }
