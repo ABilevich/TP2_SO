@@ -32,8 +32,8 @@ static void welcomeMessage(void);
 static char inputBuffer[BUFFER_SIZE];
 static char commandsHistory[COMMANDS_BUFFER_SIZE][BUFFER_SIZE];
 static char * commands[] = {"aracnoid", "clear", "clock",  "help", "inforeg", "printmem", "set", "set writing_color", "test", "test zero_div", "test inv_op_code", "test mem","test proc"};
-static char * void_func[] = {"help", "clock", "inforeg", "clear", "ps", "run", "nice", "chstate"};
-static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps, run, nice, chstate};
+static char * void_func[] = {"help", "clock", "inforeg", "clear", "ps"};
+static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps};
 
 static char * runable_name[] = {"a", "b", "testmm"};
 static void (*runable_func[])(void) = {start_a, start_b, test_mm};
@@ -55,8 +55,8 @@ static int c;
 static gameState aracnoid_save;
 static int aracnoid_saved;
 void startShell(){
-    // setCursor(0,0);
-    // welcomeMessage();
+    setCursor(0,0);
+    welcomeMessage();
 
     setCursor(0, getScreenHeight());
     user_writing_color = USER_COLOR;
@@ -378,48 +378,54 @@ void resetUserWritingColor() {
     user_writing_color = USER_COLOR;
 }
 
-static void welcomeMessage() {
+static void welcomeMessage(){
 
-    println("ANDY SE LA COME");
-    println("");
-//     println("                             .,,uod8B8bou,,.");
-//     println("                    ..,uod8BBBBBBBBBBBBBBBBRPFT?l!i:.");
-//     println("               ,=m8BBBBBBBBBBBBBBBRPFT?!||||||||||||||");
-//     println("               !...:!TVBBBRPFT||||||||||!!^^\"\"'   ||||");
-//     println("               !.......:!?|||||!!^^\"\"'            ||||");
-//     println("               !.........||||                     ||||");
-//     println("               !.........||||  ##                 ||||");
-//     println("               !.........||||                     ||||");
-//     println("               !.........||||                     ||||");
-//     println("               !.........||||                     ||||");
-//     println("               !.........||||                     ||||");
-//     println("               `.........||||                    ,||||");
-//     println("                .;.......||||               _.-!!|||||");
-//     println("         .,uodWBBBBb.....||||       _.-!!|||||||||!:'");
-//     println("      !YBBBBBBBBBBBBBBb..!|||:..-!!|||||||!iof68BBBBBb....");
-//     println("      !..YBBBBBBBBBBBBBBb!!||||||||!iof68BBBBBBRPFT?!::   `.");
-//     println("      !....YBBBBBBBBBBBBBBbaaitf68BBBBBBRPFT?!:::::::::     `.");
-//     println("      !......YBBBBBBBBBBBBBBBBBBBRPFT?!::::::;:!^\"`;:::       `.");
-//     println("      !........YBBBBBBBBBBRPFT?!::::::::::^''...::::::;         iBBbo.");
-//     println("      `..........YBRPFT?!::::::::::::::::::::::::;iof68bo.      WBBBBbo.");
-//     println("       `..........:::::::::::::::::::::::;iof688888888888b.     `YBBBP^'");
-//     println("          `........::::::::::::::::;iof688888888888888888888b.     `");
-//     println("            `......:::::::::;iof688888888888888888888888888888b.");
-//     println("              `....:::;iof688888888888888888888888888888888899fT!");
-//     println("                `..::!8888888888888888888888888888888899fT|!^\"'");
-//     println("                  `' !!988888888888888888888888899fT|!^\"'");
-//     println("                      `!!8888888888888888899fT|!^\"'");
-//     println("                        `!988888888899fT|!^\"'");
-//     println("                          `!9899fT|!^\"'");
-//     println("                            `!^\"'\")");
-//     println("");
-//     println("                                             _____   _                         ___    _                 _       _  ");
-//     println("                                            |_   _| | |_      ___      o O O  / __|  | |_      ___     | |     | |   ");
-//     println("                                              | |   | ' \\    / -_)    o       \\__ \\  | ' \\    / -_)    | |     | |   ");
-//     println("                                             _|_|_  |_||_|   \\___|   TS__[O]  |___/  |_||_|   \\___|   _|_|_   _|_|_  ");
-//     println("                                           _|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"| {======|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"|_|\"\"\"\"\"| ");
-//     println("                                           \"`-0-0-'\"`-0-0-'\"`-0-0-'./o--000'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-'\"`-0-0-' ");
-//     println("");
-//     println("");
-//     println("");    
+        println("");
+        println("");
+        println("");
+        println("");
+		println("               (    (        )     *                             (         )   (    ");
+		println("               )\\ ) )\\ )  ( /(   (  `          *   )             )\\ )   ( /(   )\\ )  ");
+		println("              (()/((()/(  )\\())  )\\))(   (   ` )  /( (       (  (()/(   )\\()) (()/(  ");
+		println("               /(_))/(_))((_)\\  ((_)()\\  )\\   ( )(_)))\\      )\\  /(_)) ((_)\\   /(_)) ");
+		println("              (_)) (_))    ((_) (_()((_)((_) (_(_())((_)  _ ((_)(_))     ((_) (_))   ");
+		println("              | _ \\| _ \\  / _ \\ |  \\/  || __||_   _|| __|| | | |/ __|   / _ \\ / __|  ");
+		println("              |  _/|   / | (_) || |\\/| || _|   | |  | _| | |_| |\\__ \\  | (_) |\\__ \\  ");
+		println("              |_|  |_|_\\  \\___/ |_|  |_||___|  |_|  |___| \\___/ |___/   \\___/ |___/  ");
+
+		println("                                           _");
+		println("                                        ==(W{==========-      /===-");
+		println("                                          ||  (.--.)         /===-_---~~~~~~~----__");
+		println("                                          | \\_,|**|,__      |===-~___            _,-'`");
+		println("                             -==\\\\        `\\ ' `--'   ),    `//~\\\\   ~~~~`--._.-~");
+		println("                         ______-==|        /`\\_. .__/\\ \\    | |  \\\\          _-~`");
+		println("                   __--~~~  ,-/-==\\      (   | .  |~~~~|   | |   `\\       ,'");
+		println("                _-~       /'    |  \\     )__/==0==-\\<>/   / /      \\     /");
+		println("              .'        /       |   \\      /~\\___/~~\\/  /' /        \\   /");
+		println("             /  ____  /         |    \\`\\.__/-~~   \\  |_/'  /          \\/'");
+		println("            /-'~    ~~~~~---__  |     ~-/~         ( )   /'        _--~`");
+		println("                              \\_|      /        _) | ;  ),   __--~~");
+		println("                                '~~--_/      _-~/- |/ \\   '-~ \\");
+		println("                               {\\__--_/}    / \\\\_>-|)<__\\      \\");
+		println("                               /'   (_/  _-~  | |__>--<__|      |");
+		println("                              |   _/) )-~     | |__>--<__|      |");
+		println("                              / /~ ,_/       / /__>---<__/      |");
+		println("                             o-o _//        /-~_>---<__-~      /");
+		println("                             (^(~          /~_>---<__-      _-~");
+		println("                            ,/|           /__>--<__/     _-~");
+		println("                         ,//('(          |__>--<__|     /                  .--_");
+		println("                        ( ( '))          |__>--<__|    |                 /' _-_~\\");
+		println("                     `-)) )) (           |__>--<__|    |                /'  /   ~\\`\\");
+		println("                    ,/,'//( (             \\__>--<__\\    \\            /'  //      ||");
+		println("                  ,( ( ((, ))              ~-__>--<_~-_  ~--__---~'/'/  /'       VV");
+		println("                `~/  )` ) ,/|                 ~-_~>--<_/-__      __-~ _/");
+		println("              ._-~//( )/ )) `                    ~~-'_/_/ /~~~~~__--~");
+		println("               ;'( ')/ ,)(                              ~~~~~~~~");
+		println("              ' ') '( (/");
+
+		println("");
+		println("");
 }
+
+ 
+                                                                      

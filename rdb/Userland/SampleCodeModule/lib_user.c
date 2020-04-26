@@ -14,7 +14,7 @@ int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim) {
 }
 
 void * malloc(int size){
-	void ** resp;
+	void ** resp = NULL;
 	_sys_system((void *) 1, (void*)(size_t)size, resp, (void*) 0);
 	return *resp;
 }
@@ -404,12 +404,12 @@ long int strtoint(char* s){
 // ----------- Process ------------
 
 int createProcess(void * rip, uint64_t priority, char fg, char * name) {
-	_sys_process(0, rip, (void *)(uint64_t) priority, (void*)(char)fg, (void *)name);
+	_sys_process(0, rip, (void *)(uint64_t) priority, (void*)(uint64_t)fg, (void *)name);
 	return 0;
 }
 
 int changeProcessPriority(uint64_t pid, uint64_t priority) {
-	int resp;
+	int resp = 0;
 	_sys_process((void *)1, (void *)(uint64_t)pid, (void *)(uint64_t)priority, (void *)&resp, 0);
 	if(resp == -1){
 		printf("nice ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
@@ -418,7 +418,7 @@ int changeProcessPriority(uint64_t pid, uint64_t priority) {
 }
 
 int changeProcessState(uint64_t pid, char state) {
-	int resp;
+	int resp = 0;
 	_sys_process((void *)2, (void *)(uint64_t)pid, (void *)(uint64_t)state, (void *)&resp, 0);
 	if(resp == -1){
 		printf("chstate ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
@@ -427,7 +427,7 @@ int changeProcessState(uint64_t pid, char state) {
 }
 
 int kill(uint64_t pid) {
-	int resp;
+	int resp = 0;
 	_sys_process((void *)3, (void *)(uint64_t)pid, (void *)&resp, 0, 0);
 	if(resp == -1){
 		printf("kill ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
@@ -448,7 +448,7 @@ void printAllProcessInfo() {
 }
 
 int getPid() {
-	int resp;
+	int resp = 0;
 	_sys_process((void *)6, (void *)&resp, 0, 0, 0);
 	return resp;
 }
