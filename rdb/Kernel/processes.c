@@ -37,6 +37,13 @@ void p_createProcess(void * rip, uint64_t priority, char fg, char * name){
 	void * bp;
 	malloc(STACK_SIZE * 8, &stack_start);
 
+	if(stack_start == NULL){
+		printString("No more memmory avelible!", 25);
+		printNewLine();
+		return;
+	}
+
+
 	// printString("stack start: ", 13);
 	// print64Hex((uint64_t)stack_start);
 	// printNewLine();

@@ -160,6 +160,8 @@ int kill(uint64_t pid){
             aux->prev->next = aux->next;
             aux->next->prev = aux->prev;
             proc_counter--;
+            free(aux->pcb);
+            free(aux);
             return 0;
         }
         aux = aux->next;
