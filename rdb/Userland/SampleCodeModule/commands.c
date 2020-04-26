@@ -149,7 +149,7 @@ void testMem(){
 /*
  *  TestMem1 allocates all the memory and then makes a free three times in a row.
  */
-static void testMem1(){
+void testMem1(){
     printf("Initializing Test-1: \n");
     printf("free mem before: %d\n", getFreeHeapSize());
     printf("taken mem before: %d\n", getTakenHeapSize());
@@ -178,7 +178,7 @@ static void testMem1(){
 /* 
  *   TestMem2 is a stress test, allocates up to 2^10 bytes then frees all of them
  */
-static void testMem2(){
+void testMem2(){
     printf("Initializing Test-2: \n");
     printf("free mem before: %d\n", getFreeHeapSize());
     printf("taken mem before: %d\n", getTakenHeapSize());
@@ -204,7 +204,7 @@ static void testMem2(){
 /* 
  * TestMem3 is a stress test, alocates and frees chuncks of memory increasing in size 40 times. 
  */
-static void testMem3(){
+void testMem3(){
     printf("Initializing Test-3: \n");
     printf("free mem before: %d\n", getFreeHeapSize());
     printf("taken mem before: %d\n", getTakenHeapSize());
@@ -231,7 +231,7 @@ static void testMem3(){
 /*
  * TestMem4 is a simple test, alocates and frees 20 bytes
  */
-static void testMem4(){
+void testMem4(){
     printf("Initializing Test-4: \n");
     printf("free mem before: %d\n", getFreeHeapSize());
     printf("taken mem before: %d\n", getTakenHeapSize());
@@ -247,7 +247,7 @@ static void testMem4(){
     printf("Test-4 completed.\n");    
 }
 
-static void testMem5(){
+void testMem5(){
     printf("Initializing Test-5: \n");
     printf("free mem before: %d\n", getFreeHeapSize());
     printf("taken mem before: %d\n", getTakenHeapSize());

@@ -11,6 +11,8 @@ GLOBAL _get_rsp
 GLOBAL getRegisters
 GLOBAL testDivException
 
+GLOBAL _sti_and_halt
+
 section .text
 ; rdi, rsi, rdx, rcx, r8, r9
 %macro preserve 0
@@ -146,3 +148,8 @@ SYS_SCREEN_CODE equ 4
 SYS_VIDEO_CODE equ 5
 SYS_SOUND_CODE equ 6
 SYS_PROCESS_CODE equ 7
+
+_sti_and_halt:
+    sti
+    hlt
+    ret

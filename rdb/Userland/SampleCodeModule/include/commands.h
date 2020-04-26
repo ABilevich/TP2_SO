@@ -20,11 +20,11 @@ void nice(uint64_t pid, uint64_t priority);
 void chstate(uint64_t pid, char state);
 
 void testMem(void);
-static void testMem1(void);
-static void testMem2(void);
-static void testMem3(void);
-static void testMem4(void);
-static void testMem5(void);
+void testMem1(void);
+void testMem2(void);
+void testMem3(void);
+void testMem4(void);
+void testMem5(void);
 
 void testProcess(void);
 
