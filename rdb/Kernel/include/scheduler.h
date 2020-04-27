@@ -6,6 +6,7 @@
 #include <mm_interface.h>
  
 enum states {READY = 0, BLOCKED};
+enum killability {DURO_DE_MATAR = 0, UN_BUEN_DIA_PARA_MORIR};
 
 typedef struct s_pcb{
     void * rsp;

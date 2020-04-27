@@ -7,6 +7,8 @@ int started = 0;
 
 s_node * curr;
 
+s_node * aux_node;
+
 void * scheduler(void * old_rsp){
 
     if(started == 0){
@@ -25,6 +27,12 @@ void * scheduler(void * old_rsp){
     }
 
     void * new_rsp = curr->pcb->rsp;
+
+    if(aux_node != NULL){
+        free(aux_node->pcb);
+        free(aux_node);
+        aux_node = NULL;
+    }
 
     return new_rsp;
 }
@@ -55,7 +63,7 @@ int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, 
     new_pcb->pid = next_pid;
     new_pcb->priority = priority;
     new_pcb->p_counter = priority;
-    new_pcb->is_deletable = 1;
+    new_pcb->is_deletable = UN_BUEN_DIA_PARA_MORIR;
     new_pcb->fg = fg;
     new_pcb->state = READY;
 
@@ -63,7 +71,7 @@ int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, 
     
     if(started == 0){
         new_pcb->caller_pid = new_pcb->pid;
-        new_pcb->is_deletable = 0;
+        new_pcb->is_deletable = DURO_DE_MATAR;
 
         init(new_pcb);
     }else{
@@ -169,6 +177,7 @@ int killCurrent(){
         curr->prev->next = curr->next;
         curr->next->prev = curr->prev;
         proc_counter--;
+        aux_node = curr;
         return 0;
     }
     return -2;
