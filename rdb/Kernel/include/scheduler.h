@@ -34,6 +34,7 @@ void addProcess(s_pcb * new_pcb);
 int kill(uint64_t pid);
 int killCurrent();
 void printPCB(s_pcb * pcb);
+int blockProcess(uint64_t pid);
 void blockCurrentProcess();
 int changeState(uint64_t pid, char state);
 int changePriority(uint64_t pid, char priority);

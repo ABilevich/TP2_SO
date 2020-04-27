@@ -452,3 +452,12 @@ int getPid() {
 	_sys_process((void *)6, (void *)&resp, 0, 0, 0);
 	return resp;
 }
+
+int block(uint64_t pid) {
+	int resp = 0;
+	_sys_process((void *)7, (void *)(uint64_t)pid, (void *)&resp, 0, 0);
+	if(resp == -1){
+		printf("block ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
+	}
+	return resp;
+}

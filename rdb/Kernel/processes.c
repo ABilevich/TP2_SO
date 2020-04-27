@@ -5,13 +5,13 @@
 int sys_process(void * option, void * arg1, void * arg2, void * arg3, void * arg4) {
     switch ((uint64_t) option) {
 	case 0:
-		p_createProcess((void *) arg1, (uint64_t)arg2, (char)arg3, (char *) arg4);
+		p_createProcess((void *) arg1, (uint64_t)arg2, (uint64_t)arg3, (char *) arg4);
 		break;
 	case 1:
 		p_changeProcessPriority((uint64_t)arg1, (uint64_t)arg2, (int*)arg3);
 		break;
 	case 2:
-		p_changeProcessState((uint64_t)arg1, (char)arg2, (int*)arg3);
+		p_changeProcessState((uint64_t)arg1, (uint64_t)arg2, (int*)arg3);
 		break;
 	case 3:
 		p_kill((uint64_t)arg1, (int*)arg2);
@@ -25,11 +25,13 @@ int sys_process(void * option, void * arg1, void * arg2, void * arg3, void * arg
 	case 6:
 		p_getPid((int*)arg1);
 		break;
+	case 7:
+		p_block((uint64_t)arg1, (int*)arg1);
 	}
 	return 0;
 }
 
-void p_createProcess(void * rip, uint64_t priority, char fg, char * name){
+void p_createProcess(void * rip, uint64_t priority, uint64_t fg, char * name){
 
 	// printString("New Process: ", 13);
     // printNewLine();
@@ -38,11 +40,10 @@ void p_createProcess(void * rip, uint64_t priority, char fg, char * name){
 	malloc(STACK_SIZE * 8, &stack_start);
 
 	if(stack_start == NULL){
-		printString("No more memmory avelible!", 25);
+		printString("No more memmory avalible!", 25);
 		printNewLine();
 		return;
 	}
-
 
 	// printString("stack start: ", 13);
 	// print64Hex((uint64_t)stack_start);
@@ -95,7 +96,7 @@ void p_changeProcessPriority(uint64_t pid, uint64_t priority, int * resp){
 	return;
 }
 
-void p_changeProcessState(uint64_t pid,char state, int * resp){
+void p_changeProcessState(uint64_t pid, uint64_t state, int * resp){
 	*resp = changeState(pid, state);
 	return;
 }
@@ -129,6 +130,10 @@ void p_getPid(int * resp){
 	return;
 }
 
+void p_block(uint64_t pid, int * resp){
+	*resp = blockProcess(pid);
+	return;
+}
 
 void wrapper(int argc, char * argv[], fn to_be_run){
 

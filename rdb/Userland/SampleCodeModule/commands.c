@@ -25,7 +25,6 @@ void printUserManual(){
     println("- aracnoid --> A classic brick breaker like game.");
     println("- clock    --> Information about the local time in Buenos Aires.");
     println("- inforeg  --> Prints registers status.");
-
     println("- printmem --> Prints RAM status, starting at some value.");
     println("- clear    --> Clear shell screen.");
     println("- set      --> Sets some properties of the shell.");
@@ -34,7 +33,20 @@ void printUserManual(){
     println("                       + default");
     println("- test     --> Tests exceptions.");
     println("       + zero_div           --> Tests Zero-Division.");
-    println("       + inv_op_code        --> Tests Invalid Op-code."); 
+    println("       + inv_op_code        --> Tests Invalid Op-code.");
+    println("");
+    println("New commands are listed below:\n");
+    println("- mem      --> Prints information about the memory state.");    
+    println("- ps       --> lists all runing processes with aditional information.");
+    println("- run   [process name] (&)  --> command to run a new process | optional & to create the process in bg.");
+    println("- kill  [process pid]       --> Kills indicated process.");
+    println("- nice  [process pid]  [new priority]    --> Changes the priority of the process indicated");
+    println("- block [process pid]       --> switches state from READY to BLOCK or vice versa");
+    println("");
+    println("Available processes:\n");
+    println("  a        --> counts up to 3 waiting a bit in between");
+    println("  loop     --> runs forever printing a message untill killed");
+    println("  testmm   --> runs teacher provided memmory stress test");
     println("");
 }
 
@@ -269,23 +281,22 @@ void testInvOpCode() {
 	__asm__("ud2");
 }
 
+void mem(){
+    printf("Total memory: %d\n", getTotalHeapSize());
+    printf("Free memory: %d\n", getFreeHeapSize());
+    printf("Taken memory: %d\n", getTakenHeapSize());
+}
 
-void testProcess(){
-    void (*a)(void);
-    a = &start_a;
-
-    //printAllProcessInfo();
-    createProcess(a, 5, 0, "a.c");
+void testProcess(){ //obsolete
     printAllProcessInfo();
-    // createProcess(b, 1, 0, "b.c");
-    // printAllProcessInfo();
-    // kill(1);
-    // kill(2);
-    // printAllProcessInfo();
 }
 
 void p_kill(uint64_t pid){
     kill(pid);
+}
+
+void p_block(uint64_t pid){
+    block(pid);
 }
 
 void ps(){

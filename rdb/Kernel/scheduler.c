@@ -10,8 +10,6 @@ s_node * curr;
 void * scheduler(void * old_rsp){
 
     if(started == 0){
-        // printString("ERROR", 5);
-        // printNewLine();
         return old_rsp;
     }
 
@@ -67,17 +65,9 @@ int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, 
         new_pcb->caller_pid = new_pcb->pid;
         new_pcb->is_deletable = 0;
 
-        // printString("Initializing...", 15);
-        // printNewLine();
-        // printPCB(new_pcb);
-
         init(new_pcb);
     }else{
         new_pcb->caller_pid = curr->pcb->pid;
-
-        // printString("Adding process...", 17);
-        // printNewLine();
-        // printPCB(new_pcb);
 
         addProcess(new_pcb);
 
@@ -203,6 +193,24 @@ uint64_t getCurrentPid(){
 
 void blockCurrentProcess(){
     curr->pcb->state = BLOCKED;
+}
+
+int blockProcess(uint64_t pid){
+    int counter = 0;
+    s_node * aux = curr;
+    while (counter < proc_counter){
+        if(aux->pcb->pid == pid){
+            if(aux->pcb->state == READY){
+                aux->pcb->state = BLOCKED;
+            }else{
+                aux->pcb->state = READY;
+            }
+            return 0;
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return -1;
 }
 
 void printProcessInfo(uint64_t pid){ 

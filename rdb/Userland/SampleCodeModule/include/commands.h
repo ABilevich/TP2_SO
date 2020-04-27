@@ -14,7 +14,9 @@ void testDivException(void);
 void testInvOpCode(void);
 
 void p_kill(uint64_t pid);
+void p_block(uint64_t pid);
 void ps();
+void mem();
 void run(void (*func)(void), char * name, char fg);
 void nice(uint64_t pid, uint64_t priority);
 void chstate(uint64_t pid, char state);

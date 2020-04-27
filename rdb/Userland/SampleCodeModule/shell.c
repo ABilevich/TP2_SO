@@ -31,12 +31,12 @@ static void welcomeMessage(void);
 
 static char inputBuffer[BUFFER_SIZE];
 static char commandsHistory[COMMANDS_BUFFER_SIZE][BUFFER_SIZE];
-static char * commands[] = {"aracnoid", "clear", "clock",  "help", "inforeg", "printmem", "set", "set writing_color", "test", "test zero_div", "test inv_op_code", "test mem","test proc"};
-static char * void_func[] = {"help", "clock", "inforeg", "clear", "ps"};
-static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps};
+static char * commands[] = {"aracnoid", "clear", "clock",  "help", "inforeg", "printmem", "set", "set writing_color", "test", "test zero_div", "test inv_op_code", "test mem","test proc","mem"};
+static char * void_func[] = {"help", "clock", "inforeg", "clear", "ps","mem"};
+static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps, mem};
 
-static char * runable_name[] = {"a", "b", "testmm"};
-static void (*runable_func[])(void) = {start_a, start_b, test_mm};
+static char * runable_name[] = {"a", "b", "testmm", "loop"};
+static void (*runable_func[])(void) = {start_a, start_b, test_mm, start_loop};
 
 static char * user = "dummie_user";
 static char * syst_name = "@rdb: ";
@@ -258,6 +258,10 @@ static void instructionHandler() {
                 else if (strcmp(cmd, "kill") == 0){
                     uint64_t aux = strtoint(params[0]);
                     p_kill(aux);
+                }
+                else if (strcmp(cmd, "block") == 0){
+                    uint64_t aux = strtoint(params[0]);
+                    p_block(aux);
                 }
                 else if (strcmp(cmd, "run") == 0){
                     int i = getRunableIndex(params[0]);

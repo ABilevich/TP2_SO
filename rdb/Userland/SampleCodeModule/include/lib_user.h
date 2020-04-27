@@ -112,7 +112,7 @@ int kill(uint64_t pid);
 void printProcessInfo(uint64_t pid);
 void printAllProcessInfo();
 int getPid();
-
+int block(uint64_t pid);
 
 // Importados de naiveConsole
 

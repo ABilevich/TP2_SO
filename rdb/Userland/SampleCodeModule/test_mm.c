@@ -1,6 +1,3 @@
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
 #include <test_util.h>
 
 #define MAX_BLOCKS 128
@@ -19,7 +16,7 @@ void test_mm(){
   while (1){
     rq = 0;
     total = 0;
-    printf("request\n");
+    //printf("request\n");
     // Request as many blocks as we can
     while(rq < MAX_BLOCKS && total < MAX_MEMORY){
       mm_rqs[rq].size = GetUniform(MAX_MEMORY - total - 1) + 1;
@@ -28,21 +25,21 @@ void test_mm(){
       total += mm_rqs[rq].size;
       rq++;
     }
-    printf("set\n");
+    //printf("set\n");
     // Set
     uint32_t i;
     for (i = 0; i < rq; i++)
       if (mm_rqs[i].address != NULL)
         t_memset(mm_rqs[i].address, i, mm_rqs[i].size); // TODO: Port this call as required
     
-    printf("check\n");
+    //printf("check\n");
     // Check
     for (i = 0; i < rq; i++)
       if (mm_rqs[i].address != NULL)
         if(!memcheck(mm_rqs[i].address, i, mm_rqs[i].size))
           printf("ERROR!\n"); // TODO: Port this call as required
 
-    printf("free\n");
+    //printf("free\n");
     // Free
     for (i = 0; i < rq; i++)
       if (mm_rqs[i].address != NULL)
