@@ -9,6 +9,7 @@ GLOBAL getRegisters
 GLOBAL _fillstack
 GLOBAL _sti_and_halt
 GLOBAL _halt
+GLOBAL _sti_set_rsp_and_halt
 
 section .text
 	
@@ -121,6 +122,12 @@ _fillstack:
 
 
 _sti_and_halt:
+    sti
+    hlt
+    ret
+
+_sti_set_rsp_and_halt:
+    mov rsp, rax
     sti
     hlt
     ret

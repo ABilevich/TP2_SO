@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <scheduler.h>
 #include <mm_interface.h>
+#include <screen.h>
 
 typedef void (*fn)();
 
@@ -19,3 +20,4 @@ void p_block(uint64_t pid, int * resp);
 
 void _fillstack(void * bp,void *  func_wrapper,void * argc,void *  argv,void *  rip);
 void _sti_and_halt();
+void _sti_set_rsp_and_halt(void *);

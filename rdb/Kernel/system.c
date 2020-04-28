@@ -29,6 +29,6 @@ int sys_system(void * option, void * arg1, void * arg2, void * arg3) {
 	case 5:
 		getTakenHeapSize( (size_t*) arg1 );
 		break;	
-	return 0;
 	}
+	return 0;
 }

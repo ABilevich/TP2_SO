@@ -176,8 +176,8 @@ void getTakenHeapSize(size_t * resp){
 
 
 static char * heap_location = (char *)HEAP_START;
-char *const mem_end = HEAP_START + TOTAL_HEAP_SIZE + 1;
-static char * mem_start = HEAP_START;
+char *const mem_end = (void*)(HEAP_START + TOTAL_HEAP_SIZE + 1);
+static char * mem_start = (void*)HEAP_START;
 
 void * sbrk (int increment){
 
@@ -211,7 +211,7 @@ int brk(char *new_location){
  */
 static int update_max_ptr(uint8_t *new_value) {
   if (new_value > max_ptr) {
-    if (brk(new_value)) {
+    if (brk((char*)new_value)) {
       return 0;
     }
     max_ptr = new_value;

@@ -37,7 +37,7 @@ void p_createProcess(void * rip, uint64_t priority, uint64_t fg, char * name){
     // printNewLine();
 	void * stack_start;
 	void * bp;
-	malloc(STACK_SIZE * 8, &stack_start);
+	malloc( STACK_SIZE * 8, &stack_start);
 
 	if(stack_start == NULL){
 		printString("No more memmory avalible!", 25);
@@ -58,7 +58,7 @@ void p_createProcess(void * rip, uint64_t priority, uint64_t fg, char * name){
 	void * rsp = (void*)( (uint64_t *)bp - 20 );
 
 	void * argc = 0;
-	void * argv = 0xABCD;
+	void * argv = 0;
 
 	fn func_wrapper;
 	func_wrapper = &wrapper;

@@ -6,8 +6,7 @@ int proc_counter = 0;
 int started = 0;
 
 s_node * curr;
-
-s_node * aux_node;
+s_node * aux_node = NULL;
 
 void * scheduler(void * old_rsp){
 
@@ -17,6 +16,8 @@ void * scheduler(void * old_rsp){
 
     if((uint64_t)old_rsp > 0x400000){
         curr->pcb->rsp = old_rsp;
+    }else{
+        printString("asd", 3);
     }
 
     curr->pcb->p_counter--;
@@ -54,7 +55,7 @@ int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, 
 
     //s_pcb new_pcb = {rsp, stack_start, next_pid, priority, priority, 1};
     s_pcb * new_pcb;
-    malloc(sizeof(s_pcb), &new_pcb);
+    malloc(sizeof(s_pcb), (void**)&new_pcb);
 
     new_pcb->rsp = rsp;
     new_pcb->stack_start = stack_start;
@@ -90,7 +91,7 @@ int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, 
 
 void init(s_pcb * new_pcb){
     s_node * aux;
-    malloc(sizeof(s_node), &aux);
+    malloc(sizeof(s_node), (void **)&aux);
 
     aux->pcb = new_pcb;
     aux->next = aux;
@@ -103,7 +104,7 @@ void init(s_pcb * new_pcb){
 
 void addProcess(s_pcb * new_pcb){
     s_node * new_node;
-    malloc(sizeof(s_node), &new_node);
+    malloc(sizeof(s_node), (void **)&new_node);
 
     new_node->pcb = new_pcb;
     new_node->next = curr;
@@ -274,13 +275,13 @@ void printPCB(s_pcb * pcb){
 	printDec( pcb->caller_pid );
     printString("  |  ", 5);
     printString("sp: ", 5);
-	print64Hex( ( (uint64_t *)pcb->rsp) );
+	print64Hex( ( (uint64_t)pcb->rsp) );
 	printString("  |  ", 5);
     printString("bp: ", 13);
-	print64Hex( ( (uint64_t *)pcb->bp ) );
+	print64Hex( ( (uint64_t)pcb->bp ) );
     printNewLine();
     printString("ss: ", 13);
-	print64Hex( ( (uint64_t *)pcb->stack_start ) );
+	print64Hex( ( (uint64_t)pcb->stack_start ) );
     printNewLine();
 }
 
