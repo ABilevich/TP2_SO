@@ -16,8 +16,6 @@ void * scheduler(void * old_rsp){
 
     if((uint64_t)old_rsp > 0x400000){
         curr->pcb->rsp = old_rsp;
-    }else{
-        printString("asd", 3);
     }
 
     curr->pcb->p_counter--;
