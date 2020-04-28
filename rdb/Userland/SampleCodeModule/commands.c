@@ -45,6 +45,7 @@ void printUserManual(){
     println("");
     println("Available processes:\n");
     println("  a        --> counts up to 3 waiting a bit in between");
+    println("  b        --> counts forever printing every 100 (for testing priority)");
     println("  loop     --> runs forever printing a message untill killed");
     println("  testmm   --> runs teacher provided memmory stress test");
     println("");

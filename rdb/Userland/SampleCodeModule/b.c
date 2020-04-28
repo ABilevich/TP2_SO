@@ -1,8 +1,11 @@
 #include <b.h>
 
 void start_b(void){
-    for (size_t i = 0; i < 3; i++){
-        wait(1);
-        printf("B is counting: %d\n", i);
+    int i = 0;
+    while(1){
+        if(i%100 == 0){
+            printf("B is counting: %d\n", i);
+        }
+        i++;
     }
 }
