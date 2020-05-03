@@ -7,8 +7,9 @@
 #include <video_vm.h>
 #include <sound.h>
 #include <processes.h>
+#include <semaphore.h>
 
-enum sys_call_codes {SYS_SYSTEM = 0, SYS_TICKS_CODE, SYS_RTC_CODE, SYS_READ_CODE, SYS_SCREEN_CODE, SYS_VIDEO_CODE, SYS_SOUND_CODE, SYS_PROCESS_CODE};
+enum sys_call_codes {SYS_SYSTEM = 0, SYS_TICKS_CODE, SYS_RTC_CODE, SYS_READ_CODE, SYS_SCREEN_CODE, SYS_VIDEO_CODE, SYS_SOUND_CODE, SYS_PROCESS_CODE, SYS_SEMAPHORE_CODE};
 
 uint64_t int80_handler(void * sysCallCode, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6) {
     
@@ -38,6 +39,8 @@ uint64_t int80_handler(void * sysCallCode, void * arg1, void * arg2, void * arg3
         case SYS_PROCESS_CODE: //syscall process
             return sys_process(arg1, arg2, arg3, arg4, arg5);
         
+        case SYS_SEMAPHORE_CODE: //syscall process
+            return sys_semaphore(arg1, arg2, arg3, arg4, arg5);
     }
     return 0;
 

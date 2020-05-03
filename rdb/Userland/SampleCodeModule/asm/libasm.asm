@@ -6,6 +6,7 @@ GLOBAL _sys_screen
 GLOBAL _sys_video
 GLOBAL _sys_sound
 GLOBAL _sys_process
+GLOBAL _sys_semaphore
 GLOBAL _get_rsp
 
 GLOBAL getRegisters
@@ -104,6 +105,16 @@ _sys_process:
     int 80h
     ret  
 
+_sys_semaphore:
+    mov r9, r8
+    mov r8, rcx   ; Arguments Shifting
+    mov rcx, rdx
+    mov rdx, rsi
+    mov rsi, rdi
+    mov rdi, SYS_SEMAPHORE_CODE
+    int 80h
+    ret 
+
 getRegisters:
     mov [array], rax
     mov [array + 8], rbx
@@ -148,6 +159,7 @@ SYS_SCREEN_CODE equ 4
 SYS_VIDEO_CODE equ 5
 SYS_SOUND_CODE equ 6
 SYS_PROCESS_CODE equ 7
+SYS_SEMAPHORE_CODE equ 8
 
 _sti_and_halt:
     sti

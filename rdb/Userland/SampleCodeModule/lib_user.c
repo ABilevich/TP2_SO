@@ -460,4 +460,52 @@ int block(uint64_t pid) {
 		printf("block ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
 	}
 	return resp;
+} 
+
+// ----------- Semaphore ------------
+
+int semOpen(char *name, uint64_t start_cont){
+	int pid = getPid();
+	int resp;
+	_sys_semaphore(0, (void *)name, (void *)(uint64_t)pid, (void *)(uint64_t)start_cont, (void *)&resp);
+	return resp;
+}
+
+int semClose(uint64_t id){
+	printf("asd6\n");
+	int pid = getPid();
+	int resp;
+	_sys_semaphore((void *)1, (void *)(uint64_t)id, (void *)(uint64_t)pid, (void *)&resp, 0);
+	if(resp == -1){
+		printf("semClose ERROR: no semaphore with id %d wa found", id);
+	}
+	return resp;
+}
+
+int semUnlink(char *name){
+	int resp;
+	_sys_semaphore((void *)2, (void*)name, (void*)(uint64_t*)&resp, 0, 0);
+	if(resp == -1){
+		printf("semUnlink ERROR: no semaphore with name \"%s\" was found", name);
+	}
+	return resp;
+}
+
+int semWait(uint64_t id){
+	int pid = getPid();
+	int resp;
+	_sys_semaphore((void *)3, (void*)(uint64_t)id, (void*)(uint64_t)pid, (void*)(uint64_t*)&resp, 0);
+	if(resp == -1){
+		printf("semWait ERROR: no semaphore with id %d wa found", id);
+	}
+	return resp;
+}
+
+int semPost(uint64_t id){
+	int resp;
+	_sys_semaphore((void *)4, (void*)(uint64_t)id, (void*)(uint64_t*)&resp, 0, 0);
+	if(resp == -1){
+		printf("semPost ERROR: no semaphore with id %d wa found", id);
+	}
+	return resp;
 }

@@ -31,6 +31,7 @@ int _sys_screen(void * arg1, void * arg2, void * arg3, void * arg4);
 int _sys_video(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 int _sys_sound(void * arg1, void * arg2, void * arg3);
 int _sys_process(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
+int _sys_semaphore(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 
 // ----------- System ------------
 int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim);
@@ -113,6 +114,14 @@ void printProcessInfo(uint64_t pid);
 void printAllProcessInfo();
 int getPid();
 int block(uint64_t pid);
+
+// ------------ Semaphore ----------
+
+int semOpen(char *name, uint64_t start_cont);
+int semClose(uint64_t id);
+int semUnlink(char *name);
+int semWait(uint64_t id);
+int semPost(uint64_t id);
 
 // Importados de naiveConsole
 
