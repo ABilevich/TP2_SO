@@ -17,6 +17,8 @@ void start_b(void){
     printf("semUnlink\n");
     semUnlink("pepito");
     printf("semClose\n");    
-    //semClose(sem);
+    semClose(sem);
+    while(1);
     printf("end\n");
+    
 }

@@ -227,6 +227,17 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
     //se fijan si el cont de un semaforo es superior a 0
         //si no lo es el proceso que llamo se bloquea
         //si lo es se decrementa en 1 el cont
+    
+    // sem_wait(){
+    // spinlock()
+    // if(sem == 0)
+    //     block process
+    // else
+    //     sem--
+    //     retornar
+    // spinunlock()
+    // }
+
 }
 
 void s_semPost(uint64_t id, uint64_t *resp){
@@ -245,12 +256,16 @@ int strcmp(const char *s1, const char *s2) {
 }
 
 void semPrintAll(){
+    if(first == NULL){
+        printString("no semaphores", 13);
+        printNewLine();
+        return;
+    }
     sem_node * iterator = first;
     while (iterator != NULL)
     {
         semPrint(iterator->semaphore);
         iterator = iterator->next;
-
     }
 }
 
