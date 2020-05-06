@@ -12,25 +12,21 @@ void start_c(void){
     // }
 
 
-    printf("C: semOpen\n");
 
     int sem = semOpen("pepito", 1);
     int i = 0;
-    while( i < 100000){
-        printf("C: semWait\n");
-        semWait(sem);
+    while( i < 10){
+        //semWait(sem);
+        printf("C ");
+        *counter = *counter - 1;
 
-        *counter--;
-
-        printf("C: semPost\n");
-        semPost(sem);
+        //semPost(sem);
+        printf("Repeat\n");
         i++;
     }
 
-    printf("C:semClose\n");
     semClose(sem);
 
-    printf("C: semUnlink\n");
     semUnlink("pepito");
 
     //printf("sem id after unlink: %d\n", sem);

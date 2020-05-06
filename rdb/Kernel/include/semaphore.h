@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <mm_interface.h>
 #include <screen.h>
+#include <processes.h>
 
 #define BLOCKED_BY_SEM 2
 #define READY 0
@@ -42,3 +43,5 @@ void semPrint(sem* s);
 void semPrintProcs(prc_node* n);
 void spin_unlock(uint64_t lock);
 void spin_lock(uint64_t lock);
+
+void unlockFirstBlockedProc(sem * semaphore);

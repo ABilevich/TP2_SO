@@ -1,9 +1,15 @@
 #include <b.h>
-
+#include <c.h>
+ 
 void start_b(void){
 
     uint64_t * counter = (void*)0xF000000;
 
+    void (*c)(void);
+    c = &start_c;
+    createProcess(c, 2, 0, "c");
+
+    //while(1);
 
     // int i = 0;
     // while(1){
@@ -14,24 +20,21 @@ void start_b(void){
     // }
 
 
-    printf("B semOpen\n");
+   
     int sem = semOpen("pepito", 1);
     int i = 0;
-    while( i < 100000){
-        printf("B semWait\n");
-        semWait(sem);
+    while( i < 10){
+        //semWait(sem);
+        printf("B ");
+        *counter = *counter + 1;
 
-        *counter++;
-
-        printf("B semPost\n");
-        semPost(sem);
+        //semPost(sem);
+        printf("Repeat\n");
         i++;
     }
 
-    printf("B semClose\n");
     semClose(sem);
 
-    printf("B semUnlink\n");
     semUnlink("pepito");
 
     //printf("sem id after unlink: %d\n", sem);
