@@ -17,6 +17,8 @@ typedef struct s_pcb{
     uint64_t caller_pid;	
     uint64_t priority;
     uint64_t p_counter;
+    uint64_t input_id;
+    uint64_t output_id;
     char is_deletable;
     char fg;
     char state;
@@ -29,7 +31,7 @@ typedef struct s_node{
 } s_node;
 
 void * scheduler(void * old_rsp);
-int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, char * name);
+int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, char * name, uint64_t input_id, uint64_t output_id);
 void init(s_pcb * new_pcb);
 void addProcess(s_pcb * new_pcb);
 int kill(uint64_t pid);
@@ -43,6 +45,8 @@ s_node * findNextReady();
 void printProcessInfo();
 void printAllProcessInfo();                                                     
 uint64_t getCurrentPid();
+void p_getMyI( uint64_t* resp);
+void p_getMyO( uint64_t* resp);
 
 void _irq00Handler();
 

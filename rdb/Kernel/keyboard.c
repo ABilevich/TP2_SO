@@ -89,14 +89,36 @@ int special_key(uint8_t key) {
 }
 
 // Returns 0 if something has been read
-int sys_read(void * buff) {
-  if (buffer_size <= 0)
+int key_read(void * buff, uint64_t input_id) {
+
+  int * actual_buffer_size;
+  char * actual_buffer;
+
+  if(input_id == 0){
+    actual_buffer_size = &buffer_size;
+    actual_buffer = buffer;
+  }else{
+    pipe* aux = p_getPipe(input_id);
+    if(aux == NULL){
+      return 2; 
+    }
+    actual_buffer_size = &(aux->buff_taken_size);
+    actual_buffer = aux->buff;
+  }
+  // actual_buffer_size = p_GetBuferSize(fd);
+  // actual_buffer = p_getBuffer(fd);
+  //dependiendo del fd, pedirle a el driver de pipes el actual_buffer_size y actual_buffer
+
+  if ( *actual_buffer_size <= 0)
       return 1;
-  char ans = buffer[0]; // Devuelvo el primer char
-  buffer_size--;
-  for (int j = 0; j < buffer_size; j++) {
-      buffer[j] = buffer[j+1]; // Muevo el buffer restante
+  char ans = actual_buffer[0]; // Devuelvo el primer char
+  (*actual_buffer_size)--;
+  for (int j = 0; j < *actual_buffer_size; j++) {
+      actual_buffer[j] = actual_buffer[j+1]; // Muevo el buffer restante
   }
   * (char *)buff = ans;
   return 0;
 }
+
+
+

@@ -26,12 +26,13 @@ typedef struct point {
 int _sys_system(void * arg1, void * arg2, void * arg3, void * arg4);
 int _sys_timet(void * arg1, void * arg2, void * arg3);
 int _sys_rtc(void * arg1);
-int _sys_read(void * arg1);
+int _sys_read_write(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 int _sys_screen(void * arg1, void * arg2, void * arg3, void * arg4);
 int _sys_video(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 int _sys_sound(void * arg1, void * arg2, void * arg3);
 int _sys_process(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 int _sys_semaphore(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
+int _sys_pipe(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
 
 // ----------- System ------------
 int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim);
@@ -59,6 +60,9 @@ time_struct getTime(void);
 
 // ----------- Read ------------
 int read(char *buffer, unsigned int buff_size);
+int read_from(char *buffer, unsigned int buff_size, uint64_t input_id);
+int write(char *buffer, unsigned int buff_size);
+int write_to(char *buffer, unsigned int buff_size, uint64_t output_id);
 int scan(char *buffer, unsigned int buff_size);
 uint64_t *getRegisters(void);
 char scanChar();
@@ -69,7 +73,7 @@ void setBackgroundColor(uint32_t color);
 void setCursor(unsigned int x, unsigned int y);
 void shiftCursor(int offset);
 void showCursor(int status);
-int write(const char *str, unsigned int str_size, int color);
+int writeOnScreen(const char *str, unsigned int str_size, int color);
 int putChar(char c);
 int putColoredChar(char c, int color);
 int print(const char *str); 
@@ -104,9 +108,7 @@ long int strtoint(char* s);
 
 // ----------- Process ------------
 
-
-
-int createProcess(void * rip, uint64_t priority, char fg, char * name);
+int createProcess(void * rip, uint64_t priority, char fg, char * name, uint64_t input_id, uint64_t output_id);
 int changeProcessPriority(uint64_t pid, uint64_t priority);
 int changeProcessState(uint64_t pid, char state);
 int kill(uint64_t pid);
@@ -114,6 +116,8 @@ void printProcessInfo(uint64_t pid);
 void printAllProcessInfo();
 int getPid();
 int block(uint64_t pid);
+
+
 
 // ------------ Semaphore ----------
 
@@ -123,6 +127,12 @@ int semUnlink(char *name);
 int semWait(uint64_t id);
 int semPost(uint64_t id);
 
+
+//--------------- PIPES ---------------
+int openPipe(char * name);
+int closePipe(uint64_t id);
+uint64_t getMyInputId();
+uint64_t getMyOutputId();
 // Importados de naiveConsole
 
 int printDec(uint64_t value);
@@ -132,5 +142,9 @@ int print64Hex(uint64_t value);
 int printBin(uint64_t value);
 int printBase(uint64_t value, uint32_t base);
 uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
+
+
+
+
 
 #endif

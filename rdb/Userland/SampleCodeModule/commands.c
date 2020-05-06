@@ -83,7 +83,7 @@ void getLocalTime(){
     printColored("Buenos Aires", 0xe37100);
     println(" is:");
     unsigned last_sec = getSecondsElapsed();
-    while ((_sys_read((void *) &c) != 0) || c != ESC) {
+    while ((_sys_read_write(0,(void *) &c,0,0,0) != 0) || c != ESC) {
         unsigned long actual_sec = getSecondsElapsed();
         if (!started || actual_sec > last_sec) {
             started = 1;
@@ -305,7 +305,7 @@ void ps(){
 }
 
 void run(void (*func)(void), char * name, char fg){
-    createProcess(func, 1, fg, name);
+    createProcess(func, 1, fg, name,0,0);
 }
 
 void nice(uint64_t pid, uint64_t priority){

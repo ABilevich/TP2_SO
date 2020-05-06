@@ -7,7 +7,7 @@ void start_b(void){
 
     void (*c)(void);
     c = &start_c;
-    createProcess(c, 2, 0, "c");
+    createProcess(c, 2, 0, "c",0,0);
 
     //while(1);
 

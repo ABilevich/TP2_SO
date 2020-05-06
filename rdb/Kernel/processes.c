@@ -5,7 +5,7 @@
 int sys_process(void * option, void * arg1, void * arg2, void * arg3, void * arg4) {
     switch ((uint64_t) option) {
 	case 0:
-		p_createProcess((void *) arg1, (uint64_t)arg2, (uint64_t)arg3, (char *) arg4);
+		p_createProcess((void *) arg1, (uint64_t *)arg2, (char *) arg3);
 		break;
 	case 1:
 		p_changeProcessPriority((uint64_t)arg1, (uint64_t)arg2, (int*)arg3);
@@ -27,11 +27,23 @@ int sys_process(void * option, void * arg1, void * arg2, void * arg3, void * arg
 		break;
 	case 7:
 		p_block((uint64_t)arg1, (int*)arg1);
+		break;
+	case 8:
+		p_getMyI((uint64_t*)arg1);
+		break;
+	case 9:
+		p_getMyO((uint64_t*)arg1);
+		break;
 	}
 	return 0;
 }
 
-void p_createProcess(void * rip, uint64_t priority, uint64_t fg, char * name){
+void p_createProcess(void * rip, uint64_t * params, char * name){
+
+	uint64_t priority =  params[0];
+	uint64_t fg = params[1];
+	uint64_t input_id = params[2];
+	uint64_t output_id = params[3];
 
 	// printString("New Process: ", 13);
     // printNewLine();
@@ -65,7 +77,7 @@ void p_createProcess(void * rip, uint64_t priority, uint64_t fg, char * name){
 
 	_fillstack(bp, func_wrapper, argc, argv, rip);
 
-	addPCB(rsp , priority, stack_start, bp, fg, name);
+	addPCB(rsp , priority, stack_start, bp, fg, name, input_id, output_id);
 
 	// for(int i = 0; i < 30; i++){
 	// 	printString("when i= ", 8);
@@ -138,8 +150,6 @@ void p_block(uint64_t pid, int * resp){
 void wrapper(int argc, char * argv[], fn to_be_run){
 
 	to_be_run();
-	printString("Ending process...", 16);
-	printNewLine();
 	p_killCurrent();
 	_sti_and_halt();
 	

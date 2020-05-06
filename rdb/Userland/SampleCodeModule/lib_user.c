@@ -84,14 +84,36 @@ time_struct getTime() {
 int read(char *buffer, unsigned int buff_size) {
 	int finished = 0;
 	int i = 0;
+	uint64_t input_id = getMyInputId();
+	//printf("input_id = %d\n", input_id);
 	while (i < buff_size && !finished) { // Mientras no se llene el buffer
 		char c;
-		while (_sys_read((void *) &c) != 0); // Mientras no consiga el caracter sigo pidiendolo.	
+		while (_sys_read_write(0,(void *) &c,(void*)input_id,0,0) != 0); // Mientras no consiga el caracter sigo pidiendolo.	
 		buffer[i++] = c;
 		if (c == '\n')
 			finished = 1;
 	} 
 	return i;
+}
+
+int read_from(char *buffer, unsigned int buff_size, uint64_t input_id) {
+	// int pid = getPid();
+	// int finished = 0;
+	// int i =0;
+	// while (i < buff_size && !finished) {
+	// 	char c;
+	// }
+	return 0;
+}
+
+int write(char *buffer, unsigned int buff_size) {
+
+	return 0;
+}
+
+int write_to(char *buffer, unsigned int buff_size, uint64_t output_id) {
+
+	return 0;
 }
 
 int scan(char *buffer, unsigned int buff_size) { // Make sure u have at least buff_size + 1 to allocate the result string.
@@ -105,6 +127,7 @@ char scanChar() {
 	read(&c, 1);
 	return c;
 }
+
 
 // ----------- Screen ------------
 
@@ -133,16 +156,16 @@ void showCursor(int status) {
 	_sys_screen((void *) 3, (void *)(uint64_t) status, 0, 0);
 }
 
-int write(const char *str, unsigned int str_size, int color) {
+int writeOnScreen(const char *str, unsigned int str_size, int color) {
 	return _sys_screen((void *) 1, (void *) str, (void *)(uint64_t) str_size, (void *)(uint64_t) color);
 }
 
 int printColored(const char *str, int color) {
-	return write(str, strlen(str), color);
+	return writeOnScreen(str, strlen(str), color);
 }
 
 int putColoredChar(char c, int color) {
-	return write(&c, 1, color);
+	return writeOnScreen(&c, 1, color);
 }
 
 int print(const char *str) {
@@ -203,7 +226,7 @@ int printf(const char *format, ...) {
 }
 
 int putChar(char c) {
-	return write(&c, 1, WHITE_COLOR);
+	return writeOnScreen(&c, 1, WHITE_COLOR);
 }
 
 int println(const char *str) {
@@ -403,8 +426,9 @@ long int strtoint(char* s){
 
 // ----------- Process ------------
 
-int createProcess(void * rip, uint64_t priority, char fg, char * name) {
-	_sys_process(0, rip, (void *)(uint64_t) priority, (void*)(uint64_t)fg, (void *)name);
+int createProcess(void * rip, uint64_t priority, char fg, char * name, uint64_t input_id, uint64_t output_id) {
+	uint64_t params[] = {priority,fg,input_id,output_id};
+	_sys_process(0, rip, (void *) params, (void *)name, 0);
 	return 0;
 }
 
@@ -462,6 +486,18 @@ int block(uint64_t pid) {
 	return resp;
 } 
 
+uint64_t getMyInputId(){
+	uint64_t resp;
+	_sys_process((void *)8, (void *)&resp, 0, 0, 0);
+	return resp;
+}
+
+uint64_t getMyOutputId(){
+	uint64_t resp;
+	_sys_process((void *)9, (void *)&resp, 0, 0, 0);
+	return resp;
+}
+
 // ----------- Semaphore ------------
 
 int semOpen(char *name, uint64_t start_cont){
@@ -509,3 +545,19 @@ int semPost(uint64_t id){
 	}
 	return resp;
 }
+
+//----------------PIPES---------------------------------
+
+int openPipe(char * name){
+	int resp;
+	_sys_pipe(0, name, (void*)&resp,0,0);
+	return resp;
+}
+
+int closePipe(uint64_t id){
+	int resp;
+	_sys_pipe((void *) 1, (void *) id, (void *) &resp,0,0);
+	return resp;
+}
+
+

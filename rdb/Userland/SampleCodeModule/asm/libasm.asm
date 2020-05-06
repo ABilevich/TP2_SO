@@ -1,12 +1,13 @@
 GLOBAL _sys_system
 GLOBAL _sys_timet
 GLOBAL _sys_rtc
-GLOBAL _sys_read
+GLOBAL _sys_read_write
 GLOBAL _sys_screen
 GLOBAL _sys_video
 GLOBAL _sys_sound
 GLOBAL _sys_process
 GLOBAL _sys_semaphore
+GLOBAL _sys_pipe
 GLOBAL _get_rsp
 
 GLOBAL getRegisters
@@ -63,11 +64,15 @@ _sys_rtc:
     int 80h
     ret
 
-_sys_read:
-    mov rsi, rdi  ; Arguments Shifting
-    mov rdi, SYS_READ_CODE
+_sys_read_write:
+    mov r9, r8
+    mov r8, rcx   ; Arguments Shifting
+    mov rcx, rdx
+    mov rdx, rsi
+    mov rsi, rdi
+    mov rdi, SYS_READ_WRITE_CODE
     int 80h
-    ret
+    ret 
 
 _sys_screen:
     mov r8, rcx   ; Arguments Shifting
@@ -115,6 +120,16 @@ _sys_semaphore:
     int 80h
     ret 
 
+_sys_pipe:
+    mov r9, r8
+    mov r8, rcx   ; Arguments Shifting
+    mov rcx, rdx
+    mov rdx, rsi
+    mov rsi, rdi
+    mov rdi, SYS_PIPE_CODE
+    int 80h
+    ret 
+
 getRegisters:
     mov [array], rax
     mov [array + 8], rbx
@@ -154,12 +169,13 @@ array resb 8*16
 SYS_SYSTEM_CODE equ 0
 SYS_TICKS_CODE equ 1
 SYS_RTC_CODE equ 2
-SYS_READ_CODE equ 3
+SYS_READ_WRITE_CODE equ 3
 SYS_SCREEN_CODE equ 4
 SYS_VIDEO_CODE equ 5
 SYS_SOUND_CODE equ 6
 SYS_PROCESS_CODE equ 7
 SYS_SEMAPHORE_CODE equ 8
+SYS_PIPE_CODE equ 9
 
 _sti_and_halt:
     sti

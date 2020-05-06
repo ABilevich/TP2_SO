@@ -49,7 +49,7 @@ s_node * findNextReady(){
     return NULL;
 }
 
-int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, char * name){
+int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, char * name, uint64_t input_id, uint64_t output_id){
 
     //s_pcb new_pcb = {rsp, stack_start, next_pid, priority, priority, 1};
     s_pcb * new_pcb;
@@ -63,6 +63,9 @@ int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, 
     new_pcb->priority = priority;
     new_pcb->p_counter = priority;
     new_pcb->is_deletable = UN_BUEN_DIA_PARA_MORIR;
+    new_pcb->fg = fg;
+    new_pcb->input_id = input_id;
+    new_pcb->output_id = output_id;
     new_pcb->fg = fg;
     new_pcb->state = READY;
 
@@ -220,6 +223,14 @@ int blockProcess(uint64_t pid){
     return -1;
 }
 
+void p_getMyI(uint64_t* resp){
+    *resp = curr->pcb->input_id;
+}
+
+void p_getMyO(uint64_t* resp){
+    *resp = curr->pcb->output_id;
+}
+
 void printProcessInfo(uint64_t pid){ 
     int counter = 0;
     s_node * aux = curr;
@@ -268,15 +279,22 @@ void printPCB(s_pcb * pcb){
     printString("prty: ", 10);
 	printDec( pcb->priority );
     printString("  |  ", 5);
+    printString("i_id: ", 10);
+	printDec( pcb->input_id );
+    printString("  |  ", 5);
+    printString("o_id: ", 10);
+	printDec( pcb->output_id );
+    printString("  |  ", 5);
     printString("cpid: ", 12);
 	printDec( pcb->caller_pid );
-    printString("  |  ", 5);
+    printNewLine();
+    printString("             | ", 16);
     printString("sp: ", 5);
 	print64Hex( ( (uint64_t)pcb->rsp) );
-	printString("  |  ", 5);
+    printString("  |  ", 5);
     printString("bp: ", 13);
 	print64Hex( ( (uint64_t)pcb->bp ) );
-    printNewLine();
+    printString("  |  ", 5);
     printString("ss: ", 13);
 	print64Hex( ( (uint64_t)pcb->stack_start ) );
     printNewLine();

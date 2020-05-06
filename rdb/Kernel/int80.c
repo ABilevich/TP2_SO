@@ -2,14 +2,15 @@
 #include <system.h>
 #include <timet.h>
 #include <rtc.h>
-#include <keyboard.h>
+#include <readwrite.h>
 #include <screen.h>
 #include <video_vm.h>
 #include <sound.h>
 #include <processes.h>
 #include <semaphore.h>
+#include <pipes.h>
 
-enum sys_call_codes {SYS_SYSTEM = 0, SYS_TICKS_CODE, SYS_RTC_CODE, SYS_READ_CODE, SYS_SCREEN_CODE, SYS_VIDEO_CODE, SYS_SOUND_CODE, SYS_PROCESS_CODE, SYS_SEMAPHORE_CODE};
+enum sys_call_codes {SYS_SYSTEM = 0, SYS_TICKS_CODE, SYS_RTC_CODE, SYS_READ_WRITE_CODE, SYS_SCREEN_CODE, SYS_VIDEO_CODE, SYS_SOUND_CODE, SYS_PROCESS_CODE, SYS_SEMAPHORE_CODE, SYS_PIPE_CODE};
 
 uint64_t int80_handler(void * sysCallCode, void * arg1, void * arg2, void * arg3, void * arg4, void * arg5, void * arg6) {
     
@@ -24,8 +25,8 @@ uint64_t int80_handler(void * sysCallCode, void * arg1, void * arg2, void * arg3
         case SYS_RTC_CODE: //syscall RTC
             return sys_rtc(arg1);
 
-        case SYS_READ_CODE: //syscall Read
-            return sys_read(arg1);
+        case SYS_READ_WRITE_CODE: //syscall Read
+            return sys_read_write(arg1, arg2, arg3, arg4, arg5);
 
         case SYS_SCREEN_CODE: //syscall Screen
             return sys_screen(arg1, arg2, arg3, arg4);
@@ -41,6 +42,9 @@ uint64_t int80_handler(void * sysCallCode, void * arg1, void * arg2, void * arg3
         
         case SYS_SEMAPHORE_CODE: //syscall process
             return sys_semaphore(arg1, arg2, arg3, arg4, arg5);
+
+        case SYS_PIPE_CODE: //syscall process
+            return sys_pipe(arg1, arg2, arg3, arg4, arg5);
     }
     return 0;
 
