@@ -3,6 +3,9 @@
 #include <mm_interface.h>
 #include <screen.h>
 
+#define BLOCKED_BY_SEM 2
+#define READY 0
+
 typedef struct prc_node{
     uint64_t pid;
     uint64_t is_blocked;
@@ -13,6 +16,7 @@ typedef struct sem{
     void * name;
     uint64_t id;
     uint64_t cont;
+    uint64_t lock;
     prc_node * procs;
 } sem;
 
@@ -36,3 +40,5 @@ int strcmp(const char *s1, const char *s2);
 void semPrintAll();
 void semPrint(sem* s);
 void semPrintProcs(prc_node* n);
+void spin_unlock(uint64_t lock);
+void spin_lock(uint64_t lock);

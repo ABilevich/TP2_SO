@@ -141,7 +141,6 @@ int changeState(uint64_t pid, char state){
     return -1;
 }   
 
-
 int kill(uint64_t pid){
     int counter = 0;
     s_node * aux = curr;
@@ -210,7 +209,7 @@ int blockProcess(uint64_t pid){
         if(aux->pcb->pid == pid){
             if(aux->pcb->state == READY){
                 aux->pcb->state = BLOCKED;
-            }else{
+            }else if(aux->pcb->state == BLOCKED){
                 aux->pcb->state = READY;
             }
             return 0;
