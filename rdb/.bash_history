@@ -1,11 +1,4 @@
 make clean
-cd ...
-cd root
-l
-ls
-make clean
-make all
-make clean
 make all
 make clean
 make all
@@ -496,5 +489,12 @@ make all
 make all
 make all
 gdb
+q
+exit
+ls
+ifconfig | grep inet
+ipconfig | grep inet
+ifconfig | grep inet
+ifconfig
 q
 exit

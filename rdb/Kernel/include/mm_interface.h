@@ -1,3 +1,5 @@
+#ifndef _MMINTERFACE_H
+#define _MMINTERFACE_H
 #include <stdint.h>
 #include <stddef.h>
 
@@ -16,3 +18,4 @@ void getFreeHeapSize(size_t * resp);
 void getTotalHeapSize(size_t * resp);
 
 void getTakenHeapSize(size_t * resp);
+#endif

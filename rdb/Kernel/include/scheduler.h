@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <mm_interface.h>
 #include <screen.h>
-enum states {READY = 0, BLOCKED, BLOCKED_BY_SEM, BLOCKED_BY_READ};
+enum states {READY = 0, BLOCKED, BLOCKED_BY_SEM, BLOCKED_BY_READ, BLOCKED_BY_WRITE};
 enum killability {DURO_DE_MATAR = 0, UN_BUEN_DIA_PARA_MORIR};
 
 typedef struct s_pcb{
@@ -39,6 +39,8 @@ int killCurrent();
 void printPCB(s_pcb * pcb);
 int blockProcess(uint64_t pid);
 void blockCurrentProcess();
+void blockCurrentProcessByRead();
+void blockCurrentProcessByWrite();
 int changeState(uint64_t pid, char state);
 int changePriority(uint64_t pid, char priority);
 s_node * findNextReady();
@@ -47,7 +49,9 @@ void printAllProcessInfo();
 uint64_t getCurrentPid();
 void p_getMyI( uint64_t* resp);
 void p_getMyO( uint64_t* resp);
-
+int unlockReader(uint64_t input_id);
+int unlockWriter(uint64_t output_id);
+void _sti_and_halt();
 void _irq00Handler();
 
 #endif

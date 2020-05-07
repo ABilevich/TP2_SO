@@ -88,7 +88,10 @@ int read(char *buffer, unsigned int buff_size) {
 	//printf("input_id = %d\n", input_id);
 	while (i < buff_size && !finished) { // Mientras no se llene el buffer
 		char c;
-		while (_sys_read_write(0,(void *) &c,(void*)input_id,0,0) != 0); // Mientras no consiga el caracter sigo pidiendolo.	
+		//while (_sys_read_write(0,(void *) &c,(void*)input_id,0,0) != 0); // Mientras no consiga el caracter sigo pidiendolo.	
+		printf("asd1\n");
+		_sys_read_write(0,(void *) &c,(void*)input_id,0,0);
+		printf("asd2\n");
 		buffer[i++] = c;
 		if (c == '\n')
 			finished = 1;
@@ -97,13 +100,19 @@ int read(char *buffer, unsigned int buff_size) {
 }
 
 int read_from(char *buffer, unsigned int buff_size, uint64_t input_id) {
-	// int pid = getPid();
-	// int finished = 0;
-	// int i =0;
-	// while (i < buff_size && !finished) {
-	// 	char c;
-	// }
-	return 0;
+	int finished = 0;
+	int i = 0;
+	while (i < buff_size && !finished) { // Mientras no se llene el buffer
+		char c;
+		//while (); // Mientras no consiga el caracter sigo pidiendolo.	
+		printf("asd1\n");
+		_sys_read_write(0,(void *) &c,(void*)input_id,0,0);
+		printf("asd2\n");
+		buffer[i++] = c;
+		if (c == '\n')
+			finished = 1;
+	} 
+	return i;
 }
 
 int write(char *buffer, unsigned int buff_size) {

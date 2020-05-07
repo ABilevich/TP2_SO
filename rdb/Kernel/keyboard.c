@@ -5,7 +5,7 @@
 #define BUFFER_SIZE 128
 
 static char buffer[BUFFER_SIZE];
-static int buffer_size;
+static uint64_t buffer_size;
 
 #define SHIFT_IN_KEY 
 
@@ -42,6 +42,7 @@ void normalKey(uint8_t aux) { buffer[buffer_size++] = regular_f[aux]; }
 void shiftedKey(uint8_t aux) { buffer[buffer_size++] = with_shift_f[aux]; }
 
 void keyboard_handler(void) {
+  printString("laviejadegabipotrisima", 22);
   uint8_t aux = kbGet();
   int spec = special_key(aux);
 
@@ -70,11 +71,13 @@ void keyboard_handler(void) {
     **la idea es que si es una letra, la matriz se encarga de devolver si es minus o mayus
     **pero si no es letra, solo depende de si está o no presionado el SHIFT
     */
-    if (regular_f[aux] >= 'a' && regular_f[aux] <= 'z')
+    if (regular_f[aux] >= 'a' && regular_f[aux] <= 'z'){
       keyHandler[SHIFTED][CAPS_LOCKED](aux);
-    else
+    }else{
       keyHandler[SHIFTED][0](aux);
-    
+    }
+    unlockReader(0);
+
   }
 }
 
@@ -91,7 +94,7 @@ int special_key(uint8_t key) {
 // Returns 0 if something has been read
 int key_read(void * buff, uint64_t input_id) {
 
-  int * actual_buffer_size;
+  uint64_t * actual_buffer_size;
   char * actual_buffer;
 
   if(input_id == 0){
@@ -109,8 +112,10 @@ int key_read(void * buff, uint64_t input_id) {
   // actual_buffer = p_getBuffer(fd);
   //dependiendo del fd, pedirle a el driver de pipes el actual_buffer_size y actual_buffer
 
-  if ( *actual_buffer_size <= 0)
-      return 1;
+  if ( *actual_buffer_size <= 0){
+    blockCurrentProcessByRead();
+    //return 1;
+  }
   char ans = actual_buffer[0]; // Devuelvo el primer char
   (*actual_buffer_size)--;
   for (int j = 0; j < *actual_buffer_size; j++) {

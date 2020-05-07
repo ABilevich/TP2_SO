@@ -46,6 +46,9 @@ s_node * findNextReady(){
         aux = aux->next;
         counter++;
     }
+    printString("laviejadegabipotrisimo2", 22);
+    
+    printString("laviejadegabipotrisimy3", 22);
     return NULL;
 }
 
@@ -205,6 +208,17 @@ void blockCurrentProcess(){
     curr->pcb->state = BLOCKED;
 }
 
+void blockCurrentProcessByRead(){
+    curr->pcb->state = BLOCKED_BY_READ;
+    printString("read", 4);
+    _irq00Handler();
+}
+
+void blockCurrentProcessByWrite(){
+    curr->pcb->state = BLOCKED_BY_WRITE;
+    _irq00Handler();
+}
+
 int blockProcess(uint64_t pid){
     int counter = 0;
     s_node * aux = curr;
@@ -229,6 +243,38 @@ void p_getMyI(uint64_t* resp){
 
 void p_getMyO(uint64_t* resp){
     *resp = curr->pcb->output_id;
+}
+
+int unlockReader(uint64_t input_id){
+	int counter = 0;
+    s_node * aux = curr;
+    while (counter < proc_counter){
+        if(aux->pcb->input_id == input_id){
+            if(aux->pcb->state == BLOCKED_BY_READ){
+                aux->pcb->state = READY;
+                return 0;
+            }
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return -1;
+}
+
+int unlockWriter(uint64_t output_id){
+    int counter = 0;
+    s_node * aux = curr;
+    while (counter < proc_counter){
+        if(aux->pcb->output_id == output_id){
+            if(aux->pcb->state == BLOCKED_BY_WRITE){
+                aux->pcb->state = READY;
+                return 0;
+            }
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return -1;
 }
 
 void printProcessInfo(uint64_t pid){ 

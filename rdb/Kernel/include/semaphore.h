@@ -1,3 +1,5 @@
+#ifndef _SEMAPHORE_H
+#define _SEMOPHORE_H
 #include <stdint.h>
 #include <stddef.h>
 #include <mm_interface.h>
@@ -45,3 +47,4 @@ void spin_unlock(uint64_t lock);
 void spin_lock(uint64_t lock);
 
 void unlockFirstBlockedProc(sem * semaphore);
+#endif

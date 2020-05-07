@@ -1,3 +1,5 @@
+#ifndef _PROCESSES_H
+#define _PROCESSES_H
 #include <stdint.h>
 #include <stddef.h>
 #include <scheduler.h>
@@ -21,3 +23,4 @@ void p_block(uint64_t pid, int * resp);
 void _fillstack(void * bp,void *  func_wrapper,void * argc,void *  argv,void *  rip);
 void _sti_and_halt();
 void _sti_set_rsp_and_halt(void *);
+#endif

@@ -1,3 +1,6 @@
+#ifndef PIPES
+#define PIPES
+
 #include <stdint.h>
 #include <stddef.h>
 #include <mm_interface.h>
@@ -29,3 +32,4 @@ pipe * p_getPipe(uint64_t id);
 int strcmp2(const char *s1, const char *s2);
 
 
+#endif
