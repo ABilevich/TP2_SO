@@ -1,6 +1,3 @@
-make clean
-cd ..
-make clean
 cd Toolchain/
 make all
 cd ..
@@ -498,3 +495,6 @@ ls la
 ls -la
 vim .dckr_gdb
 sed -i -e 's/\r$//' .dckr_gdb
+ps
+gdb
+exit

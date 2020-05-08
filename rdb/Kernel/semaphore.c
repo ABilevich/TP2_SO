@@ -174,6 +174,9 @@ void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp){
                 }
                 free(iterator->semaphore);
                 free(iterator);
+                *resp = 2; //hay que hacer free a sem_info
+                semPrintAll();
+                return;
                 //printString("asd2", 4);
             }
             *resp = 0; //se removio el pid
@@ -183,7 +186,7 @@ void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp){
         prev = iterator;
         iterator = iterator->next;
     }
-    *resp = -1; //no se encontro un semaforo con ese id
+    *resp = 1; //no se encontro un semaforo con ese id
     semPrintAll();
     return;
 }
@@ -338,7 +341,8 @@ prc_node * getProc(sem * sem, uint64_t pid){
 }
 
 void s_semPost(uint64_t id, uint64_t *resp){
-    printString("sem post", 8);
+    printString("sem post id: ", 13);
+	printDec( id );
     printNewLine();
     semPrintAll();
     //aumenta en uno el cont del semaforo
@@ -355,7 +359,7 @@ void s_semPost(uint64_t id, uint64_t *resp){
 
     sem->cont++;
     unlockFirstBlockedProc(sem);
-    *resp = 0;
+    *resp = 2;
     semPrintAll();
     return;
 }

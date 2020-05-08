@@ -22,6 +22,10 @@ typedef struct point {
     int y;
 } point;
 
+typedef struct sem_info {
+    uint64_t id;
+} sem_info;
+
 // ----------- Sys Calls ------------
 int _sys_system(void * arg1, void * arg2, void * arg3, void * arg4);
 int _sys_timet(void * arg1, void * arg2, void * arg3);
@@ -121,12 +125,11 @@ int block(uint64_t pid);
 
 // ------------ Semaphore ----------
 
-int semOpen(char *name, uint64_t start_cont);
-int semClose(uint64_t id);
+sem_info * semOpen(char *name, uint64_t start_cont);
+int semClose(sem_info * si);
 int semUnlink(char *name);
-int semWait(uint64_t id);
-int semPost(uint64_t id);
-
+int semWait(sem_info * si);
+int semPost(sem_info * si);
 
 //--------------- PIPES ---------------
 int openPipe(char * name);

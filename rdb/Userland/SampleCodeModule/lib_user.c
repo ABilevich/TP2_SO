@@ -509,20 +509,26 @@ uint64_t getMyOutputId(){
 
 // ----------- Semaphore ------------
 
-int semOpen(char *name, uint64_t start_cont){
+sem_info * semOpen(char *name, uint64_t start_cont){
 	int pid = getPid();
-	int resp;
+	sem_info * aux = malloc(sizeof(sem_info));
+	uint64_t resp;
 	_sys_semaphore(0, (void *)name, (void *)(uint64_t)pid, (void *)(uint64_t)start_cont, (void *)&resp);
-	return resp;
+	aux->id = resp;
+	return aux;
 }
 
-int semClose(uint64_t id){
+int semClose(sem_info * si){
 	//printf("asd6\n");
 	int pid = getPid();
+	uint64_t id = si->id;
 	int resp;
 	_sys_semaphore((void *)1, (void *)(uint64_t)id, (void *)(uint64_t)pid, (void *)&resp, 0);
-	if(resp == -1){
-		printf("semClose ERROR: no semaphore with id %d wa found", id);
+	if(resp == 1){
+		printf("semClose ERROR: no semaphore with id %d was found\n", id);
+	}else if(resp == 2){
+		free(si);
+		printf("sem destroyed\n");
 	}
 	return resp;
 }
@@ -531,26 +537,31 @@ int semUnlink(char *name){
 	int resp;
 	_sys_semaphore((void *)2, (void*)name, (void*)(uint64_t*)&resp, 0, 0);
 	if(resp == -1){
-		printf("semUnlink ERROR: no semaphore with name \"%s\" was found", name);
+		printf("semUnlink ERROR: no semaphore with name \"%s\" was found\n", name);
 	}
 	return resp;
 }
 
-int semWait(uint64_t id){
+int semWait(sem_info * si){
 	int pid = getPid();
+	uint64_t id = si->id;
 	int resp;
 	_sys_semaphore((void *)3, (void*)(uint64_t)id, (void*)(uint64_t)pid, (void*)(uint64_t*)&resp, 0);
 	if(resp == -1){
-		printf("semWait ERROR: no semaphore with id %d wa found", id);
+		printf("semWait ERROR: no semaphore with id %d was found\n", id);
 	}
 	return resp;
 }
 
-int semPost(uint64_t id){
+int semPost(sem_info * si){
 	int resp;
+	uint64_t id = si->id;
 	_sys_semaphore((void *)4, (void*)(uint64_t)id, (void*)(uint64_t*)&resp, 0, 0);
-	if(resp == -1){
-		printf("semPost ERROR: no semaphore with id %d wa found", id);
+	if(resp == 1){
+		printf("semPost ERROR: no semaphore with id %d was found\n", id);
+	}
+	if(resp == 2){
+		printf("semPost FATAL ERROR id: %d\n", id);
 	}
 	return resp;
 }

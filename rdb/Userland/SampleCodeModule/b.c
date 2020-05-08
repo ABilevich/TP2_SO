@@ -8,7 +8,6 @@ void start_b(void){
     void (*c)(void);
     c = &start_c;
     createProcess(c, 2, 0, "c",0,0);
-
     
     //while(1);
 
@@ -20,19 +19,21 @@ void start_b(void){
     //     i++;
     // }
    
-    int sem = semOpen("pepito", 1);
+    sem_info * si = semOpen("pepito", 1);
 //     // int i = 0;
 //     // while( i < 10){
-    semWait(sem);
+    semWait(si);
 
-        wait(2);
+    ///wait(2);
 //     //     *counter = *counter + 1;
 //     //     printf("B count up\n");
-    semPost(sem);
+    semPost(si);
 //     //     i++;
 //     // }
+    printf("holaaaa\n");
 
-    semClose(sem);
+
+    semClose(si);
 
 //     semUnlink("pepito");
 
