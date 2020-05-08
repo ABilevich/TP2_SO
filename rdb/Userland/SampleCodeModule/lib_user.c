@@ -517,7 +517,7 @@ int semOpen(char *name, uint64_t start_cont){
 }
 
 int semClose(uint64_t id){
-	printf("asd6\n");
+	//printf("asd6\n");
 	int pid = getPid();
 	int resp;
 	_sys_semaphore((void *)1, (void *)(uint64_t)id, (void *)(uint64_t)pid, (void *)&resp, 0);

@@ -46,6 +46,9 @@ void semPrintProcs(prc_node* n);
 void spin_unlock(uint64_t lock);
 void spin_lock(uint64_t lock);
 
+sem * getSem(uint64_t id);
+prc_node * getProc(sem * sem, uint64_t pid);
+
 void unlockFirstBlockedProc(sem * semaphore);
 
 void _irq00Handler();

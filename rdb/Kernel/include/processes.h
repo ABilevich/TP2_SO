@@ -6,7 +6,7 @@
 #include <mm_interface.h>
 #include <screen.h>
 
-typedef void (*fn)();
+typedef void (*fn)(void);
 
 int sys_process(void * option, void * arg1, void * arg2, void * arg3, void * arg4);
 void p_createProcess(void * rip, uint64_t * params, char * name);

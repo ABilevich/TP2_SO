@@ -148,8 +148,9 @@ void p_block(uint64_t pid, int * resp){
 }
 
 void wrapper(int argc, char * argv[], fn to_be_run){
-
+    
 	to_be_run();
+	//_cli();
 	p_killCurrent();
 	_sti_and_halt();
 	

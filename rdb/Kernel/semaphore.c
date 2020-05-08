@@ -33,8 +33,6 @@ void s_semOpen(char *name, uint64_t pid, uint64_t start_cont, uint64_t *resp_id)
     if(first == NULL){ //si es el primero
         first = semCreate(name, pid, start_cont);
         *resp_id = first->semaphore->id;
-        semPrintAll();
-        return;
     }else{
         sem_node * iterator = first;
         sem_node * prev = NULL;
@@ -52,8 +50,8 @@ void s_semOpen(char *name, uint64_t pid, uint64_t start_cont, uint64_t *resp_id)
         //sino lo crea y lo retorna
         prev->next = semCreate(name, pid, start_cont);
         *resp_id = prev->next->semaphore->id;
-        semPrintAll();
     }
+    semPrintAll();
     return;
 }
 
@@ -156,16 +154,17 @@ void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp){
     semPrintAll();
     //toma el id
     //busca el semaforo con ese id
+
     sem_node * iterator = first;
     sem_node * prev = NULL;
     while(iterator != NULL){
         if(iterator->semaphore->id == id){
-            printString("asd0", 4);
+            //printString("asd0", 4);
             //si lo encuentra
             //saca al proceso de la lista de procesos que lo usan
             RemoveProcessFromSem(iterator->semaphore, pid);
-            printString("asd1", 4);
-            if(iterator->semaphore->name == NULL && iterator->semaphore->procs == NULL){
+            //printString("asd1", 4);
+            if(/*iterator->semaphore->name == NULL &&*/ iterator->semaphore->procs == NULL){
                 //si ningun otro proceso lo usa y el nombre es NULL lo borra
                 if(prev == NULL){ 
                     //si el semaforo que voy a borrar es tambien el primero de la lista
@@ -175,7 +174,7 @@ void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp){
                 }
                 free(iterator->semaphore);
                 free(iterator);
-                printString("asd2", 4);
+                //printString("asd2", 4);
             }
             *resp = 0; //se removio el pid
             semPrintAll();
@@ -247,67 +246,116 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
     // spinunlock()
     // }
 
-    sem_node * iterator = first;
-    prc_node * prc_iterator;
-    int finished = 0;
-    while (iterator != NULL){
-        if(iterator->semaphore->id == id){
-            //spin_lock(iterator->semaphore->lock);
-                if(iterator->semaphore->cont == 0){
-                    //spin_unlock(iterator->semaphore->lock);
-                    prc_iterator = iterator->semaphore->procs;
-                    while(prc_iterator != NULL && !finished){
-                        if(prc_iterator->pid == pid){
-                            prc_iterator->is_blocked = 1;
-                            changeState(pid, BLOCKED_BY_SEM);
-                            _irq00Handler(); 
-                            printString("asdasd", 6);
-                            printNewLine();
-                            iterator->semaphore->cont--;    
-                            finished = 1;  
-                        }
-                        prc_iterator = prc_iterator->next;
-                    }
-                    semPrintAll();
-                }else{
-                    iterator->semaphore->cont--;
-                    //spin_unlock(iterator->semaphore->lock); 
-                    semPrintAll();   
-                }     
-            _sti();    
-            *resp = 0;
-            return;
-        }
-        iterator = iterator->next;
+    sem * sem = getSem(id);
+    if(sem == NULL){
+        printString("no sem found", 12);
+        printNewLine();
+        *resp = -1;
+        return;
     }
-    _sti(); 
-    *resp = -1;   // no se encontro un semaforo con ese nombre
+
+    prc_node * prc = getProc(sem, pid);
+    if(prc == NULL){
+        printString("no prc found", 12);
+        printNewLine();
+        *resp = -2;
+        return;
+    }
+
+    if(sem->cont == 0){
+        prc->is_blocked = 1;
+        changeState(pid, BLOCKED_BY_SEM);
+        _irq00Handler();
+    }
+
+    sem->cont--;
+
+    *resp = 0;
     semPrintAll();
-    return;  
+    return;
+
+    // sem_node * iterator = first;
+    // prc_node * prc_iterator;
+    // int finished = 0;
+    // while (iterator != NULL){
+    //     if(iterator->semaphore->id == id){
+    //         //spin_lock(iterator->semaphore->lock);
+    //             if(iterator->semaphore->cont == 0){
+    //                 //spin_unlock(iterator->semaphore->lock);
+    //                 prc_iterator = iterator->semaphore->procs;
+    //                 while(prc_iterator != NULL && !finished){
+    //                     if(prc_iterator->pid == pid){
+    //                         prc_iterator->is_blocked = 1;
+    //                         changeState(pid, BLOCKED_BY_SEM);
+    //                         _irq00Handler(); 
+    //                         printString("asdasd", 6);
+    //                         printNewLine();
+    //                         iterator->semaphore->cont--;    
+    //                         finished = 1;  
+    //                     }
+    //                     prc_iterator = prc_iterator->next;
+    //                 }
+    //                 semPrintAll();
+    //             }else{
+    //                 iterator->semaphore->cont--;
+    //                 //spin_unlock(iterator->semaphore->lock); 
+    //                 semPrintAll();   
+    //             }     
+    //         _sti();    
+    //         *resp = 0;
+    //         return;
+    //     }
+    //     iterator = iterator->next;
+    // }
+    // _sti(); 
+    // *resp = -1;   // no se encontro un semaforo con ese nombre
+    // semPrintAll();
+    // return;  
 
 }
 
+
+sem * getSem(uint64_t id){
+    sem_node * iterator = first;
+    while (iterator != NULL){
+        if(iterator->semaphore->id == id){
+            return iterator->semaphore;
+        }
+        iterator = iterator->next;
+    }
+    return NULL;
+}
+
+prc_node * getProc(sem * sem, uint64_t pid){
+    prc_node * prc_iterator = sem->procs;
+    while (prc_iterator != NULL){
+        if(prc_iterator->pid == pid){
+            return prc_iterator;
+        }
+        prc_iterator = prc_iterator->next;
+    }
+    return NULL;
+}
 
 void s_semPost(uint64_t id, uint64_t *resp){
     printString("sem post", 8);
     printNewLine();
     semPrintAll();
     //aumenta en uno el cont del semaforo
-    
-    sem_node * iterator = first;
 
-    while (iterator != NULL){
-        if(iterator->semaphore->id == id){
-            iterator->semaphore->cont++;
-            unlockFirstBlockedProc(iterator->semaphore);
-            *resp = 0;
-            semPrintAll();
-            return;
-        }
-        iterator = iterator->next;
+    sem * sem = getSem(id);
+
+    if(sem == NULL){
+        printString("no sem found", 12);
+        printNewLine();
+        *resp = -1;
+        semPrintAll();
+        return;
     }
 
-    *resp = -1;   // no se encontro un semaforo con ese nombre
+    sem->cont++;
+    unlockFirstBlockedProc(sem);
+    *resp = 0;
     semPrintAll();
     return;
 }
@@ -370,6 +418,9 @@ void semPrint(sem* s){
 }
 
 void semPrintProcs(prc_node * n){
+    if(n == NULL){
+        printString("NULL", 4);
+    }
     while (n != NULL){
         printString("(", 1);
         printDec(n->pid);
