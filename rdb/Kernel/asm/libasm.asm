@@ -134,12 +134,13 @@ _sti_set_rsp_and_halt:
     ret
 
 
-locked:                      ; The lock variable. 1 = locked, 0 = unlocked.
-     dd      0
+
+
+; The lock variable. 1 = locked, 0 = unlocked.
 
 spin_lock:
     mov     rax, 1          ; Set the EAX register to 1.
-    xchg    rax, rdi        ; Atomically swap the EAX register with
+    xchg    rax, [rdi]      ; Atomically swap the EAX register with
                             ;  the lock variable.
                             ; This will always store 1 to the lock, leaving
                             ;  the previous value in the EAX register.
@@ -156,7 +157,7 @@ spin_lock:
 
 spin_unlock:
      xor     rax, rax       ; Set the EAX register to 0.
-     xchg    rax, rdi       ; Atomically swap the EAX register with
+     xchg    rax, [rdi]       ; Atomically swap the EAX register with
                             ;  the lock variable.
      ret                    ; The lock has been released.
 

@@ -1,50 +1,34 @@
 #include <b.h>
 #include <c.h>
- 
+
+
 void start_b(void){
 
-    // uint64_t * counter = (void*)0xE00000;
-
-    void (*c)(void);
-    c = &start_c;
-    createProcess(c, 2, 0, "c",0,0);
+    void (*c1)(void);
+    c1 = &start_c;
+    createProcess(c1, 2, 0, "c",0,0);
     
-    //while(1);
-
-    // int i = 0;
-    // while(1){
-    //     if(i%100 == 0){
-    //         printf("B is counting: %d\n", i);
-    //     }
-    //     i++;
-    // }
-   
+    int *variable = (void*)0xF00000;
+    int old;
     sem_info * si = semOpen("pepito", 1);
-//     // int i = 0;
-//     // while( i < 10){
-    semWait(si);
+    int i = 0;
+    while( i < 1000){
+        semWait(si);
 
-    ///wait(2);
-//     //     *counter = *counter + 1;
-//     //     printf("B count up\n");
-    semPost(si);
-//     //     i++;
-//     // }
+        old = *variable;
+        old++;
+        *variable = old;
+
+        i++;
+        semPost(si);
+    }
+
     printf("holaaaa\n");
-
 
     semClose(si);
 
-//     semUnlink("pepito");
+    printf("B final counter: %d\n", *variable);
 
-//     //printf("sem id after unlink: %d\n", sem);
-
-//     printf("B final counter: %d\n", *counter);
-
-//     // printf("semOpen\n");
-//     // int sem2 = semOpen("juan", 1);
-
-//    // while(1);
     wait(1);
     printf("end\n");
 }

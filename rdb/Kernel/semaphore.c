@@ -85,7 +85,6 @@ void addProcessToSem(sem * sem, uint64_t pid){
     }
 }
 
-
 void RemoveProcessFromSem(sem * sem, uint64_t pid){
     prc_node * prev = NULL;
     prc_node * iterator = sem->procs;
@@ -230,11 +229,11 @@ void s_semUnlink(char *name, uint64_t *resp){
 
 
 void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
-    _cli();
-    printString("sem wait: ", 10);
-    printDec( pid );
-    printNewLine();
-    semPrintAll();
+    //printString("sem wait: ", 10);
+    //printDec( pid );
+    //printNewLine();
+    //semPrintAll();
+
     //se fijan si el cont de un semaforo es superior a 0
         //si no lo es el proceso que llamo se bloquea
         //si lo es se decrementa en 1 el cont
@@ -248,6 +247,7 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
     //     retornar
     // spinunlock()
     // }
+
 
     sem * sem = getSem(id);
     if(sem == NULL){
@@ -264,56 +264,20 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
         *resp = -2;
         return;
     }
-
+    
+    spin_lock(&(sem->lock));
     if(sem->cont == 0){
         prc->is_blocked = 1;
         changeState(pid, BLOCKED_BY_SEM);
-        _irq00Handler();
+        spin_unlock(&(sem->lock));
+        _sti_and_halt();
     }
-
     sem->cont--;
+    spin_unlock(&(sem->lock));
 
     *resp = 0;
-    semPrintAll();
+    //semPrintAll();
     return;
-
-    // sem_node * iterator = first;
-    // prc_node * prc_iterator;
-    // int finished = 0;
-    // while (iterator != NULL){
-    //     if(iterator->semaphore->id == id){
-    //         //spin_lock(iterator->semaphore->lock);
-    //             if(iterator->semaphore->cont == 0){
-    //                 //spin_unlock(iterator->semaphore->lock);
-    //                 prc_iterator = iterator->semaphore->procs;
-    //                 while(prc_iterator != NULL && !finished){
-    //                     if(prc_iterator->pid == pid){
-    //                         prc_iterator->is_blocked = 1;
-    //                         changeState(pid, BLOCKED_BY_SEM);
-    //                         _irq00Handler(); 
-    //                         printString("asdasd", 6);
-    //                         printNewLine();
-    //                         iterator->semaphore->cont--;    
-    //                         finished = 1;  
-    //                     }
-    //                     prc_iterator = prc_iterator->next;
-    //                 }
-    //                 semPrintAll();
-    //             }else{
-    //                 iterator->semaphore->cont--;
-    //                 //spin_unlock(iterator->semaphore->lock); 
-    //                 semPrintAll();   
-    //             }     
-    //         _sti();    
-    //         *resp = 0;
-    //         return;
-    //     }
-    //     iterator = iterator->next;
-    // }
-    // _sti(); 
-    // *resp = -1;   // no se encontro un semaforo con ese nombre
-    // semPrintAll();
-    // return;  
 
 }
 
@@ -341,10 +305,10 @@ prc_node * getProc(sem * sem, uint64_t pid){
 }
 
 void s_semPost(uint64_t id, uint64_t *resp){
-    printString("sem post id: ", 13);
-	printDec( id );
-    printNewLine();
-    semPrintAll();
+    //printString("sem post id: ", 13);
+	//printDec( id );
+    //printNewLine();
+    //semPrintAll();
     //aumenta en uno el cont del semaforo
 
     sem * sem = getSem(id);
@@ -359,8 +323,8 @@ void s_semPost(uint64_t id, uint64_t *resp){
 
     sem->cont++;
     unlockFirstBlockedProc(sem);
-    *resp = 2;
-    semPrintAll();
+    *resp = 0;
+    //semPrintAll();
     return;
 }
 
@@ -370,9 +334,9 @@ void unlockFirstBlockedProc(sem * semaphore){
         if(iterator->is_blocked == 1){
             iterator->is_blocked = 0;
             changeState(iterator->pid, READY);
-            printString("READY: ", 7);
-	        printDec( iterator->pid );
-            printNewLine();
+            //printString("READY: ", 7);
+	        //printDec( iterator->pid );
+            //printNewLine();
             return;
         }
         iterator = iterator->next;

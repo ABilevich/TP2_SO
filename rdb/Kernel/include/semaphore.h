@@ -43,15 +43,17 @@ int strcmp(const char *s1, const char *s2);
 void semPrintAll();
 void semPrint(sem* s);
 void semPrintProcs(prc_node* n);
-void spin_unlock(uint64_t lock);
-void spin_lock(uint64_t lock);
+
+void spin_unlock(uint64_t * lock);
+void spin_lock(uint64_t * lock);
 
 sem * getSem(uint64_t id);
 prc_node * getProc(sem * sem, uint64_t pid);
 
 void unlockFirstBlockedProc(sem * semaphore);
 
-void _irq00Handler();
+void _irq00HandlerFake();
+void _sti_and_halt();
 void _cli();
 void _sti();
 

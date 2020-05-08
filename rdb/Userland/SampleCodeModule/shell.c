@@ -63,6 +63,14 @@ void startShell(){
     b = &start_b;
     createProcess(b, 2, 0, "b",0,0);
 
+    void (*b1)(void);
+    b1 = &start_b;
+    createProcess(b1, 2, 0, "b1",0,0);
+
+    void (*b2)(void);
+    b2 = &start_b;
+    createProcess(b2, 2, 0, "b2",0,0);
+
     setCursor(0, getScreenHeight());
     user_writing_color = USER_COLOR;
     setBackgroundColor(USER_BACKGROUND_COLOR);

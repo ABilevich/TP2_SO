@@ -5,6 +5,7 @@ GLOBAL picSlaveMask
 GLOBAL haltcpu
 GLOBAL _hlt
 
+GLOBAL _irq00HandlerFake
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
 GLOBAL _irq02Handler
@@ -142,6 +143,21 @@ _irq00Handler:
 
 	popState
 	iretq
+
+
+_irq00HandlerFake:
+	pushState
+
+	mov rdi, rsp ; pasaje de parametro
+	call int_20
+	mov rsp, rax
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
+
+	popState
+	ret
 
 ;Keyboard
 _irq01Handler:
