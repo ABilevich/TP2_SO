@@ -1,13 +1,4 @@
 make clean
-make all
-make clean
-make all
-make clean
-make all
-make clean
-make all
-cd Toolchain/
-make clean
 cd ..
 make clean
 cd Toolchain/
@@ -498,3 +489,12 @@ ifconfig | grep inet
 ifconfig
 q
 exit
+ls
+cd 
+ls
+vim .dckr_gdb
+vim .dckr_gdb.sh
+ls la
+ls -la
+vim .dckr_gdb
+sed -i -e 's/\r$//' .dckr_gdb
