@@ -15,10 +15,9 @@ void * scheduler(void * old_rsp){
     }
 
     if((uint64_t)old_rsp >= HEAP_START){
-        printString(" old: ", 6);
-        print64Hex( ( (uint64_t)old_rsp) );
+        //printString(" old: ", 6);
+        //print64Hex( ( (uint64_t)old_rsp) );
         curr->pcb->rsp = old_rsp;
-
     }else{
         printString("ESTO SOLO UNA VEZ", 17);
     }
@@ -28,8 +27,8 @@ void * scheduler(void * old_rsp){
         curr->pcb->p_counter = curr->pcb->priority;
 
         curr = findNextReady();
-        printString("new: ", 5);
-        print64Hex( ( (uint64_t)curr->pcb->rsp) );
+        //printString("new: ", 5);
+        //print64Hex( ( (uint64_t)curr->pcb->rsp) );
     }
 
     void * new_rsp = curr->pcb->rsp;

@@ -1,4 +1,4 @@
-target remote 172.17.15.177:1234
+target remote 192.168.1.3:1234
 add-symbol-file Kernel/kernel.elf 0x100000
 add-symbol-file Userland/0000-sampleCodeModule.elf 0x400000
 

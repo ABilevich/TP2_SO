@@ -30,7 +30,6 @@ void start_b(void){
     }
 
     semClose(sem);
-
     semUnlink("pepito");
 
     //printf("sem id after unlink: %d\n", sem);

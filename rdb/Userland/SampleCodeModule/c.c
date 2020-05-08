@@ -17,9 +17,8 @@ void start_c(void){
     int i = 0;
     while( i < 10){
         semWait(sem);
-        
         *counter = *counter - 1;
-         printf("C count down\n");
+        printf("C count down\n");
         semPost(sem);
         i++;
     }
