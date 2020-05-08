@@ -42,7 +42,7 @@ void normalKey(uint8_t aux) { buffer[buffer_size++] = regular_f[aux]; }
 void shiftedKey(uint8_t aux) { buffer[buffer_size++] = with_shift_f[aux]; }
 
 void keyboard_handler(void) {
-  printString("laviejadegabipotrisima", 22);
+  //printString("test1", 5);
   uint8_t aux = kbGet();
   int spec = special_key(aux);
 
@@ -76,7 +76,7 @@ void keyboard_handler(void) {
     }else{
       keyHandler[SHIFTED][0](aux);
     }
-    unlockReader(0);
+    //unlockReader(0);
 
   }
 }
@@ -113,8 +113,8 @@ int key_read(void * buff, uint64_t input_id) {
   //dependiendo del fd, pedirle a el driver de pipes el actual_buffer_size y actual_buffer
 
   if ( *actual_buffer_size <= 0){
-    blockCurrentProcessByRead();
-    //return 1;
+    //blockCurrentProcessByRead();
+    return 1;
   }
   char ans = actual_buffer[0]; // Devuelvo el primer char
   (*actual_buffer_size)--;

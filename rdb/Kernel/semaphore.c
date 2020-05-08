@@ -228,6 +228,7 @@ void s_semUnlink(char *name, uint64_t *resp){
 
 
 void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
+    _cli();
     printString("sem wait: ", 10);
     printDec( pid );
     printNewLine();
@@ -259,6 +260,8 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
                             prc_iterator->is_blocked = 1;
                             changeState(pid, BLOCKED_BY_SEM);
                             _irq00Handler(); 
+                            printString("asdasd", 6);
+                            printNewLine();
                             iterator->semaphore->cont--; 
                         }
                     }
@@ -268,13 +271,13 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
                     //spin_unlock(iterator->semaphore->lock); 
                     semPrintAll();   
                 }     
-                   
+            _sti();    
             *resp = 0;
             return;
         }
         iterator = iterator->next;
     }
-
+    _sti(); 
     *resp = -1;   // no se encontro un semaforo con ese nombre
     semPrintAll();
     return;  
@@ -312,6 +315,9 @@ void unlockFirstBlockedProc(sem * semaphore){
         if(iterator->is_blocked == 1){
             iterator->is_blocked = 0;
             changeState(iterator->pid, READY);
+            printString("READY: ", 7);
+	        printDec( iterator->pid );
+            printNewLine();
             return;
         }
         iterator = iterator->next;

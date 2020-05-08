@@ -88,10 +88,10 @@ int read(char *buffer, unsigned int buff_size) {
 	//printf("input_id = %d\n", input_id);
 	while (i < buff_size && !finished) { // Mientras no se llene el buffer
 		char c;
-		//while (_sys_read_write(0,(void *) &c,(void*)input_id,0,0) != 0); // Mientras no consiga el caracter sigo pidiendolo.	
-		printf("asd1\n");
-		_sys_read_write(0,(void *) &c,(void*)input_id,0,0);
-		printf("asd2\n");
+		while (_sys_read_write(0,(void *) &c,(void*)input_id,0,0) != 0); // Mientras no consiga el caracter sigo pidiendolo.	
+		// printf("asd1\n");
+		// _sys_read_write(0,(void *) &c,(void*)input_id,0,0);
+		// printf("asd2\n");
 		buffer[i++] = c;
 		if (c == '\n')
 			finished = 1;

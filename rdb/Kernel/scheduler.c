@@ -9,13 +9,18 @@ s_node * curr;
 s_node * aux_node = NULL;
 
 void * scheduler(void * old_rsp){
-
+    
     if(started == 0){
         return old_rsp;
     }
 
-    if((uint64_t)old_rsp > 0x400000){
+    if((uint64_t)old_rsp >= HEAP_START){
+        printString(" old: ", 6);
+        print64Hex( ( (uint64_t)old_rsp) );
         curr->pcb->rsp = old_rsp;
+
+    }else{
+        printString("ESTO SOLO UNA VEZ", 17);
     }
 
     curr->pcb->p_counter--;
@@ -23,6 +28,8 @@ void * scheduler(void * old_rsp){
         curr->pcb->p_counter = curr->pcb->priority;
 
         curr = findNextReady();
+        printString("new: ", 5);
+        print64Hex( ( (uint64_t)curr->pcb->rsp) );
     }
 
     void * new_rsp = curr->pcb->rsp;
@@ -46,9 +53,9 @@ s_node * findNextReady(){
         aux = aux->next;
         counter++;
     }
-    // printString("laviejadegabipotrisimo2", 22);
+    // printString("test2", 5);
     // _sti_and_halt();
-    // printString("laviejadegabipotrisimy3", 22);
+    // printString("test3", 5);
     return NULL;
 }
 

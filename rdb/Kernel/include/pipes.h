@@ -1,5 +1,5 @@
-#ifndef PIPES
-#define PIPES
+#ifndef _PIPES_H
+#define _PIPES_H
 
 #include <stdint.h>
 #include <stddef.h>

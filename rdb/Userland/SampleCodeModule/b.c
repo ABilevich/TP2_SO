@@ -3,7 +3,7 @@
  
 void start_b(void){
 
-    uint64_t * counter = (void*)0xF000000;
+    uint64_t * counter = (void*)0xE00000;
 
     void (*c)(void);
     c = &start_c;
@@ -18,18 +18,14 @@ void start_b(void){
     //     }
     //     i++;
     // }
-
-
    
     int sem = semOpen("pepito", 1);
     int i = 0;
     while( i < 10){
-        //semWait(sem);
-        printf("B ");
+        semWait(sem);
         *counter = *counter + 1;
-
-        //semPost(sem);
-        printf("Repeat\n");
+        printf("B count up\n");
+        semPost(sem);
         i++;
     }
 
@@ -39,12 +35,11 @@ void start_b(void){
 
     //printf("sem id after unlink: %d\n", sem);
 
-    printf("B counter: %d\n", *counter);
+    printf("B final counter: %d\n", *counter);
 
     // printf("semOpen\n");
     // int sem2 = semOpen("juan", 1);
 
-    while(1);
+   // while(1);
     printf("end\n");  
-
 }

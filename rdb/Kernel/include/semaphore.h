@@ -47,4 +47,9 @@ void spin_unlock(uint64_t lock);
 void spin_lock(uint64_t lock);
 
 void unlockFirstBlockedProc(sem * semaphore);
+
+void _irq00Handler();
+void _cli();
+void _sti();
+
 #endif

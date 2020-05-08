@@ -1,5 +1,5 @@
-#ifndef _SCHEDUL
-#define _SCHEDUL
+#ifndef _SCHEDUL_H
+#define _SCHEDUL_H
 
 #include <stdint.h>
 #include <stddef.h>
