@@ -61,7 +61,7 @@ void startShell(){
     createProcess(b, 2, 0, "b",0,0);
 
     setCursor(0,0);
-    welcomeMessage();
+    //welcomeMessage();
 
     setCursor(0, getScreenHeight());
     user_writing_color = USER_COLOR;

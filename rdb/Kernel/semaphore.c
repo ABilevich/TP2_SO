@@ -249,21 +249,24 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp){
 
     sem_node * iterator = first;
     prc_node * prc_iterator;
+    int finished = 0;
     while (iterator != NULL){
         if(iterator->semaphore->id == id){
             //spin_lock(iterator->semaphore->lock);
                 if(iterator->semaphore->cont == 0){
                     //spin_unlock(iterator->semaphore->lock);
                     prc_iterator = iterator->semaphore->procs;
-                    while(prc_iterator != NULL){
+                    while(prc_iterator != NULL && !finished){
                         if(prc_iterator->pid == pid){
                             prc_iterator->is_blocked = 1;
                             changeState(pid, BLOCKED_BY_SEM);
                             _irq00Handler(); 
                             printString("asdasd", 6);
                             printNewLine();
-                            iterator->semaphore->cont--; 
+                            iterator->semaphore->cont--;    
+                            finished = 1;  
                         }
+                        prc_iterator = prc_iterator->next;
                     }
                     semPrintAll();
                 }else{
