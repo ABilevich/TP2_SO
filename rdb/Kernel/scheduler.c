@@ -46,9 +46,9 @@ s_node * findNextReady(){
         aux = aux->next;
         counter++;
     }
-    printString("laviejadegabipotrisimo2", 22);
-    
-    printString("laviejadegabipotrisimy3", 22);
+    // printString("laviejadegabipotrisimo2", 22);
+    // _sti_and_halt();
+    // printString("laviejadegabipotrisimy3", 22);
     return NULL;
 }
 
