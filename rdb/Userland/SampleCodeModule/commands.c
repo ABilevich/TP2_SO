@@ -304,8 +304,8 @@ void ps(){
     printAllProcessInfo();
 }
 
-void run(void (*func)(void), char * name, char fg){
-    createProcess(func, 1, fg, name,0,0);
+void run(void (*func)(void), char * name, char fg, uint64_t input_id, uint64_t output_id){
+    createProcess(func, 1, fg, name,input_id,output_id);
 }
 
 void nice(uint64_t pid, uint64_t priority){

@@ -1,7 +1,7 @@
 #include <pipes.h>
 
 
-uint64_t next_pipe_id = 1;
+uint64_t next_pipe_id = 0;
 pipe_node * current = NULL;
 uint64_t total_pipes = 0;
 
@@ -21,90 +21,72 @@ int sys_pipe(void * option, void * arg1, void * arg2, void * arg3, void * arg4) 
 
 void p_openPipe(char * name, uint64_t * resp_pipe_id){
     if(current == NULL){
-        current = p_createPipe(name, NULL, NULL);
-        current->next = current;
-        current->prev = current;
-        current->proc_count++;
-        total_pipes++;
+        pipeInit(name);
+        pipePrintAll();
         return;
-    }else{
-        pipe_node * iterator = current;
-        int i = 0;
-        while(i < total_pipes){
-            if(strcmp2(iterator->pipe->name,name) == 0){
-                *resp_pipe_id = iterator->pipe->id; 
-                iterator->proc_count++;
-                return;
-            }
-            i++;
-            iterator = iterator->next;
-        }
-        pipe_node * aux = p_createPipe(name,iterator->prev,iterator->next);
-        aux->proc_count++;
-        *resp_pipe_id = aux->pipe->id;
     }
-    
+    pipe_node * iterator = current;
+    int i = 0;
+    while(i < total_pipes){
+        if(name != NULL && strcmp2(iterator->pipe->name,name) == 0){
+            *resp_pipe_id = iterator->pipe->id; 
+            iterator->pipe->proc_count++;
+            pipePrintAll();
+            return;
+        }
+        i++;
+        iterator = iterator->next;
+    }
+    pipe_node * aux = p_createPipe(name,iterator->prev,iterator->next);
+    aux->pipe->proc_count++;
+    *resp_pipe_id = aux->pipe->id;   
+    pipePrintAll();
 }
 
 pipe_node * p_createPipe(char * name, pipe_node * prev, pipe_node * next){
     
     pipe * p;
     malloc(sizeof(pipe), (void **)&p);
-
     p->name = name;
     p->id = next_pipe_id++;
-    p->is_open = 1;
     p->buff_taken_size = 0;
-
+    p->proc_count = 0;
 
     pipe_node * n;
     malloc(sizeof(pipe_node), (void **)&n);
     n->prev = prev;
     n->next = next;
     n->pipe = p;
-    n->proc_count = 0;
     prev->next = n;
     next->prev = n;
 
-    return n;
+    total_pipes++;
 
+    return n;
 }
 
 void p_closePipe(uint64_t id, uint64_t * resp){
+    if(id == 0){
+        *resp = 2; 
+        return;
+    }
     pipe_node * iterator = current;
     for(int i = 0 ; i < total_pipes; i++){
         if(iterator->pipe->id == id){
-            iterator->proc_count--;
-            
-            if(iterator->proc_count == 0){
+            iterator->pipe->proc_count--;
+            if(iterator->pipe->proc_count == 0){
                 p_deletePipe(id);
-                *resp = 0;
-                return;
-            }
-            if(iterator->pipe->is_open){
-                iterator->pipe->is_open = 0;
             }
             *resp = 0;
             return;
         }
     }
-    *resp = -1;
+    *resp = 1;
     return;
 }
 
 int p_deletePipe(uint64_t id){
     pipe_node * iterator = current;
-
-    if(total_pipes == 0){
-        return -1;
-    }
-
-    if(total_pipes == 1){
-        free(iterator->pipe);
-        free(iterator);
-        current = NULL;
-        return 0;
-    }
 
     for(int i = 0 ; i < total_pipes; i++){
         if(iterator->pipe->id == id){
@@ -116,7 +98,7 @@ int p_deletePipe(uint64_t id){
             return 0;
         }
     }
-    return -1;
+    return 1;
 }
 
 pipe * p_getPipe(uint64_t id){
@@ -129,6 +111,13 @@ pipe * p_getPipe(uint64_t id){
     return NULL;
 }
 
+void pipeInit(char * name){
+    current = p_createPipe(name, NULL, NULL);
+    current->next = current;
+    current->prev = current;
+    current->pipe->proc_count++;
+}
+
 int strcmp2(const char *s1, const char *s2) {
     unsigned char c1, c2;
     while ((c1 = *s1++) == (c2 = *s2++)) {
@@ -136,4 +125,37 @@ int strcmp2(const char *s1, const char *s2) {
             return 0;
     }
     return c1 - c2;
+}
+
+void pipePrintAll(){
+    if(current == NULL){
+        printString("no pipes", 13);
+        printNewLine();
+        return;
+    }
+    printString("/--------------------------PIPES------------------------/", 57);
+    printNewLine();
+    pipe_node * iterator = current;
+    for(int i = 0 ; i < total_pipes; i++){
+        pipePrint(iterator->pipe);
+        iterator = iterator->next;
+    }
+    printString("/-------------------------------------------------------/", 57);
+    printNewLine();
+}
+
+void pipePrint(pipe* p){
+    printString("name: ", 6);
+    if(p->name != NULL){
+        printString(p->name, 20);
+    }else{
+        printString("NULL", 4);
+    }
+    printString("  |  ", 5);
+    printString("id: ", 4);
+	printDec( p->id );
+    printString("  |  ", 5);
+    printString("cont: ", 6);
+	printDec( p->proc_count );
+    printNewLine();
 }

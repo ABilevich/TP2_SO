@@ -31,4 +31,5 @@ void start_b(void){
 
     wait(1);
     printf("end\n");
+
 }

@@ -25,4 +25,5 @@ void start_c(void){
 
     wait(1);
     printf("end\n");
+
 }

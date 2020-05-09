@@ -5,7 +5,7 @@
 void _sti_and_halt(void);
 
 int main() {
-	
+	openPipe("stdpipe");
 	//startShell();
 	void (*shell)(void);
     shell = &startShell;

@@ -17,7 +17,7 @@ void p_kill(uint64_t pid);
 void p_block(uint64_t pid);
 void ps();
 void mem();
-void run(void (*func)(void), char * name, char fg);
+void run(void (*func)(void), char * name, char fg, uint64_t input_id, uint64_t output_id);
 void nice(uint64_t pid, uint64_t priority);
 void chstate(uint64_t pid, char state);
 

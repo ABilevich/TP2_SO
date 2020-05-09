@@ -2,10 +2,8 @@
 #include <naiveConsole.h>
 #include <screen.h>
 
-#define BUFFER_SIZE 128
-
-static char buffer[BUFFER_SIZE];
-static uint64_t buffer_size;
+char * buffer = NULL;
+uint64_t * buffer_size;
 
 #define SHIFT_IN_KEY 
 
@@ -38,10 +36,15 @@ static int SPCL_CODES[] = {BACKS, CTRL, SHIFT_IN, SHIFT_IN, ALT, CAPS, F1, F2, A
 static func keyHandler[2][2] = {{normalKey, shiftedKey}, //1ra posicion SHIFT, 2da posicion CAPSLOCK
                                 {shiftedKey, normalKey}};
 
-void normalKey(uint8_t aux) { buffer[buffer_size++] = regular_f[aux]; }
-void shiftedKey(uint8_t aux) { buffer[buffer_size++] = with_shift_f[aux]; }
+void normalKey(uint8_t aux) {  buffer[(*buffer_size)++] = regular_f[aux]; }
+void shiftedKey(uint8_t aux) {  buffer[(*buffer_size)++] = with_shift_f[aux]; }
 
 void keyboard_handler(void) {
+
+  if(buffer == NULL){
+    bufferInit();
+  }
+
   //printString("test1", 5);
   uint8_t aux = kbGet();
   int spec = special_key(aux);
@@ -62,7 +65,7 @@ void keyboard_handler(void) {
 
   if (spec < 0) {
     if (spec != SHIFT_IN && spec != SHIFT_OUT && spec != CAPS) {
-      buffer[buffer_size++] = spec;
+      buffer[(*buffer_size)++] = spec;
     }
   }
 
@@ -91,37 +94,14 @@ int special_key(uint8_t key) {
   return 0;
 }
 
+void bufferInit(){
+  pipe* aux = p_getPipe(0);
+	buffer_size = &(aux->buff_taken_size);
+	buffer = aux->buff;
+}
+
 // Returns 0 if something has been read
 int key_read(void * buff, uint64_t input_id) {
-
-  uint64_t * actual_buffer_size;
-  char * actual_buffer;
-
-  if(input_id == 0){
-    actual_buffer_size = &buffer_size;
-    actual_buffer = buffer;
-  }else{
-    pipe* aux = p_getPipe(input_id);
-    if(aux == NULL){
-      return 2; 
-    }
-    actual_buffer_size = &(aux->buff_taken_size);
-    actual_buffer = aux->buff;
-  }
-  // actual_buffer_size = p_GetBuferSize(fd);
-  // actual_buffer = p_getBuffer(fd);
-  //dependiendo del fd, pedirle a el driver de pipes el actual_buffer_size y actual_buffer
-
-  if ( *actual_buffer_size <= 0){
-    //blockCurrentProcessByRead();
-    return 1;
-  }
-  char ans = actual_buffer[0]; // Devuelvo el primer char
-  (*actual_buffer_size)--;
-  for (int j = 0; j < *actual_buffer_size; j++) {
-      actual_buffer[j] = actual_buffer[j+1]; // Muevo el buffer restante
-  }
-  * (char *)buff = ans;
   return 0;
 }
 

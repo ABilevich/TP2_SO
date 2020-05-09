@@ -76,7 +76,6 @@ int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, 
     new_pcb->fg = fg;
     new_pcb->input_id = input_id;
     new_pcb->output_id = output_id;
-    new_pcb->fg = fg;
     new_pcb->state = READY;
 
     next_pid++;

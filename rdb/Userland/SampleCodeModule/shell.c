@@ -7,11 +7,18 @@
 #define BUFFER_SIZE 2000
 #define COMMANDS_BUFFER_SIZE 50
 #define LONGEST_PARAM 20
-#define MAX_PARAMS 2
+#define MAX_PARAMS 3
 #define STUCKED_BEEP_FREQ 230
 
-#define USER_COLOR 0xfff4a3;
+#define FG 1
+#define BG 0
+#define STDIN 0
+#define STDOUT 0
+
+
+#define USER_COLOR 0xfff4a3
 #define USER_BACKGROUND_COLOR 0x000000
+
 
 #define TAB '\t'
 
@@ -59,17 +66,17 @@ void startShell(){
     setCursor(0,0);
     welcomeMessage();
 
-    void (*b)(void);
-    b = &start_b;
-    createProcess(b, 2, 0, "b",0,0);
+    // void (*b)(void);
+    // b = &start_b;
+    // createProcess(b, 2, 0, "b",0,0);
 
-    void (*b1)(void);
-    b1 = &start_b;
-    createProcess(b1, 2, 0, "b1",0,0);
+    // void (*b1)(void);
+    // b1 = &start_b;
+    // createProcess(b1, 2, 0, "b1",0,0);
 
-    void (*b2)(void);
-    b2 = &start_b;
-    createProcess(b2, 2, 0, "b2",0,0);
+    // void (*b2)(void);
+    // b2 = &start_b;
+    // createProcess(b2, 2, 0, "b2",0,0);
 
     setCursor(0, getScreenHeight());
     user_writing_color = USER_COLOR;
@@ -278,11 +285,11 @@ static void instructionHandler() {
                 else if (strcmp(cmd, "run") == 0){
                     int i = getRunableIndex(params[0]);
                     if(i == -1){
-                        printf("run ERROR: no runable with that tame found!\n");
+                        printf("run ERROR: no runable with that name found!\n");
                     }else{
                         fn func = runable_func[i];
                         char * name = runable_name[i];
-                        run(func, name, 1);
+                        run(func, name, FG, STDIN, STDOUT);
                     }
                 }    
                 else
@@ -304,20 +311,49 @@ static void instructionHandler() {
                 else if (strcmp(cmd, "run") == 0){
                     int i = getRunableIndex(params[0]);
                     if(i == -1){
-                        printf("run ERROR: no runable with that tame found!\n");
+                        printf("run ERROR: no runable with that name found!\n");
                     }else{
                         fn func = runable_func[i];
                         char * name = runable_name[i];
-                        char fg = strcmp(params[1], "&") == 0 ? 0 : 1;
-                        run(func, name, fg);
+                        char fg = strcmp(params[1], "&") == 0 ? BG : FG;
+                        
+                        run(func, name, fg,STDIN,STDOUT);
                     }
                 }  
                 else
                     executed = 1;
                 break;
+            case 3:
+                if (strcmp(cmd, "run") == 0){
+                    if(strcmp(params[1], "|") != 0){
+                        printf("run ERROR: unknown symbol!\n");
+                    }else{
+                        int i1 = getRunableIndex(params[0]);
+                        int i2 = getRunableIndex(params[2]);
+                        if(i1 == -1){
+                            printf("run ERROR: no runable with name: %s found!\n", params[0]);
+                        }else if (i2 == -1){
+                            printf("run ERROR: no runable with name: %s found!\n", params[2]);
+                        }else{
+                            fn func1 = runable_func[i1];
+                            char * name1 = runable_name[i1];
+                            fn func2 = runable_func[i2];
+                            char * name2 = runable_name[i2];
+
+                            pipe_info * pipe = openPipe(NULL);
+                            printf("pipe id: %d\n", pipe->id);
+                            run(func1, name1,BG,STDIN,pipe->id);
+                            run(func2, name2,BG,pipe->id,STDOUT);
+                            ps();
+                        }
+                    }   
+                }else{
+                    executed = 1;
+                }
+                break;
         }
 
-         if((res == -1 || executed != 0) && inputBuffer[0] != 0) {
+        if((res == -1 || executed != 0) && inputBuffer[0] != 0) {
             printError("Command not found.\n");
         }
 }

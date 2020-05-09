@@ -568,15 +568,19 @@ int semPost(sem_info * si){
 
 //----------------PIPES---------------------------------
 
-int openPipe(char * name){
-	int resp;
+pipe_info * openPipe(char * name){
+	uint64_t resp;
+	pipe_info * aux = malloc(sizeof(pipe_info));
+	aux->id = resp;
 	_sys_pipe(0, name, (void*)&resp,0,0);
-	return resp;
+	printf("pipe id: %d\n", resp);
+	return 	aux;
 }
 
-int closePipe(uint64_t id){
+int closePipe(pipe_info * pipe){
 	int resp;
-	_sys_pipe((void *) 1, (void *) id, (void *) &resp,0,0);
+	_sys_pipe((void *) 1, (void *) pipe->id, (void *) &resp,0,0);
+	free(pipe);
 	return resp;
 }
 

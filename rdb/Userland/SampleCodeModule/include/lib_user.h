@@ -26,6 +26,10 @@ typedef struct sem_info {
     uint64_t id;
 } sem_info;
 
+typedef struct pipe_info {
+    uint64_t id;
+} pipe_info;
+
 // ----------- Sys Calls ------------
 int _sys_system(void * arg1, void * arg2, void * arg3, void * arg4);
 int _sys_timet(void * arg1, void * arg2, void * arg3);
@@ -132,8 +136,8 @@ int semWait(sem_info * si);
 int semPost(sem_info * si);
 
 //--------------- PIPES ---------------
-int openPipe(char * name);
-int closePipe(uint64_t id);
+pipe_info * openPipe(char * name);
+int closePipe(pipe_info * pipe);
 uint64_t getMyInputId();
 uint64_t getMyOutputId();
 // Importados de naiveConsole

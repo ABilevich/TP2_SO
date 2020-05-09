@@ -358,12 +358,16 @@ void semPrintAll(){
         printNewLine();
         return;
     }
+    printString("/------------------------SEMAPHORES---------------------/", 57);
+    printNewLine();
     sem_node * iterator = first;
     while (iterator != NULL)
     {
         semPrint(iterator->semaphore);
         iterator = iterator->next;
     }
+    printString("/-------------------------------------------------------/", 57);
+    printNewLine();
 }
 
 void semPrint(sem* s){
