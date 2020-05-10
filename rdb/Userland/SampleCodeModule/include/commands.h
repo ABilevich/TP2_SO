@@ -2,14 +2,14 @@
 #define _CMDS_H
 
 #include <aracnoid.h>
-void startAracnoid(gameState * save_file, int * saved);
-void printUserManual(void); 
+void startAracnoid(gameState *save_file, int *saved);
+void printUserManual(void);
 void getLocalTime(void);
 void printRegistersInfo(void);
 void clear(void);
-void printMemoryStatus(long int offset); 
-void test(char * option);
-void command_set(char * option, char * color);
+void printMemoryStatus(long int offset);
+void test(char *option);
+void command_set(char *option, char *color);
 void testDivException(void);
 void testInvOpCode(void);
 
@@ -17,9 +17,11 @@ void p_kill(uint64_t pid);
 void p_block(uint64_t pid);
 void ps();
 void mem();
-void run(void (*func)(void), char * name, char fg, uint64_t input_id, uint64_t output_id);
+void run(void (*func)(void), char *name, char fg, uint64_t input_id, uint64_t output_id);
 void nice(uint64_t pid, uint64_t priority);
 void chstate(uint64_t pid, char state);
+void sem();
+void pipe();
 
 void testMem(void);
 void testMem1(void);

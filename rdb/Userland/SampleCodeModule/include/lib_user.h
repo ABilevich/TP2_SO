@@ -11,41 +11,85 @@
 
 #define PIT_FREQUENCY 400
 
-enum SPECIAL_KEYS {SHIFT_IN = -20, SHIFT_OUT, CAPS, BACKS, ENTER, ESC,CTRL, ALT,F1, F2, ARROW_UP, ARROW_LEFT,ARROW_RIGHT, ARROW_DOWN, INS, DEL};
-enum REG_POS {RAX = 0, RBX, RCX, RDX, RBP, RDI, RSI, R8, R9, R10, R11, R12, R13, R14, R15, RIP, TOTAL_REGS};
-enum states {READY = 0, BLOCKED};
+enum SPECIAL_KEYS
+{
+    SHIFT_IN = -20,
+    SHIFT_OUT,
+    CAPS,
+    BACKS,
+    ENTER,
+    ESC,
+    CTRL,
+    ALT,
+    F1,
+    F2,
+    ARROW_UP,
+    ARROW_LEFT,
+    ARROW_RIGHT,
+    ARROW_DOWN,
+    INS,
+    DEL
+};
+enum REG_POS
+{
+    RAX = 0,
+    RBX,
+    RCX,
+    RDX,
+    RBP,
+    RDI,
+    RSI,
+    R8,
+    R9,
+    R10,
+    R11,
+    R12,
+    R13,
+    R14,
+    R15,
+    RIP,
+    TOTAL_REGS
+};
+enum states
+{
+    READY = 0,
+    BLOCKED
+};
 
 typedef void (*function)(void);
 
-typedef struct point {
+typedef struct point
+{
     int x;
     int y;
 } point;
 
-typedef struct sem_info {
+typedef struct sem_info
+{
     uint64_t id;
 } sem_info;
 
-typedef struct pipe_info {
+typedef struct pipe_info
+{
     uint64_t id;
 } pipe_info;
 
 // ----------- Sys Calls ------------
-int _sys_system(void * arg1, void * arg2, void * arg3, void * arg4);
-int _sys_timet(void * arg1, void * arg2, void * arg3);
-int _sys_rtc(void * arg1);
-int _sys_read_write(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
-int _sys_screen(void * arg1, void * arg2, void * arg3, void * arg4);
-int _sys_video(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
-int _sys_sound(void * arg1, void * arg2, void * arg3);
-int _sys_process(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
-int _sys_semaphore(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
-int _sys_pipe(void * arg1, void * arg2, void * arg3, void * arg4, void * arg5);
+int _sys_system(void *arg1, void *arg2, void *arg3, void *arg4);
+int _sys_timet(void *arg1, void *arg2, void *arg3);
+int _sys_rtc(void *arg1);
+int _sys_read_write(void *arg1, void *arg2, void *arg3, void *arg4, void *arg5);
+int _sys_screen(void *arg1, void *arg2, void *arg3, void *arg4);
+int _sys_video(void *arg1, void *arg2, void *arg3, void *arg4, void *arg5);
+int _sys_sound(void *arg1, void *arg2, void *arg3);
+int _sys_process(void *arg1, void *arg2, void *arg3, void *arg4, void *arg5);
+int _sys_semaphore(void *arg1, void *arg2, void *arg3, void *arg4, void *arg5);
+int _sys_pipe(void *arg1, void *arg2, void *arg3, void *arg4, void *arg5);
 
 // ----------- System ------------
 int getMem(void *pos, uint64_t *mem_buffer, unsigned int dim);
-void * malloc(int size);
-void free(void* por);
+void *malloc(int size);
+void free(void *por);
 int getFreeHeapSize(void);
 int getTotalHeapSize(void);
 int getTakenHeapSize(void);
@@ -59,10 +103,11 @@ void removeTimeFunction(function f);
 void wait(unsigned int millis);
 
 // ----------- RTC ------------
-typedef struct time_struct {
-	int hours;
-	int mins;
-	int secs;
+typedef struct time_struct
+{
+    int hours;
+    int mins;
+    int secs;
 } time_struct;
 time_struct getTime(void);
 
@@ -84,8 +129,8 @@ void showCursor(int status);
 int writeOnScreen(const char *str, unsigned int str_size, int color);
 int putChar(char c);
 int putColoredChar(char c, int color);
-int print(const char *str); 
-int printf(const char* fmt,...);
+int print(const char *str);
+int printf(const char *fmt, ...);
 int printColored(const char *str, int color);
 int printError(const char *str);
 int println(const char *str);
@@ -109,14 +154,14 @@ void beeps(uint32_t freq);
 
 // ----------- Strings ------------
 unsigned int strlen(const char *str);
-int strcmp (const char * s1, const char * s2);
+int strcmp(const char *s1, const char *s2);
 int strncmp(const char *s1, const char *s2, unsigned int n);
-int strcpy (char *dst, const char *src);
-long int strtoint(char* s);
+int strcpy(char *dst, const char *src);
+long int strtoint(char *s);
 
 // ----------- Process ------------
 
-int createProcess(void * rip, uint64_t priority, char fg, char * name, uint64_t input_id, uint64_t output_id);
+int createProcess(void *rip, uint64_t priority, char fg, char *name, uint64_t input_id, uint64_t output_id);
 int changeProcessPriority(uint64_t pid, uint64_t priority);
 int changeProcessState(uint64_t pid, char state);
 int kill(uint64_t pid);
@@ -125,21 +170,20 @@ void printAllProcessInfo();
 int getPid();
 int block(uint64_t pid);
 
-
-
 // ------------ Semaphore ----------
 
-sem_info * semOpen(char *name, uint64_t start_cont);
-int semClose(sem_info * si);
+sem_info *semOpen(char *name, uint64_t start_cont);
+int semClose(sem_info *si);
 int semUnlink(char *name);
-int semWait(sem_info * si);
-int semPost(sem_info * si);
-
+int semWait(sem_info *si);
+int semPost(sem_info *si);
+void PrintAllSemInfo();
 //--------------- PIPES ---------------
-pipe_info * openPipe(char * name);
-int closePipe(pipe_info * pipe);
+pipe_info *openPipe(char *name);
+int closePipe(pipe_info *pipe);
 uint64_t getMyInputId();
 uint64_t getMyOutputId();
+void PrintAllPipeInfo();
 // Importados de naiveConsole
 
 int printDec(uint64_t value);
@@ -148,10 +192,6 @@ int printHex(uint64_t value);
 int print64Hex(uint64_t value);
 int printBin(uint64_t value);
 int printBase(uint64_t value, uint32_t base);
-uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
-
-
-
-
+uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base);
 
 #endif

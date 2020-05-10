@@ -18,6 +18,7 @@
         "video_vm.h": "c",
         "exceptions.h": "c",
         "mm_interface.h": "c",
-        "processes.h": "c"
+        "processes.h": "c",
+        "c.h": "c"
     }
 }
