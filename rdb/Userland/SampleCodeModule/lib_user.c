@@ -561,6 +561,10 @@ int getPid()
 {
 	int resp = 0;
 	_sys_process((void *)6, (void *)&resp, 0, 0, 0);
+	if (resp == -1)
+	{
+		return 0;
+	}
 	return resp;
 }
 
@@ -671,16 +675,21 @@ pipe_info *openPipe(char *name)
 {
 	uint64_t resp;
 	pipe_info *aux = malloc(sizeof(pipe_info));
+	uint64_t pid = getPid();
+	_sys_pipe(0, (void *)name, (void *)pid, (void *)&resp, 0);
 	aux->id = resp;
-	_sys_pipe(0, name, (void *)&resp, 0, 0);
 	printf("pipe id: %d\n", resp);
+	printf("asd pipe id: %d\n", aux->id);
 	return aux;
 }
 
 int closePipe(pipe_info *pipe)
 {
 	int resp;
-	_sys_pipe((void *)1, (void *)pipe->id, (void *)&resp, 0, 0);
+	uint64_t pid = getPid();
+	printf("removing %d from pipe %d", pid, pipe->id);
+	// pipe id no llega bien
+	_sys_pipe((void *)1, (void *)pipe->id, (void *)pid, (void *)&resp, 0);
 	free(pipe);
 	return resp;
 }

@@ -383,7 +383,7 @@ static void instructionHandler()
                     printf("pipe id: %d\n", pipe->id);
                     run(func1, name1, BG, STDIN, pipe->id);
                     run(func2, name2, BG, pipe->id, STDOUT);
-                    ps();
+                    closePipe(pipe);
                 }
             }
         }

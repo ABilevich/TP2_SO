@@ -5,25 +5,31 @@ int proc_counter = 0;
 
 int started = 0;
 
-s_node * curr;
-s_node * aux_node = NULL;
+s_node *curr;
+s_node *aux_node = NULL;
 
-void * scheduler(void * old_rsp){
-    
-    if(started == 0){
+void *scheduler(void *old_rsp)
+{
+
+    if (started == 0)
+    {
         return old_rsp;
     }
 
-    if((uint64_t)old_rsp >= HEAP_START){
+    if ((uint64_t)old_rsp >= HEAP_START)
+    {
         //printString(" old: ", 6);
         //print64Hex( ( (uint64_t)old_rsp) );
         curr->pcb->rsp = old_rsp;
-    }else{
+    }
+    else
+    {
         printString("ESTO SOLO UNA VEZ", 17);
     }
 
     curr->pcb->p_counter--;
-    if(curr->pcb->p_counter == 0){
+    if (curr->pcb->p_counter == 0)
+    {
         curr->pcb->p_counter = curr->pcb->priority;
 
         curr = findNextReady();
@@ -31,9 +37,10 @@ void * scheduler(void * old_rsp){
         //print64Hex( ( (uint64_t)curr->pcb->rsp) );
     }
 
-    void * new_rsp = curr->pcb->rsp;
+    void *new_rsp = curr->pcb->rsp;
 
-    if(aux_node != NULL){
+    if (aux_node != NULL)
+    {
         free(aux_node->pcb->stack_start);
         free(aux_node->pcb);
         free(aux_node);
@@ -43,11 +50,14 @@ void * scheduler(void * old_rsp){
     return new_rsp;
 }
 
-s_node * findNextReady(){
+s_node *findNextReady()
+{
     int counter = 0;
-    s_node * aux = curr->next;
-    while (counter < proc_counter){
-        if(aux->pcb->state == READY){
+    s_node *aux = curr->next;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->state == READY)
+        {
             return aux;
         }
         aux = aux->next;
@@ -59,11 +69,12 @@ s_node * findNextReady(){
     return NULL;
 }
 
-int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, char * name, uint64_t input_id, uint64_t output_id){
+int addPCB(void *rsp, size_t priority, void *stack_start, void *bp, char fg, char *name, uint64_t input_id, uint64_t output_id)
+{
 
     //s_pcb new_pcb = {rsp, stack_start, next_pid, priority, priority, 1};
-    s_pcb * new_pcb;
-    malloc(sizeof(s_pcb), (void**)&new_pcb);
+    s_pcb *new_pcb;
+    malloc(sizeof(s_pcb), (void **)&new_pcb);
 
     new_pcb->rsp = rsp;
     new_pcb->stack_start = stack_start;
@@ -78,29 +89,37 @@ int addPCB(void * rsp, size_t priority, void * stack_start, void * bp, char fg, 
     new_pcb->output_id = output_id;
     new_pcb->state = READY;
 
+    openPipeForProc(input_id, next_pid);
+    openPipeForProc(output_id, next_pid);
+
     next_pid++;
-    
-    if(started == 0){
+
+    if (started == 0)
+    {
         new_pcb->caller_pid = new_pcb->pid;
         new_pcb->is_deletable = DURO_DE_MATAR;
 
         init(new_pcb);
-    }else{
+    }
+    else
+    {
         new_pcb->caller_pid = curr->pcb->pid;
 
         addProcess(new_pcb);
 
-        if(fg == 1){
-            blockCurrentProcess(); 
+        if (fg == 1)
+        {
+            blockCurrentProcess();
         }
     }
     proc_counter++;
 
-    return 0; 
+    return 0;
 }
 
-void init(s_pcb * new_pcb){
-    s_node * aux;
+void init(s_pcb *new_pcb)
+{
+    s_node *aux;
     malloc(sizeof(s_node), (void **)&aux);
 
     aux->pcb = new_pcb;
@@ -112,8 +131,9 @@ void init(s_pcb * new_pcb){
     started = 1;
 }
 
-void addProcess(s_pcb * new_pcb){
-    s_node * new_node;
+void addProcess(s_pcb *new_pcb)
+{
+    s_node *new_node;
     malloc(sizeof(s_node), (void **)&new_node);
 
     new_node->pcb = new_pcb;
@@ -123,12 +143,14 @@ void addProcess(s_pcb * new_pcb){
     curr->prev = new_node;
 }
 
-
-int changePriority(uint64_t pid, char priority){
+int changePriority(uint64_t pid, char priority)
+{
     int counter = 0;
-    s_node * aux = curr;
-    while (counter < proc_counter){
-        if(aux->pcb->pid == pid){
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->pid == pid)
+        {
             aux->pcb->priority = priority;
             return 0;
         }
@@ -136,14 +158,16 @@ int changePriority(uint64_t pid, char priority){
         counter++;
     }
     return -1;
-} 
+}
 
-
-int changeState(uint64_t pid, char state){
+int changeState(uint64_t pid, char state)
+{
     int counter = 0;
-    s_node * aux = curr;
-    while (counter < proc_counter){
-        if(aux->pcb->pid == pid){
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->pid == pid)
+        {
             aux->pcb->state = state;
             return 0;
         }
@@ -151,19 +175,29 @@ int changeState(uint64_t pid, char state){
         counter++;
     }
     return -1;
-}   
+}
 
-int kill(uint64_t pid){
+int kill(uint64_t pid)
+{
     int counter = 0;
-    s_node * aux = curr;
-    while (counter < proc_counter){
-        if(aux->pcb->pid == pid){
-            if(aux->pcb->is_deletable == 0){
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->pid == pid)
+        {
+            if (aux->pcb->is_deletable == 0)
+            {
                 return -2;
             }
-            if(aux->pcb->fg == 1){
+            if (aux->pcb->fg == 1)
+            {
                 changeState(aux->pcb->caller_pid, READY);
             }
+
+            uint64_t *p_aux; //basura
+            p_closePipe(aux->pcb->input_id, aux->pcb->pid, p_aux);
+            p_closePipe(aux->pcb->output_id, aux->pcb->pid, p_aux);
+
             free(aux->pcb->stack_start);
             aux->prev->next = aux->next;
             aux->next->prev = aux->prev;
@@ -178,11 +212,18 @@ int kill(uint64_t pid){
     return -1;
 }
 
-int killCurrent(){
-    if(curr->pcb->is_deletable == 1){
-        if(curr->pcb->fg == 1){
+int killCurrent()
+{
+    if (curr->pcb->is_deletable == 1)
+    {
+        if (curr->pcb->fg == 1)
+        {
             changeState(curr->pcb->caller_pid, READY);
         }
+        uint64_t *p_aux; //basura
+        p_closePipe(curr->pcb->input_id, curr->pcb->pid, p_aux);
+        p_closePipe(curr->pcb->output_id, curr->pcb->pid, p_aux);
+
         curr->prev->next = curr->next;
         curr->next->prev = curr->prev;
         proc_counter--;
@@ -192,46 +233,63 @@ int killCurrent(){
     return -2;
 }
 
-s_pcb *  getProcessInfo(uint64_t pid){
+s_pcb *getProcessInfo(uint64_t pid)
+{
     int counter = 0;
-    s_node * aux = curr;
-    while (counter < proc_counter){
-        if(aux->pcb->pid == pid){
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->pid == pid)
+        {
             return aux->pcb;
         }
         aux = aux->next;
         counter++;
     }
     return NULL;
-} 
-
-uint64_t getCurrentPid(){
-    return curr->pcb->pid;
 }
 
-void blockCurrentProcess(){
+int getCurrentPid()
+{
+    if (curr == NULL)
+    {
+        return -1;
+    }
+    return (int)(curr->pcb->pid);
+}
+
+void blockCurrentProcess()
+{
     curr->pcb->state = BLOCKED;
 }
 
-void blockCurrentProcessByRead(){
+void blockCurrentProcessByRead()
+{
     curr->pcb->state = BLOCKED_BY_READ;
     printString("read", 4);
     _irq00Handler();
 }
 
-void blockCurrentProcessByWrite(){
+void blockCurrentProcessByWrite()
+{
     curr->pcb->state = BLOCKED_BY_WRITE;
     _irq00Handler();
 }
 
-int blockProcess(uint64_t pid){
+int blockProcess(uint64_t pid)
+{
     int counter = 0;
-    s_node * aux = curr;
-    while (counter < proc_counter){
-        if(aux->pcb->pid == pid){
-            if(aux->pcb->state == READY){
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->pid == pid)
+        {
+            if (aux->pcb->state == READY)
+            {
                 aux->pcb->state = BLOCKED;
-            }else if(aux->pcb->state == BLOCKED){
+            }
+            else if (aux->pcb->state == BLOCKED)
+            {
                 aux->pcb->state = READY;
             }
             return 0;
@@ -242,20 +300,26 @@ int blockProcess(uint64_t pid){
     return -1;
 }
 
-void p_getMyI(uint64_t* resp){
+void p_getMyI(uint64_t *resp)
+{
     *resp = curr->pcb->input_id;
 }
 
-void p_getMyO(uint64_t* resp){
+void p_getMyO(uint64_t *resp)
+{
     *resp = curr->pcb->output_id;
 }
 
-int unlockReader(uint64_t input_id){
-	int counter = 0;
-    s_node * aux = curr;
-    while (counter < proc_counter){
-        if(aux->pcb->input_id == input_id){
-            if(aux->pcb->state == BLOCKED_BY_READ){
+int unlockReader(uint64_t input_id)
+{
+    int counter = 0;
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->input_id == input_id)
+        {
+            if (aux->pcb->state == BLOCKED_BY_READ)
+            {
                 aux->pcb->state = READY;
                 return 0;
             }
@@ -266,12 +330,16 @@ int unlockReader(uint64_t input_id){
     return -1;
 }
 
-int unlockWriter(uint64_t output_id){
+int unlockWriter(uint64_t output_id)
+{
     int counter = 0;
-    s_node * aux = curr;
-    while (counter < proc_counter){
-        if(aux->pcb->output_id == output_id){
-            if(aux->pcb->state == BLOCKED_BY_WRITE){
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->output_id == output_id)
+        {
+            if (aux->pcb->state == BLOCKED_BY_WRITE)
+            {
                 aux->pcb->state = READY;
                 return 0;
             }
@@ -282,11 +350,14 @@ int unlockWriter(uint64_t output_id){
     return -1;
 }
 
-void printProcessInfo(uint64_t pid){ 
+void printProcessInfo(uint64_t pid)
+{
     int counter = 0;
-    s_node * aux = curr;
-    while (counter < proc_counter){
-        if(aux->pcb->pid == pid){
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->pid == pid)
+        {
             printString("--------------------PROCESS--------------------", 47);
             printNewLine();
             printPCB(aux->pcb);
@@ -296,60 +367,62 @@ void printProcessInfo(uint64_t pid){
         aux = aux->next;
         counter++;
     }
-    return; 
+    return;
 }
 
-void printAllProcessInfo(){
+void printAllProcessInfo()
+{
     printString("--------------------PROCESS--------------------", 47);
     printNewLine();
     int counter = 0;
-        s_node * aux = curr;
-        while (counter < proc_counter){
-            printPCB(aux->pcb);
-            aux = aux->next;
-            counter++;
-        }
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        printPCB(aux->pcb);
+        aux = aux->next;
+        counter++;
+    }
     printString("-----------------------------------------------", 47);
     printNewLine();
-    return; 
+    return;
 }
 
-void printPCB(s_pcb * pcb){
+void printPCB(s_pcb *pcb)
+{
     printString("name: ", 6);
-	printString(pcb->name, 20);
+    printString(pcb->name, 20);
     printString("  |  ", 5);
     printString("pid: ", 5);
-	printDec( pcb->pid );
+    printDec(pcb->pid);
     printString("  |  ", 5);
     printString("st: ", 7);
-	printDec( pcb->state );
+    printDec(pcb->state);
     printString("  |  ", 5);
     printString("fg: ", 3);
-	printDec( pcb->fg );
+    printDec(pcb->fg);
     printString("  |  ", 5);
     printString("prty: ", 10);
-	printDec( pcb->priority );
+    printDec(pcb->priority);
     printString("  |  ", 5);
     printString("i_id: ", 10);
-	printDec( pcb->input_id );
+    printDec(pcb->input_id);
     printString("  |  ", 5);
     printString("o_id: ", 10);
-	printDec( pcb->output_id );
+    printDec(pcb->output_id);
     printString("  |  ", 5);
     printString("cpid: ", 12);
-	printDec( pcb->caller_pid );
+    printDec(pcb->caller_pid);
     printNewLine();
     printString("             | ", 16);
     printString("sp: ", 5);
-	print64Hex( ( (uint64_t)pcb->rsp) );
+    print64Hex(((uint64_t)pcb->rsp));
     printString("  |  ", 5);
     printString("bp: ", 13);
-	print64Hex( ( (uint64_t)pcb->bp ) );
+    print64Hex(((uint64_t)pcb->bp));
     printString("  |  ", 5);
     printString("ss: ", 13);
-	print64Hex( ( (uint64_t)pcb->stack_start ) );
+    print64Hex(((uint64_t)pcb->stack_start));
     printNewLine();
 }
-
 
 //inicia el primer proceso

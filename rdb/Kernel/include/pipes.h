@@ -5,24 +5,15 @@
 #include <stddef.h>
 #include <mm_interface.h>
 #include <screen.h>
+//#include<semaphore.h>
 
 #define PIPE_SIZE 256
 
-enum modes
-{
-    U = 0,
-    R,
-    W,
-    BR,
-    BW
-};
-
-typedef struct prc_node
+typedef struct p_prc_node
 {
     uint64_t pid;
-    uint64_t mode;
-    struct prc_node *next;
-} prc_node;
+    struct p_prc_node *next;
+} p_prc_node;
 
 typedef struct pipe
 {
@@ -30,8 +21,9 @@ typedef struct pipe
     char *name;
     char buff[PIPE_SIZE];
     uint64_t buff_taken_size;
-    uint64_t proc_count;
-    prc_node *procs;
+    // sem *r_sem;
+    // sem *w_sem;
+    p_prc_node *procs;
 } pipe;
 
 typedef struct pipe_node
@@ -41,18 +33,25 @@ typedef struct pipe_node
     struct pipe_node *prev;
 } pipe_node;
 
-void p_openPipe(char *name, uint64_t *resp_pipe_id);
+int sys_pipe(void *option, void *arg1, void *arg2, void *arg3, void *arg4);
+void p_openPipe(char *name, uint64_t pid, uint64_t *resp_pipe_id);
 pipe_node *p_createPipe(char *name, pipe_node *prev, pipe_node *next);
-void p_closePipe(uint64_t id, uint64_t *resp);
+void p_closePipe(uint64_t id, uint64_t pid, uint64_t *resp);
 int p_deletePipe(uint64_t id);
 pipe *p_getPipe(uint64_t id);
 void pipeInit(char *name);
 
-void addProcessToPipe(pipe *pipe, uint64_t pid, uint64_t mode);
+// sem *p_getRSem(uint64_t id);
+// sem *p_getWSem(uint64_t id);
+
+void openPipeForProc(uint64_t id, uint64_t pid);
+
+void addProcessToPipe(pipe *pipe, uint64_t pid);
 void RemoveProcessFromPipe(pipe *pipe, uint64_t pid);
 
 void pipePrintAll();
 void pipePrint(pipe *p);
+void pipePrintProcs(p_prc_node *n);
 
 int strcmp2(const char *s1, const char *s2);
 
