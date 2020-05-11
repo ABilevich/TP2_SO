@@ -181,7 +181,9 @@ _irq05Handler:
 
 ; Software interruptions
 _int80Handler:
+	pushStateNoRAX
 	call int80_handler
+	popStateNoRAX
 	iretq
 
 ;Zero Division Exception
@@ -196,7 +198,6 @@ haltcpu:
 	cli
 	hlt
 	ret
-
 
 SECTION .bss
 	aux resq 1

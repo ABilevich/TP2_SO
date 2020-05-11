@@ -6,5 +6,5 @@ void start_d(void)
 
     void (*e1)(void);
     e1 = &start_e;
-    createProcess(e1, 2, 0, "e", 0, 0);
+    createProcess(e1, 1, 0, "e", 0, 0);
 }

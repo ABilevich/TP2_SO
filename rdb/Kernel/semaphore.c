@@ -316,7 +316,8 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp)
         prc->is_blocked = 1;
         changeState(pid, BLOCKED_BY_SEM);
         spin_unlock(&(sem->lock));
-        _sti_and_halt();
+        //_sti_and_halt();
+        _forceInt20();
     }
     sem->cont--;
     spin_unlock(&(sem->lock));

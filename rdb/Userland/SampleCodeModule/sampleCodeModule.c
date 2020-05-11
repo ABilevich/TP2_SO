@@ -10,7 +10,7 @@ int main()
 	//startShell();
 	void (*shell)(void);
 	shell = &startShell;
-	createProcess(shell, 2, 1, "shell", 0, 0);
+	createProcess(shell, 1, 1, "shell", 0, 0);
 	_sti_and_halt();
 	return 0;
 }

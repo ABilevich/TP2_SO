@@ -12,6 +12,9 @@ GLOBAL _halt
 GLOBAL _sti_set_rsp_and_halt
 GLOBAL spin_lock
 GLOBAL spin_unlock
+
+GLOBAL _forceInt20
+
 section .text
 	
 cpuVendor:
@@ -105,7 +108,7 @@ _fillstack:
     push 0x2       ;rbx
     push 0x3       ;rcx
     push r8        ;rdx
-    push 0x5       ;rbp
+    push rdi       ;rbp
     push rdx       ;rdi
     push rcx       ;rsi
     push 0x0       ;r8
@@ -125,6 +128,10 @@ _fillstack:
 _sti_and_halt:
     sti
     hlt
+    ret
+
+_forceInt20:
+	int 0x20
     ret
 
 _sti_set_rsp_and_halt:

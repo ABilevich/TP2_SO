@@ -28,7 +28,7 @@ void *scheduler(void *old_rsp)
     }
 
     curr->pcb->p_counter--;
-    if (curr->pcb->p_counter == 0)
+    if (curr->pcb->p_counter == 0 || curr->pcb->state != READY)
     {
         curr->pcb->p_counter = curr->pcb->priority;
 
@@ -194,9 +194,9 @@ int kill(uint64_t pid)
                 changeState(aux->pcb->caller_pid, READY);
             }
 
-            uint64_t *p_aux; //basura
-            p_closePipe(aux->pcb->input_id, aux->pcb->pid, p_aux);
-            p_closePipe(aux->pcb->output_id, aux->pcb->pid, p_aux);
+            uint64_t p_aux; //basura
+            p_closePipe(aux->pcb->input_id, aux->pcb->pid, &p_aux);
+            p_closePipe(aux->pcb->output_id, aux->pcb->pid, &p_aux);
 
             free(aux->pcb->stack_start);
             aux->prev->next = aux->next;
@@ -220,9 +220,9 @@ int killCurrent()
         {
             changeState(curr->pcb->caller_pid, READY);
         }
-        uint64_t *p_aux; //basura
-        p_closePipe(curr->pcb->input_id, curr->pcb->pid, p_aux);
-        p_closePipe(curr->pcb->output_id, curr->pcb->pid, p_aux);
+        uint64_t p_aux; //basura
+        p_closePipe(curr->pcb->input_id, curr->pcb->pid, &p_aux);
+        p_closePipe(curr->pcb->output_id, curr->pcb->pid, &p_aux);
 
         curr->prev->next = curr->next;
         curr->next->prev = curr->prev;

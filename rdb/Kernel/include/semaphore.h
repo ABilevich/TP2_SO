@@ -58,6 +58,7 @@ void unlockFirstBlockedProc(sem *semaphore);
 
 void _irq00HandlerFake();
 void _sti_and_halt();
+void _forceInt20();
 void _cli();
 void _sti();
 
