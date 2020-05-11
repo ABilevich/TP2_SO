@@ -165,9 +165,6 @@ void wrapper(int argc, char *argv[], fn to_be_run)
 	to_be_run();
 	p_killCurrent();
 	_sti_and_halt();
-	printString("|||||", 5);
-	while(1){
-
-	}
-		
+	printString("THIS SHOULD NEVER PRINT", 23);
+	// while(1);
 }
