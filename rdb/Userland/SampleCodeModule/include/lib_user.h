@@ -11,6 +11,9 @@
 
 #define PIT_FREQUENCY 400
 
+#define SHELL_PID 0
+#define INIT_PID 1
+
 enum SPECIAL_KEYS
 {
     SHIFT_IN = -20,

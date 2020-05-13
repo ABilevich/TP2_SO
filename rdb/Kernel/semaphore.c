@@ -31,10 +31,10 @@ int sys_semaphore(void *option, void *arg1, void *arg2, void *arg3, void *arg4)
 
 void s_semOpen(char *name, uint64_t pid, uint64_t start_cont, uint64_t *resp_id)
 {
-    printString("sem open: ", 10);
-    printDec(pid);
-    printNewLine();
-    semPrintAll();
+    // printString("sem open: ", 10);
+    // printDec(pid);
+    // printNewLine();
+    // semPrintAll();
     //buscar el semaforo
     if (first == NULL)
     { //si es el primero
@@ -52,7 +52,7 @@ void s_semOpen(char *name, uint64_t pid, uint64_t start_cont, uint64_t *resp_id)
                 //si estalo retorna
                 *resp_id = iterator->semaphore->id;
                 addProcessToSem(iterator->semaphore, pid);
-                semPrintAll();
+                //semPrintAll();
                 return;
             }
             prev = iterator;
@@ -62,8 +62,43 @@ void s_semOpen(char *name, uint64_t pid, uint64_t start_cont, uint64_t *resp_id)
         prev->next = semCreate(name, pid, start_cont);
         *resp_id = prev->next->semaphore->id;
     }
-    semPrintAll();
+    //semPrintAll();
     return;
+}
+
+uint64_t createEmptySem(uint64_t start_cont)
+{
+    if (first == NULL)
+    {
+        first = semCreate(NULL, -1, start_cont);
+        //semPrintAll();
+        return first->semaphore->id;
+    }
+    else
+    {
+        sem_node *iterator = first;
+        sem_node *prev = NULL;
+        while (iterator != NULL)
+        {
+            prev = iterator;
+            iterator = iterator->next;
+        }
+        prev->next = semCreate(NULL, -1, start_cont);
+        //semPrintAll();
+        return prev->next->semaphore->id;
+    }
+}
+
+void addProcessToSemViaId(uint64_t id, uint64_t pid)
+{
+    sem *s = getSem(id);
+    addProcessToSem(s, pid);
+}
+
+void RemoveProcessFromSemViaId(uint64_t id, uint64_t pid)
+{
+    sem *s = getSem(id);
+    RemoveProcessFromSem(s, pid);
 }
 
 void addProcessToSem(sem *sem, uint64_t pid)
@@ -148,7 +183,10 @@ sem_node *semCreate(char *name, uint64_t pid, uint64_t start_cont)
     new_sem->lock = 0;
     new_sem->procs = NULL;
 
-    addProcessToSem(new_sem, pid);
+    if (pid != -1)
+    {
+        addProcessToSem(new_sem, pid);
+    }
 
     sem_node *new_node;
     malloc(sizeof(sem_node), (void **)&new_node);
@@ -181,7 +219,7 @@ sem_node *semCreate(char *name, uint64_t pid, uint64_t start_cont)
 
 void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp)
 {
-    semPrintAll();
+    //semPrintAll();
     //toma el id
     //busca el semaforo con ese id
 
@@ -211,12 +249,12 @@ void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp)
                 free(iterator->semaphore);
                 free(iterator);
                 *resp = 2; //hay que hacer free a sem_info
-                semPrintAll();
+                //semPrintAll();
                 return;
                 //printString("asd2", 4);
             }
             *resp = 0; //se removio el pid
-            semPrintAll();
+            //semPrintAll();
             return;
         }
         prev = iterator;
@@ -317,8 +355,12 @@ void s_semWait(uint64_t id, uint64_t pid, uint64_t *resp)
         changeState(pid, BLOCKED_BY_SEM);
         spin_unlock(&(sem->lock));
         //_sti_and_halt();
+        //printString("hola0", 5);
+        //printAllProcessInfo();
         _forceInt20();
+        //printString("hola1", 5);
     }
+
     sem->cont--;
     spin_unlock(&(sem->lock));
 

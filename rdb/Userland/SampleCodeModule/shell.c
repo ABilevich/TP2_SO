@@ -4,6 +4,7 @@
 #include <shell.h>
 #include <runable.h>
 #include <phyloController.h>
+#include <init.h>
 
 #define BUFFER_SIZE 2000
 #define COMMANDS_BUFFER_SIZE 50
@@ -40,8 +41,8 @@ static char *commands[] = {"aracnoid", "clear", "clock", "help", "inforeg", "pri
 static char *void_func[] = {"help", "clock", "inforeg", "clear", "ps", "mem", "sem", "pipe", "phylo", "a", "r"};
 static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps, mem, sem, pipe, startPhyloController, addPhylo, removePhylo};
 
-static char *runable_name[] = {"a", "b", "c", "d", "e", "testmm", "test_sem", "loop"};
-static void (*runable_func[])(void) = {start_a, start_b, start_c, start_d, start_e, test_mm, test_sem, start_loop};
+static char *runable_name[] = {"a", "b", "c", "d", "e", "test_mem", "test_sem", "loop", "test_proc"};
+static void (*runable_func[])(void) = {start_a, start_b, start_c, start_d, start_e, test_mm, test_sem, start_loop, test_processes};
 
 static char *user = "dummie_user";
 static char *syst_name = "@rdb: ";
@@ -61,6 +62,10 @@ static gameState aracnoid_save;
 static int aracnoid_saved;
 void startShell()
 {
+    void (*init)(void);
+    init = &startInit;
+    createProcess(init, 1, 0, "init", STDIN, STDOUT);
+    changeProcessState(INIT_PID, 5);
 
     setCursor(0, 0);
     welcomeMessage();
@@ -381,7 +386,7 @@ static void instructionHandler()
                     char *name2 = runable_name[i2];
 
                     pipe_info *pipe = openPipe(NULL);
-                    printf("in shell pipe id: %d\n", pipe->id);
+                    //printf("in shell pipe id: %d\n", pipe->id);
                     run(func1, name1, BG, STDIN, pipe->id);
                     run(func2, name2, BG, pipe->id, STDOUT);
                     closePipe(pipe);

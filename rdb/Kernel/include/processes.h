@@ -10,7 +10,7 @@
 typedef void (*fn)(void);
 
 int sys_process(void *option, void *arg1, void *arg2, void *arg3, void *arg4);
-void p_createProcess(void *rip, uint64_t *params, char *name);
+void p_createProcess(void *rip, uint64_t *params, char *name, int *resp_pid);
 void p_changeProcessPriority(uint64_t pid, uint64_t priority, int *resp);
 void p_changeProcessState(uint64_t pid, uint64_t state, int *resp);
 void p_kill(uint64_t pid, int *resp);

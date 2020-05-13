@@ -72,8 +72,8 @@ pipe_node *p_createPipe(char *name, pipe_node *prev, pipe_node *next)
     p->id = next_pipe_id++;
     p->buff_taken_size = 0;
     p->procs = NULL;
-    // p->r_sem = NULL; //UPDATE LATER
-    // p->w_sem = NULL; //UPDATE LATER
+    p->r_sem_id = createEmptySem(0);
+    p->w_sem_id = createEmptySem(PIPE_SIZE);
 
     pipe_node *n;
     malloc(sizeof(pipe_node), (void **)&n);
@@ -157,11 +157,11 @@ void RemoveProcessFromPipe(pipe *pipe, uint64_t pid)
 
 void p_closePipe(uint64_t id, uint64_t pid, uint64_t *resp)
 {
-    printString("removing proces with pid: ", 26);
-    printDec(pid);
-    printString(" from pipe id: ", 15);
-    printDec(id);
-    printNewLine();
+    // printString("removing proces with pid: ", 26);
+    // printDec(pid);
+    // printString(" from pipe id: ", 15);
+    // printDec(id);
+    // printNewLine();
 
     pipe_node *iterator = current;
     for (int i = 0; i < total_pipes; i++)
@@ -171,6 +171,9 @@ void p_closePipe(uint64_t id, uint64_t pid, uint64_t *resp)
             RemoveProcessFromPipe(iterator->pipe, pid);
             if (iterator->pipe->procs == NULL)
             {
+                uint64_t junk;
+                s_semClose(iterator->pipe->r_sem_id, pid, &junk);
+                s_semClose(iterator->pipe->w_sem_id, pid, &junk);
                 p_deletePipe(id);
                 *resp = 1; //el pipe fue borrado
             }
@@ -284,6 +287,23 @@ void pipePrint(pipe *p)
     printString("  |  ", 5);
     printString("procs: ", 7);
     pipePrintProcs(p->procs);
+    printString("  |  ", 5);
+    printString("r_pipe_id: ", 11);
+    printDec(p->r_sem_id);
+    printString("  |  ", 5);
+    printString("w_pipe_id: ", 11);
+    printDec(p->w_sem_id);
+    printNewLine();
+    printString("buffer: ", 8);
+    if (p->buff_taken_size != 0)
+    {
+        printString(p->buff, p->buff_taken_size);
+    }
+    else
+    {
+        printString("empty...", 8);
+    }
+
     printNewLine();
 }
 

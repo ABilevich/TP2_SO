@@ -31,7 +31,6 @@ void *scheduler(void *old_rsp)
     if (curr->pcb->p_counter == 0 || curr->pcb->state != READY)
     {
         curr->pcb->p_counter = curr->pcb->priority;
-
         curr = findNextReady();
         //printString("new: ", 5);
         //print64Hex( ( (uint64_t)curr->pcb->rsp) );
@@ -63,10 +62,19 @@ s_node *findNextReady()
         aux = aux->next;
         counter++;
     }
-    // printString("test2", 5);
-    // _sti_and_halt();
-    // printString("test3", 5);
-    return NULL;
+    //printString("looking", 7);
+    counter = 0;
+    aux = curr->next;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->state == INIT)
+        {
+            //printString("founditt", 8);
+            return aux;
+        }
+        aux = aux->next;
+        counter++;
+    }
 }
 
 int addPCB(void *rsp, size_t priority, void *stack_start, void *bp, char fg, char *name, uint64_t input_id, uint64_t output_id)
@@ -114,7 +122,7 @@ int addPCB(void *rsp, size_t priority, void *stack_start, void *bp, char fg, cha
     }
     proc_counter++;
 
-    return 0;
+    return new_pcb->pid;
 }
 
 void init(s_pcb *new_pcb)

@@ -1,3 +1,6 @@
+#ifndef _PHYLO_H
+#define _PHYLO_H
 #include <phyloController.h>
 
-void phylo(s_phylo *me);
+void phylo();
+#endif

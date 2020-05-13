@@ -13,7 +13,8 @@ enum states
     BLOCKED,
     BLOCKED_BY_SEM,
     BLOCKED_BY_READ,
-    BLOCKED_BY_WRITE
+    BLOCKED_BY_WRITE,
+    INIT
 };
 enum killability
 {

@@ -1,14 +1,11 @@
 #ifndef _SEMAPHORE_H
 #define _SEMAPHORE_H
+
 #include <stdint.h>
 #include <stddef.h>
 #include <mm_interface.h>
 #include <screen.h>
 #include <processes.h>
-#include <pipes.h>
-
-#define BLOCKED_BY_SEM 2
-#define READY 0
 
 typedef struct prc_node
 {
@@ -35,8 +32,13 @@ typedef struct sem_node
 int sys_semaphore(void *option, void *arg1, void *arg2, void *arg3, void *arg4);
 
 void s_semOpen(char *name, uint64_t pid, uint64_t start_cont, uint64_t *resp_id);
+uint64_t createEmptySem(uint64_t start_cont);
+
 void addProcessToSem(sem *sem, uint64_t pid);
 void RemoveProcessFromSem(sem *sem, uint64_t pid);
+void addProcessToSemViaId(uint64_t id, uint64_t pid);
+void RemoveProcessFromSemViaId(uint64_t id, uint64_t pid);
+
 sem_node *semCreate(char *name, uint64_t pid, uint64_t start_cont);
 void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp);
 void s_semUnlink(char *name, uint64_t *resp);

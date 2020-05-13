@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <mm_interface.h>
 #include <screen.h>
-//#include<semaphore.h>
+#include <semaphore.h>
 
 #define PIPE_SIZE 256
 
@@ -21,8 +21,8 @@ typedef struct pipe
     char *name;
     char buff[PIPE_SIZE];
     uint64_t buff_taken_size;
-    // sem *r_sem;
-    // sem *w_sem;
+    uint64_t r_sem_id;
+    uint64_t w_sem_id;
     p_prc_node *procs;
 } pipe;
 

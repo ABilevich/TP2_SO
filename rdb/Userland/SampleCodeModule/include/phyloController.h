@@ -1,3 +1,7 @@
+#ifndef _PHYLOCONTROLLER_H
+#define _PHYLOCONTROLLER_H
+
+
 #include <lib_user.h>
 
 typedef enum state
@@ -7,13 +11,23 @@ typedef enum state
     EATING
 } state;
 
+typedef struct s_chopstick
+{
+    sem_info * chop_id;
+    char * chop_name;
+
+} s_chopstick;
+
 typedef struct s_phylo
 {
     uint64_t id;
     state s;
-    sem_info *left_chop;
-    sem_info *right_chop;
+    s_chopstick * left_chop;
+    s_chopstick * right_chop;
+    
 } s_phylo;
+
+
 
 typedef struct s_node
 {
@@ -22,6 +36,11 @@ typedef struct s_node
     struct s_node *prev;
 } s_node;
 
+#include <phylo.h>
+
 void startPhyloController();
 void addPhylo();
 void removePhylo();
+void printPhylos();
+s_phylo * getLastPhylo();
+#endif

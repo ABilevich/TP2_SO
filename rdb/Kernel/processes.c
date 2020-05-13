@@ -7,7 +7,7 @@ int sys_process(void *option, void *arg1, void *arg2, void *arg3, void *arg4)
 	switch ((uint64_t)option)
 	{
 	case 0:
-		p_createProcess((void *)arg1, (uint64_t *)arg2, (char *)arg3);
+		p_createProcess((void *)arg1, (uint64_t *)arg2, (char *)arg3, (int *)arg4);
 		break;
 	case 1:
 		p_changeProcessPriority((uint64_t)arg1, (uint64_t)arg2, (int *)arg3);
@@ -37,12 +37,12 @@ int sys_process(void *option, void *arg1, void *arg2, void *arg3, void *arg4)
 		p_getMyO((uint64_t *)arg1);
 		break;
 	}
+
 	return 0;
 }
 
-void p_createProcess(void *rip, uint64_t *params, char *name)
+void p_createProcess(void *rip, uint64_t *params, char *name, int *resp_pid)
 {
-
 	uint64_t priority = params[0];
 	uint64_t fg = params[1];
 	uint64_t input_id = params[2];
@@ -58,6 +58,7 @@ void p_createProcess(void *rip, uint64_t *params, char *name)
 	{
 		printString("No more memmory avalible!", 25);
 		printNewLine();
+		*resp_pid = -1;
 		return;
 	}
 
@@ -81,7 +82,7 @@ void p_createProcess(void *rip, uint64_t *params, char *name)
 
 	_fillstack(bp, func_wrapper, argc, argv, rip);
 
-	addPCB(rsp, priority, stack_start, bp, fg, name, input_id, output_id);
+	*resp_pid = addPCB(rsp, priority, stack_start, bp, fg, name, input_id, output_id);
 
 	// for(int i = 0; i < 30; i++){
 	// 	printString("when i= ", 8);

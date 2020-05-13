@@ -97,15 +97,11 @@ int read(char *buffer, unsigned int buff_size)
 	int finished = 0;
 	int i = 0;
 	uint64_t input_id = getMyInputId();
-	//printf("input_id = %d\n", input_id);
 	while (i < buff_size && !finished)
 	{ // Mientras no se llene el buffer
 		char c;
-		while (_sys_read_write(0, (void *)&c, (void *)input_id, 0, 0) != 0)
-			; // Mientras no consiga el caracter sigo pidiendolo.
-		// printf("asd1\n");
-		// _sys_read_write(0,(void *) &c,(void*)input_id,0,0);
-		// printf("asd2\n");
+		// 	; // si no esta el caracter me bloqueo.
+		_sys_read_write(0, (void *)&c, (void *)input_id, 0, 0);
 		buffer[i++] = c;
 		if (c == '\n')
 			finished = 1;
@@ -117,13 +113,11 @@ int read_from(char *buffer, unsigned int buff_size, uint64_t input_id)
 {
 	int finished = 0;
 	int i = 0;
+	//printf("input_id = %d\n", input_id);
 	while (i < buff_size && !finished)
 	{ // Mientras no se llene el buffer
 		char c;
-		//while (); // Mientras no consiga el caracter sigo pidiendolo.
-		printf("asd1\n");
 		_sys_read_write(0, (void *)&c, (void *)input_id, 0, 0);
-		printf("asd2\n");
 		buffer[i++] = c;
 		if (c == '\n')
 			finished = 1;
@@ -133,14 +127,36 @@ int read_from(char *buffer, unsigned int buff_size, uint64_t input_id)
 
 int write(char *buffer, unsigned int buff_size)
 {
-
-	return 0;
+	int finished = 0;
+	int i = 0;
+	char *c;
+	uint64_t output_id = getMyOutputId();
+	while (i < buff_size && !finished)
+	{
+		*c = buffer[i];
+		_sys_read_write((void *)1, (void *)&c, (void *)output_id, 0, 0);
+		i++;
+		if (c == '\0')
+			finished = 1;
+	}
+	return i;
 }
 
 int write_to(char *buffer, unsigned int buff_size, uint64_t output_id)
 {
-
-	return 0;
+	int finished = 0;
+	int i = 0;
+	char *c;
+	while (i < buff_size && !finished)
+	{
+		*c = buffer[i];
+		//printf("buffer[i] = %c, c = %c\n", buffer[i], *c);
+		_sys_read_write((void *)1, (void *)c, (void *)output_id, 0, 0);
+		i++;
+		if (c == '\0')
+			finished = 1;
+	}
+	return i;
 }
 
 int scan(char *buffer, unsigned int buff_size)
@@ -503,9 +519,10 @@ long int strtoint(char *s)
 
 int createProcess(void *rip, uint64_t priority, char fg, char *name, uint64_t input_id, uint64_t output_id)
 {
+	int resp = 0;
 	uint64_t params[] = {priority, fg, input_id, output_id};
-	_sys_process(0, rip, (void *)params, (void *)name, 0);
-	return 0;
+	_sys_process(0, rip, (void *)params, (void *)name, (void *)&resp);
+	return resp;
 }
 
 int changeProcessPriority(uint64_t pid, uint64_t priority)
@@ -527,7 +544,7 @@ int changeProcessState(uint64_t pid, char state)
 	{
 		printf("chstate ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
 	}
-	return 0;
+	return resp;
 }
 
 int kill(uint64_t pid)
@@ -542,7 +559,7 @@ int kill(uint64_t pid)
 	{
 		printf("kill ERROR: Process with pid %d cant be killed!\n", pid);
 	}
-	return 0;
+	return resp;
 }
 
 void printProcessInfo(uint64_t pid)
@@ -563,7 +580,7 @@ int getPid()
 	_sys_process((void *)6, (void *)&resp, 0, 0, 0);
 	if (resp == -1)
 	{
-		return 0;
+		return SHELL_PID;
 	}
 	return resp;
 }
