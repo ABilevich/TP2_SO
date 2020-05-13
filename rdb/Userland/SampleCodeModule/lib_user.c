@@ -678,8 +678,6 @@ pipe_info *openPipe(char *name)
 	uint64_t pid = getPid();
 	_sys_pipe(0, (void *)name, (void *)pid, (void *)&resp, 0);
 	aux->id = resp;
-	printf("pipe id: %d\n", resp);
-	printf("asd pipe id: %d\n", aux->id);
 	return aux;
 }
 
@@ -687,9 +685,16 @@ int closePipe(pipe_info *pipe)
 {
 	int resp;
 	uint64_t pid = getPid();
-	printf("removing %d from pipe %d", pid, pipe->id);
-	// pipe id no llega bien
-	_sys_pipe((void *)1, (void *)pipe->id, (void *)pid, (void *)&resp, 0);
+	uint64_t pipeid = pipe->id;
+	_sys_pipe((void *)1, (void *)pipeid, (void *)pid, (void *)&resp, 0);
+	if (resp == 1)
+	{
+		printf("Deleting pipe with id %d\n", pipe->id);
+	}
+	else if (resp == 2)
+	{
+		printf("closePipe ERROR: no pipe with id %d was found\n", pipe->id);
+	}
 	free(pipe);
 	return resp;
 }

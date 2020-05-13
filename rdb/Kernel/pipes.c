@@ -27,6 +27,7 @@ void p_openPipe(char *name, uint64_t pid, uint64_t *resp_pipe_id)
     {
         pipeInit(name);
         addProcessToPipe(current->pipe, pid);
+        *resp_pipe_id = current->pipe->id;
         return;
     }
     pipe_node *iterator = current;
@@ -156,6 +157,12 @@ void RemoveProcessFromPipe(pipe *pipe, uint64_t pid)
 
 void p_closePipe(uint64_t id, uint64_t pid, uint64_t *resp)
 {
+    printString("removing proces with pid: ", 26);
+    printDec(pid);
+    printString(" from pipe id: ", 15);
+    printDec(id);
+    printNewLine();
+
     pipe_node *iterator = current;
     for (int i = 0; i < total_pipes; i++)
     {
@@ -165,12 +172,14 @@ void p_closePipe(uint64_t id, uint64_t pid, uint64_t *resp)
             if (iterator->pipe->procs == NULL)
             {
                 p_deletePipe(id);
+                *resp = 1; //el pipe fue borrado
             }
-            *resp = 0;
+            *resp = 0; //el pipe no fue borrado
             return;
         }
+        iterator = iterator->next;
     }
-    *resp = 1;
+    *resp = 2;
     return;
 }
 
@@ -189,6 +198,7 @@ int p_deletePipe(uint64_t id)
             total_pipes--;
             return 0;
         }
+        iterator = iterator->next;
     }
     return 1;
 }
@@ -202,6 +212,7 @@ pipe *p_getPipe(uint64_t id)
         {
             return iterator->pipe;
         }
+        iterator = iterator->next;
     }
     return NULL;
 }

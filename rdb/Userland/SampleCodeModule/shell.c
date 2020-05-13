@@ -3,6 +3,7 @@
 #include <commands.h>
 #include <shell.h>
 #include <runable.h>
+#include <phyloController.h>
 
 #define BUFFER_SIZE 2000
 #define COMMANDS_BUFFER_SIZE 50
@@ -36,8 +37,8 @@ static void welcomeMessage(void);
 static char inputBuffer[BUFFER_SIZE];
 static char commandsHistory[COMMANDS_BUFFER_SIZE][BUFFER_SIZE];
 static char *commands[] = {"aracnoid", "clear", "clock", "help", "inforeg", "printmem", "set", "set writing_color", "test", "test zero_div", "test inv_op_code", "test mem", "test proc", "nice", "run", "ps", "mem", "sem", "pipe"};
-static char *void_func[] = {"help", "clock", "inforeg", "clear", "ps", "mem", "sem", "pipe"};
-static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps, mem, sem, pipe};
+static char *void_func[] = {"help", "clock", "inforeg", "clear", "ps", "mem", "sem", "pipe", "phylo", "a", "r"};
+static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps, mem, sem, pipe, startPhyloController, addPhylo, removePhylo};
 
 static char *runable_name[] = {"a", "b", "c", "d", "e", "testmm", "test_sem", "loop"};
 static void (*runable_func[])(void) = {start_a, start_b, start_c, start_d, start_e, test_mm, test_sem, start_loop};
@@ -380,7 +381,7 @@ static void instructionHandler()
                     char *name2 = runable_name[i2];
 
                     pipe_info *pipe = openPipe(NULL);
-                    printf("pipe id: %d\n", pipe->id);
+                    printf("in shell pipe id: %d\n", pipe->id);
                     run(func1, name1, BG, STDIN, pipe->id);
                     run(func2, name2, BG, pipe->id, STDOUT);
                     closePipe(pipe);
