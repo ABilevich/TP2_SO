@@ -7,16 +7,16 @@ void start_e(void)
 
     char *message;
 
-    read_from(message, 32, p->id);
+    read_from(message, 33, p->id);
 
     printf("i read: %s\n", message);
 
-    // PrintAllPipeInfo();
-    // PrintAllSemInfo();
+    // // PrintAllPipeInfo();
+    // // PrintAllSemInfo();
 
     closePipe(p);
 
-    // PrintAllPipeInfo();
-    // PrintAllSemInfo();
-    printf("byeee\n");
+    // // PrintAllPipeInfo();
+    // // PrintAllSemInfo();
+    // printf("byeee\n");
 }

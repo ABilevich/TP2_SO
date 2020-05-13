@@ -75,7 +75,7 @@ void removeTimeFunction(function f)
 void wait(unsigned int millis)
 {
 	int last_ticks = getTicks();
-	while ((getTicks() - last_ticks) < millis * 1000)
+	while ((getTicks() - last_ticks) < millis)
 		;
 }
 

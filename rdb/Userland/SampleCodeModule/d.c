@@ -15,11 +15,11 @@ void start_d(void)
 
     char *message1 = "Aguante Po!!";
     int size1 = strlen(message1);
-    char *message2 = "El gerrero dragon!!";
+    char *message2 = "El guerrero dragon!!";
     int size2 = strlen(message2);
 
     write_to(message1, 12, p->id);
-    write_to(message2, 20, p->id);
+    write_to(message2, 21, p->id);
 
     printf("i wrote: %s\n", message1);
     printf("i wrote: %s\n", message2);
