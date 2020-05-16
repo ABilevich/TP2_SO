@@ -129,7 +129,7 @@ int write(char *buffer, unsigned int buff_size)
 {
 	int finished = 0;
 	int i = 0;
-	char *c;
+	char *c = NULL;
 	uint64_t output_id = getMyOutputId();
 	while (i < buff_size && !finished)
 	{
@@ -146,7 +146,7 @@ int write_to(char *buffer, unsigned int buff_size, uint64_t output_id)
 {
 	int finished = 0;
 	int i = 0;
-	char *c;
+	char *c = NULL;
 	while (i < buff_size && !finished)
 	{
 		*c = buffer[i];
@@ -719,4 +719,21 @@ int closePipe(pipe_info *pipe)
 void PrintAllPipeInfo()
 {
 	_sys_pipe((void *)2, 0, 0, 0, 0);
+}
+
+
+char* my_strcat(char* destination, const char* source)
+{
+	// make ptr point to the end of destination string
+	char* ptr = destination + strlen(destination);
+
+	// Appends characters of source to the destination string
+	while (*source != '\0')
+		*ptr++ = *source++;
+
+	// null terminate destination string
+	*ptr = '\0';
+
+	// destination is returned by standard strcat()
+	return destination;
 }

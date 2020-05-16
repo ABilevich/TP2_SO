@@ -2,6 +2,7 @@
 #define _PHYLOCONTROLLER_H
 
 #define MAX_CHOP_DIGIT 10
+#define MAX_PHYLO_DIGIT 10
 #define INITIAL_PHYLO_CANT 5
 
 #include <lib_user.h>
@@ -29,7 +30,9 @@ typedef struct s_phylo
     state s;
     s_chopstick *left_chop;
     s_chopstick *right_chop;
-
+    sem_info * my_sem;
+    char my_sem_name[MAX_PHYLO_DIGIT];
+    int i_love_philosofating;
 } s_phylo;
 
 typedef struct s_node

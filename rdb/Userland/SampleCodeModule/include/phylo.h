@@ -10,5 +10,7 @@ sem_info *getHeightest(s_phylo *me);
 
 uint32_t GetUint();
 uint32_t GetUniform(uint32_t max);
+void waitRand();
+
 
 #endif
