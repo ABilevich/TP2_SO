@@ -94,53 +94,31 @@ time_struct getTime()
 
 int read(char *buffer, unsigned int buff_size)
 {
-	int finished = 0;
-	int i = 0;
 	uint64_t input_id = getMyInputId();
-	while (i < buff_size && !finished)
-	{ // Mientras no se llene el buffer
-		char c;
-		// 	; // si no esta el caracter me bloqueo.
-		_sys_read_write(0, (void *)&c, (void *)input_id, 0, 0);
-		buffer[i++] = c;
-		if (c == '\n')
-			finished = 1;
-	}
-	return i;
+	return read_from(buffer, buff_size, input_id);
 }
 
 int read_from(char *buffer, unsigned int buff_size, uint64_t input_id)
 {
 	int finished = 0;
 	int i = 0;
-	//printf("input_id = %d\n", input_id);
 	while (i < buff_size && !finished)
 	{ // Mientras no se llene el buffer
 		char c;
 		_sys_read_write(0, (void *)&c, (void *)input_id, 0, 0);
 		buffer[i++] = c;
-		if (c == '\n')
+		if (c == '\0'){
+			i--;
 			finished = 1;
+		}
 	}
 	return i;
 }
 
 int write(char *buffer, unsigned int buff_size)
 {
-	int finished = 0;
-	int i = 0;
-	char *c = malloc(1);
 	uint64_t output_id = getMyOutputId();
-	while (i < buff_size && !finished)
-	{
-		*c = buffer[i];
-		_sys_read_write((void *)1, (void *)&c, (void *)output_id, 0, 0);
-		i++;
-		if (c == '\0')
-			finished = 1;
-	}
-	free(c);
-	return i;
+	return write_to(buffer, buff_size, output_id);
 }
 
 int write_to(char *buffer, unsigned int buff_size, uint64_t output_id)
@@ -154,7 +132,7 @@ int write_to(char *buffer, unsigned int buff_size, uint64_t output_id)
 		//printf("buffer[i] = %c, c = %c\n", buffer[i], *c);
 		_sys_read_write((void *)1, (void *)c, (void *)output_id, 0, 0);
 		i++;
-		if (c == '\0')
+		if (*c == '\0')
 			finished = 1;
 	}
 	free(c);
@@ -164,7 +142,14 @@ int write_to(char *buffer, unsigned int buff_size, uint64_t output_id)
 int scan(char *buffer, unsigned int buff_size)
 { // Make sure u have at least buff_size + 1 to allocate the result string.
 	int size_read = read(buffer, buff_size);
-	buffer[size_read] = 0;
+	buffer[size_read] = '\0';
+	return 0;
+}
+
+int scan_from(char *buffer, unsigned int buff_size, uint64_t input_id)
+{ // Make sure u have at least buff_size + 1 to allocate the result string.
+	int size_read = read_from(buffer, buff_size, input_id);
+	buffer[size_read] = '\0';
 	return 0;
 }
 

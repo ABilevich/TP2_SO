@@ -49,6 +49,12 @@ void rw_read(void *c, uint64_t input_id, uint64_t *resp)
 
 void rw_write(char *c, uint64_t output_id, uint64_t *resp)
 {
+
+	if(output_id == 0){
+		printString(c,1);
+		return;
+	}
+
 	pipe *aux = p_getPipe(output_id);
 
 	if (aux == NULL)

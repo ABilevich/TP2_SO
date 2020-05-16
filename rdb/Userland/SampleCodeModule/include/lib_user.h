@@ -122,7 +122,7 @@ int write_to(char *buffer, unsigned int buff_size, uint64_t output_id);
 int scan(char *buffer, unsigned int buff_size);
 uint64_t *getRegisters(void);
 char scanChar();
-
+int scan_from(char *buffer, unsigned int buff_size, uint64_t input_id);
 // ----------- Screen ------------
 void clearScreen(void);
 void setBackgroundColor(uint32_t color);

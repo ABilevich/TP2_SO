@@ -20,11 +20,11 @@ void start_d(void)
     char *message3 = "123456789";
     //int size3 = strlen(message3);
 
-    write_to(message1, 12, p->id);
+    write_to(message1, 100, p->id);
     //PrintAllPipeInfo();
-    write_to(message2, 20, p->id);
+    write_to(message2, 100, p->id);
     //PrintAllPipeInfo();
-    write_to(message3, 9, p->id);
+    write_to(message3, 100, p->id);
     //PrintAllPipeInfo();
 
     printf("i wrote: %s\n", message1);

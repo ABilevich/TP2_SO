@@ -8,3 +8,6 @@
 #include <test_sem.h>
 #include <test_prio.h>
 #include <test_sync_async.h>
+#include <wc.h>
+#include <filter.h>
+#include <cat.h>
