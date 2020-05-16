@@ -533,7 +533,7 @@ int changeProcessPriority(uint64_t pid, uint64_t priority)
 	{
 		printf("nice ERROR: Process pid %d was not found! Try \"ps\" comand.\n", pid);
 	}
-	return 0;
+	return resp;
 }
 
 int changeProcessState(uint64_t pid, char state)

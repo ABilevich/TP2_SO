@@ -6,3 +6,5 @@
 #include <loop.h>
 #include <test_util.h>
 #include <test_sem.h>
+#include <test_prio.h>
+#include <test_sync_async.h>

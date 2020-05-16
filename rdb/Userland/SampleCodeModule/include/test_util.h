@@ -1,4 +1,5 @@
-#include <stdint.h>
+#ifndef _TEST_UTIL_H
+#define _TEST_UTIL_H
 #include <stdint.h>
 #include <lib_user.h>
 
@@ -14,3 +15,4 @@ uint32_t my_kill(uint32_t pid);
 uint32_t my_block(uint32_t pid);
 uint32_t my_unblock(uint32_t pid);
 void test_processes();
+#endif
