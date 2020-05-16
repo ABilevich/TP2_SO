@@ -3,20 +3,21 @@
 void start_e(void)
 {
 
-    // pipe_info *p = openPipe("test");
+    pipe_info *p = openPipe("test");
 
-    // char *message;
+    char *message = malloc(100 * sizeof(char));
 
-    // read_from(message, 33, p->id);
+    read_from(message,35 , p->id);
+    //PrintAllPipeInfo();
 
-    // printf("i read: %s\n", message);
+    printf("i read: %s\n", message);
 
-    // // PrintAllPipeInfo();
-    // // PrintAllSemInfo();
+    // PrintAllPipeInfo();
+    // PrintAllSemInfo();
 
-    // closePipe(p);
+    closePipe(p);
 
-    // // PrintAllPipeInfo();
-    // // PrintAllSemInfo();
-    // printf("byeee\n");
+    // PrintAllPipeInfo();
+    // PrintAllSemInfo();
+    printf("byeee\n");
 }

@@ -9,7 +9,7 @@ uint64_t my_sem_wait(sem_info *sem);
 uint64_t my_sem_post(sem_info *sem);
 uint64_t my_sem_close(sem_info *sem);
 
-#define N 100000000
+#define N 10000
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 

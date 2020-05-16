@@ -129,7 +129,7 @@ int write(char *buffer, unsigned int buff_size)
 {
 	int finished = 0;
 	int i = 0;
-	char *c = NULL;
+	char *c = malloc(1);
 	uint64_t output_id = getMyOutputId();
 	while (i < buff_size && !finished)
 	{
@@ -139,6 +139,7 @@ int write(char *buffer, unsigned int buff_size)
 		if (c == '\0')
 			finished = 1;
 	}
+	free(c);
 	return i;
 }
 
@@ -146,7 +147,7 @@ int write_to(char *buffer, unsigned int buff_size, uint64_t output_id)
 {
 	int finished = 0;
 	int i = 0;
-	char *c = NULL;
+	char *c = malloc(1);
 	while (i < buff_size && !finished)
 	{
 		*c = buffer[i];
@@ -156,6 +157,7 @@ int write_to(char *buffer, unsigned int buff_size, uint64_t output_id)
 		if (c == '\0')
 			finished = 1;
 	}
+	free(c);
 	return i;
 }
 

@@ -5,12 +5,16 @@ uint64_t sync_create_process(char * name){
 
   if(strcmp("my_process_inc", name) == 0){
     func = &my_process_inc;
+    //printf("creating my_process_inc\n");
   }else if(strcmp("my_process_dec", name) == 0){
     func = &my_process_dec;
+    //printf("creating my_process_dec\n");
   }else if(strcmp("my_process_inc_no_sem", name) == 0){
     func = &my_process_inc_no_sem;
+    //printf("creating my_process_inc_no_sem\n");
   }else if(strcmp("my_process_dec_no_sem", name) == 0){
     func = &my_process_dec_no_sem;
+    //printf("creating my_process_dec_no_sem\n");
   }
   
   return (uint64_t) createProcess(func, 1, 0, name, 0, 0);
@@ -42,9 +46,9 @@ void slowInc(uint64_t *p, uint64_t inc){
 
 void my_process_inc(){
   uint64_t i;
-
+  
   sem_info * s = my_sem_open(SEM_ID, 1);
-
+  //PrintAllSemInfo();
   if (s == NULL){
     printf("ERROR OPENING SEM\n");
     return;
@@ -58,14 +62,14 @@ void my_process_inc(){
 
   my_sem_close(s);
   
-  printf("Final value: %d\n", global);
+  printf("Final sync value: %d\n", global);
 }
 
 void my_process_dec(){
   uint64_t i;
 
   sem_info * s = my_sem_open(SEM_ID, 1);
-
+  //PrintAllSemInfo();
   if ( s == NULL){
     printf("ERROR OPENING SEM\n");
     return;
@@ -79,12 +83,11 @@ void my_process_dec(){
 
   my_sem_close(s);
 
-  printf("Final value: %d\n", global);
+  printf("Final sync value: %d\n", global);
 }
 
 void test_sync(){
   uint64_t i;
-
   global = 0;
 
   printf("CREATING PROCESSES...\n");
@@ -93,7 +96,7 @@ void test_sync(){
     sync_create_process("my_process_inc");
     sync_create_process("my_process_dec");
   }
-  
+
   // The last one should print 0
 }
 
@@ -103,7 +106,7 @@ void my_process_inc_no_sem(){
     slowInc(&global, 1);
   }
 
-  printf("Final value: %d\n", global);
+  printf("Final async value: %d\n", global);
 }
 
 void my_process_dec_no_sem(){
@@ -112,7 +115,7 @@ void my_process_dec_no_sem(){
     slowInc(&global, -1);
   }
 
-  printf("Final value: %d\n", global);
+  printf("Final async value: %d\n", global);
 }
 
 void test_no_sync(){

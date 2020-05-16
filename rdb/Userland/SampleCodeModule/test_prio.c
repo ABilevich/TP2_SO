@@ -42,8 +42,6 @@ void prio_endless_loop(){
   }
 }
 
-#define TOTAL_PROCESSES 3
-
 void test_prio(){
   uint64_t pids[TOTAL_PROCESSES];
   uint64_t i;
@@ -57,16 +55,17 @@ void test_prio(){
   for(i = 0; i < TOTAL_PROCESSES; i++){
     switch (i % 3){
       case 0:
-        my_nice(pids[i], 0); //lowest priority 
+        my_nice(pids[i], 1); //lowest priority 
         break;
       case 1:
-        my_nice(pids[i], 1); //medium priority
+        my_nice(pids[i], 2); //medium priority
         break;
       case 2:
-        my_nice(pids[i], 2); //highest priority
+        my_nice(pids[i], 3); //highest priority
         break;
     }
   }
+//   printAllProcessInfo();
 
   bussy_wait(WAIT);
   printf("\nBLOCKING...\n");
@@ -88,6 +87,7 @@ void test_prio(){
         break;
     }
   }
+//   printAllProcessInfo();
 
   printf("UNBLOCKING...\n");
 
