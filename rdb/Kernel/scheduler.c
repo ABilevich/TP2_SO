@@ -186,6 +186,46 @@ int changeState(uint64_t pid, char state)
     return -1;
 }
 
+int unlockFromSem(uint64_t pid)
+{
+    int counter = 0;
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->pid == pid)
+        {
+            if (aux->pcb->state == BLOCKED_BY_SEM)
+            {
+                aux->pcb->state = READY;
+            }
+            return 0;
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return -1;
+}
+
+int lockToSem(uint64_t pid)
+{
+    int counter = 0;
+    s_node *aux = curr;
+    while (counter < proc_counter)
+    {
+        if (aux->pcb->pid == pid)
+        {
+            if (aux->pcb->state == READY)
+            {
+                aux->pcb->state = BLOCKED_BY_SEM;
+            }
+            return 0;
+        }
+        aux = aux->next;
+        counter++;
+    }
+    return -1;
+}
+
 int kill(uint64_t pid)
 {
     int counter = 0;
@@ -231,7 +271,11 @@ int killCurrent()
     {
         if (curr->pcb->fg == 1)
         {
-            changeState(curr->pcb->caller_pid, READY);
+            s_pcb *parent = getProcessInfo(curr->pcb->caller_pid);
+            if (parent->state == BLOCKED)
+            {
+                parent->state = READY;
+            }
         }
         uint64_t p_aux; //basura
         p_closePipe(curr->pcb->input_id, curr->pcb->pid, &p_aux);

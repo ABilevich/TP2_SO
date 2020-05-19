@@ -431,7 +431,7 @@ void unlockFirstBlockedProc(sem *semaphore)
         if (iterator->is_blocked == 1)
         {
             iterator->is_blocked = 0;
-            changeState(iterator->pid, READY);
+            unlockFromSem(iterator->pid);
             //printString("READY: ", 7);
             //printDec( iterator->pid );
             //printNewLine();

@@ -70,5 +70,6 @@ int unlockReader(uint64_t input_id);
 int unlockWriter(uint64_t output_id);
 void _sti_and_halt();
 void _irq00Handler();
-
+int unlockFromSem(uint64_t pid);
+int lockToSem(uint64_t pid);
 #endif
