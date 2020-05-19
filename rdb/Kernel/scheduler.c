@@ -55,7 +55,7 @@ s_node *findNextReady()
     s_node *aux = curr->next;
     while (counter < proc_counter)
     {
-        if (aux->pcb->state == READY)
+        if (aux->pcb->state == READY && aux->pcb->blocked_by_sem == 0)
         {
             return aux;
         }
@@ -97,6 +97,7 @@ int addPCB(void *rsp, size_t priority, void *stack_start, void *bp, char fg, cha
     new_pcb->input_id = input_id;
     new_pcb->output_id = output_id;
     new_pcb->state = READY;
+    new_pcb->blocked_by_sem = 0;
 
     openPipeForProc(input_id, next_pid);
     openPipeForProc(output_id, next_pid);
@@ -194,10 +195,7 @@ int unlockFromSem(uint64_t pid)
     {
         if (aux->pcb->pid == pid)
         {
-            if (aux->pcb->state == BLOCKED_BY_SEM)
-            {
-                aux->pcb->state = READY;
-            }
+            aux->pcb->blocked_by_sem = 0;
             return 0;
         }
         aux = aux->next;
@@ -214,10 +212,7 @@ int lockToSem(uint64_t pid)
     {
         if (aux->pcb->pid == pid)
         {
-            if (aux->pcb->state == READY)
-            {
-                aux->pcb->state = BLOCKED_BY_SEM;
-            }
+            aux->pcb->blocked_by_sem = 1;
             return 0;
         }
         aux = aux->next;
@@ -320,19 +315,6 @@ void blockCurrentProcess()
     curr->pcb->state = BLOCKED;
 }
 
-void blockCurrentProcessByRead()
-{
-    curr->pcb->state = BLOCKED_BY_READ;
-    printString("read", 4);
-    _irq00Handler();
-}
-
-void blockCurrentProcessByWrite()
-{
-    curr->pcb->state = BLOCKED_BY_WRITE;
-    _irq00Handler();
-}
-
 int blockProcess(uint64_t pid)
 {
     int counter = 0;
@@ -365,46 +347,6 @@ void p_getMyI(uint64_t *resp)
 void p_getMyO(uint64_t *resp)
 {
     *resp = curr->pcb->output_id;
-}
-
-int unlockReader(uint64_t input_id)
-{
-    int counter = 0;
-    s_node *aux = curr;
-    while (counter < proc_counter)
-    {
-        if (aux->pcb->input_id == input_id)
-        {
-            if (aux->pcb->state == BLOCKED_BY_READ)
-            {
-                aux->pcb->state = READY;
-                return 0;
-            }
-        }
-        aux = aux->next;
-        counter++;
-    }
-    return -1;
-}
-
-int unlockWriter(uint64_t output_id)
-{
-    int counter = 0;
-    s_node *aux = curr;
-    while (counter < proc_counter)
-    {
-        if (aux->pcb->output_id == output_id)
-        {
-            if (aux->pcb->state == BLOCKED_BY_WRITE)
-            {
-                aux->pcb->state = READY;
-                return 0;
-            }
-        }
-        aux = aux->next;
-        counter++;
-    }
-    return -1;
 }
 
 void printProcessInfo(uint64_t pid)
@@ -452,32 +394,35 @@ void printPCB(s_pcb *pcb)
     printString("pid: ", 5);
     printDec(pcb->pid);
     printString("  |  ", 5);
-    printString("st: ", 7);
+    printString("st: ", 4);
     printDec(pcb->state);
     printString("  |  ", 5);
-    printString("fg: ", 3);
+    printString("bs: ", 4);
+    printDec(pcb->blocked_by_sem);
+    printString("  |  ", 5);
+    printString("fg: ", 4);
     printDec(pcb->fg);
     printString("  |  ", 5);
-    printString("prty: ", 10);
+    printString("prty: ", 6);
     printDec(pcb->priority);
     printString("  |  ", 5);
-    printString("i_id: ", 10);
+    printString("i_id: ", 6);
     printDec(pcb->input_id);
     printString("  |  ", 5);
-    printString("o_id: ", 10);
+    printString("o_id: ", 6);
     printDec(pcb->output_id);
     printString("  |  ", 5);
-    printString("cpid: ", 12);
+    printString("cpid: ", 6);
     printDec(pcb->caller_pid);
     printNewLine();
-    printString("             | ", 16);
-    printString("sp: ", 5);
+    printString("             | ", 15);
+    printString("sp: ", 4);
     print64Hex(((uint64_t)pcb->rsp));
     printString("  |  ", 5);
-    printString("bp: ", 13);
+    printString("bp: ", 4);
     print64Hex(((uint64_t)pcb->bp));
     printString("  |  ", 5);
-    printString("ss: ", 13);
+    printString("ss: ", 4);
     print64Hex(((uint64_t)pcb->stack_start));
     printNewLine();
 }

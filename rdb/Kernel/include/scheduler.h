@@ -37,6 +37,7 @@ typedef struct s_pcb
     char is_deletable;
     char fg;
     char state;
+    char blocked_by_sem;
 } s_pcb;
 
 typedef struct s_node
@@ -55,8 +56,7 @@ int killCurrent();
 void printPCB(s_pcb *pcb);
 int blockProcess(uint64_t pid);
 void blockCurrentProcess();
-void blockCurrentProcessByRead();
-void blockCurrentProcessByWrite();
+
 int changeState(uint64_t pid, char state);
 int changePriority(uint64_t pid, char priority);
 s_node *findNextReady();
@@ -66,8 +66,7 @@ int getCurrentPid();
 s_pcb *getProcessInfo(uint64_t pid);
 void p_getMyI(uint64_t *resp);
 void p_getMyO(uint64_t *resp);
-int unlockReader(uint64_t input_id);
-int unlockWriter(uint64_t output_id);
+
 void _sti_and_halt();
 void _irq00Handler();
 int unlockFromSem(uint64_t pid);
