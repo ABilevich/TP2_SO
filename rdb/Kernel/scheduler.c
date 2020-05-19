@@ -75,6 +75,7 @@ s_node *findNextReady()
         aux = aux->next;
         counter++;
     }
+    return NULL;
 }
 
 int addPCB(void *rsp, size_t priority, void *stack_start, void *bp, char fg, char *name, uint64_t input_id, uint64_t output_id)
@@ -199,7 +200,11 @@ int kill(uint64_t pid)
             }
             if (aux->pcb->fg == 1)
             {
-                changeState(aux->pcb->caller_pid, READY);
+                s_pcb *parent = getProcessInfo(aux->pcb->caller_pid);
+                if (parent->state == BLOCKED)
+                {
+                    parent->state = READY;
+                }
             }
 
             uint64_t p_aux; //basura

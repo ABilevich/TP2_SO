@@ -9,6 +9,7 @@ GLOBAL _sys_process
 GLOBAL _sys_semaphore
 GLOBAL _sys_pipe
 GLOBAL _get_rsp
+GLOBAL _my_halt
 
 GLOBAL getRegisters
 GLOBAL testDivException
@@ -179,5 +180,9 @@ SYS_PIPE_CODE equ 9
 
 _sti_and_halt:
     sti
+    hlt
+    ret
+
+_my_halt:
     hlt
     ret

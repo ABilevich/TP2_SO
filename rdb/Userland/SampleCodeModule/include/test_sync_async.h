@@ -3,13 +3,13 @@
 #include <stdint.h>
 #include <lib_user.h>
 
-uint64_t sync_create_process(char * name);
-sem_info *  my_sem_open(char *sem_id, uint64_t initialValue);
+uint64_t sync_create_process(char *name);
+sem_info *my_sem_open(char *sem_id, uint64_t initialValue);
 uint64_t my_sem_wait(sem_info *sem);
 uint64_t my_sem_post(sem_info *sem);
 uint64_t my_sem_close(sem_info *sem);
 
-#define N 10000
+#define N 1000000
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 

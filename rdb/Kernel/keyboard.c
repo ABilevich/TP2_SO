@@ -66,6 +66,7 @@ void keyboard_handler(void)
     buffer_size = &(aux_p->buff_taken_size);
     buffer = aux_p->buff;
   }
+  uint64_t starting_buff_size = *buffer_size;
   aux_p = p_getPipe(0);
   uint64_t r_sem_id = aux_p->r_sem_id;
   uint64_t w_sem_id = aux_p->w_sem_id;
@@ -73,6 +74,7 @@ void keyboard_handler(void)
   uint64_t pid = getCurrentPid();
   uint64_t auxresp;
   addProcessToSemViaId(w_sem_id, pid);
+
   s_semWait(w_sem_id, pid, &auxresp);
   //printString("test1", 5);
   uint8_t aux = kbGet();
@@ -99,7 +101,6 @@ void keyboard_handler(void)
     if (spec != SHIFT_IN && spec != SHIFT_OUT && spec != CAPS)
     {
       buffer[(*buffer_size)++] = spec;
-      s_semPost(r_sem_id, &auxresp);
     }
   }
 
@@ -117,6 +118,10 @@ void keyboard_handler(void)
     {
       keyHandler[SHIFTED][0](aux);
     }
+  }
+
+  if (starting_buff_size != *buffer_size)
+  {
     s_semPost(r_sem_id, &auxresp);
   }
   RemoveProcessFromSemViaId(w_sem_id, pid);

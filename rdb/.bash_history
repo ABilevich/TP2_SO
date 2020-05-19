@@ -1,18 +1,4 @@
 make all
-make clean
-make all
-make all
-make clean
-make all
-make all
-make all
-make clean
-make all
-make clean
-make all
-make all
-make clean
-make all
 make all
 make clean
 make all
@@ -497,4 +483,18 @@ make clean
 make all
 make all
 make all
+exit
+ls
+cd root/
+ls
+cat run.sh
+qemu-system-x86_64 -hda Image/x64BareBonesImage.qcow2 -m 512 -soundhw pcspk -d int gdb 2>&1 | grep "v=" | grep -v -e "v=20" -e "v=80"
+./run.sh
+ls
+make all
+./run.sh
+./run
+cat run.sh
+qemu-system-x86_64 -hda Image/x64BareBonesImage.qcow2 -m 512 -soundhw pcspk
+q
 exit

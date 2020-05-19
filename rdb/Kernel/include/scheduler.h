@@ -63,6 +63,7 @@ s_node *findNextReady();
 void printProcessInfo();
 void printAllProcessInfo();
 int getCurrentPid();
+s_pcb *getProcessInfo(uint64_t pid);
 void p_getMyI(uint64_t *resp);
 void p_getMyO(uint64_t *resp);
 int unlockReader(uint64_t input_id);

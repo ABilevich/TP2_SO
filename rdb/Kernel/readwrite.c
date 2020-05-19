@@ -31,7 +31,14 @@ void rw_read(void *c, uint64_t input_id, uint64_t *resp)
 	uint64_t auxresp;
 	addProcessToSemViaId(r_sem_id, pid);
 	s_semWait(r_sem_id, pid, &auxresp);
+
 	//pipePrintAll();
+	if (*actual_buffer_size == 0)
+	{
+		printString("se rompio ", 9);
+		printDec(input_id);
+		//aca a veces entra
+	}
 	char ans = actual_buffer[0]; // Devuelvo el primer char
 	(*actual_buffer_size)--;
 	for (int j = 0; j < *actual_buffer_size; j++)
@@ -49,9 +56,9 @@ void rw_read(void *c, uint64_t input_id, uint64_t *resp)
 
 void rw_write(char *c, uint64_t output_id, uint64_t *resp)
 {
-
-	if(output_id == 0){
-		printString(c,1);
+	if (output_id == 0)
+	{
+		printString(c, 1);
 		return;
 	}
 
@@ -72,7 +79,6 @@ void rw_write(char *c, uint64_t output_id, uint64_t *resp)
 	addProcessToSemViaId(w_sem_id, pid);
 
 	s_semWait(w_sem_id, pid, &auxresp);
-	//printString(c, 1);
 
 	actual_buffer[(*actual_buffer_size)] = *c;
 	(*actual_buffer_size)++;

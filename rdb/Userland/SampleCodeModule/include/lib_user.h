@@ -197,5 +197,8 @@ int printBin(uint64_t value);
 int printBase(uint64_t value, uint32_t base);
 uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base);
 
-char* my_strcat(char* destination, const char* source);
+char *my_strcat(char *destination, const char *source);
+
+void halt();
+
 #endif

@@ -130,6 +130,10 @@ _sti_and_halt:
     hlt
     ret
 
+_halt:
+    hlt
+    ret
+
 _forceInt20:
 	int 0x20
     ret

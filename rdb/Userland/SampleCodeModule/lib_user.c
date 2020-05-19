@@ -45,6 +45,11 @@ int getTakenHeapSize(void)
 	return (int)(*resp);
 }
 
+void halt()
+{
+	_sys_system((void *)6, 0, 0, 0);
+}
+
 // ----------- Timet ------------
 
 unsigned long getTicks()
@@ -107,7 +112,8 @@ int read_from(char *buffer, unsigned int buff_size, uint64_t input_id)
 		char c;
 		_sys_read_write(0, (void *)&c, (void *)input_id, 0, 0);
 		buffer[i++] = c;
-		if (c == '\0'){
+		if (c == '\0')
+		{
 			i--;
 			finished = 1;
 		}
@@ -708,11 +714,10 @@ void PrintAllPipeInfo()
 	_sys_pipe((void *)2, 0, 0, 0, 0);
 }
 
-
-char* my_strcat(char* destination, const char* source)
+char *my_strcat(char *destination, const char *source)
 {
 	// make ptr point to the end of destination string
-	char* ptr = destination + strlen(destination);
+	char *ptr = destination + strlen(destination);
 
 	// Appends characters of source to the destination string
 	while (*source != '\0')
