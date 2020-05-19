@@ -17,7 +17,6 @@
  * for larger allocations again.
  */
 
-
 /*
  * Every allocation needs an 8-byte header to store the allocation size while
  * staying 8-byte aligned. The address returned by "malloc" is the address
@@ -40,7 +39,7 @@
  * heaps will have multiple allocations, so the real maximum allocation limit
  * is at most 1gb.
  */
-#define MAX_ALLOC_LOG2 20
+#define MAX_ALLOC_LOG2 27
 #define MAX_ALLOC ((size_t)1 << MAX_ALLOC_LOG2)
 
 /* 
@@ -55,7 +54,6 @@
  */
 #define BUCKET_COUNT (MAX_ALLOC_LOG2 - MIN_ALLOC_LOG2 + 1)
 
-
 /*
  * Free lists are stored as circular doubly-linked lists. Every possible
  * allocation size has an associated free list that is threaded through all
@@ -63,7 +61,8 @@
  * "sizeof(list_t)". MIN_ALLOC is currently 16 bytes, so this will be true for
  * both 32-bit and 64-bit.
  */
-typedef struct list_t {
+typedef struct list_t
+{
   struct list_t *prev, *next;
 } list_t;
 
@@ -127,10 +126,10 @@ static uint8_t *max_ptr;
 
 //----------------------------PROTOS---------------------------------------------------------------------------
 
-void * sbrk (int increment);
+void *sbrk(int increment);
 int brk(char *new_location);
 
-void * og_malloc(size_t request);
+void *og_malloc(size_t request);
 void og_free(void *ptr);
 
 static int update_max_ptr(uint8_t *new_value);
@@ -147,53 +146,60 @@ static int lower_bucket_limit(size_t bucket);
 
 //----------------------------VARIABLES---------------------------------------------------------------------------
 
-static size_t  free_bytes_remaining = TOTAL_HEAP_SIZE;
+static size_t free_bytes_remaining = TOTAL_HEAP_SIZE;
 
 //----------------------------WRAPPER-----------------------------------------------------------------------------
 
-void malloc(size_t wanted_size, void ** ret_val){
-  *ret_val = (void *) og_malloc(wanted_size);
+void malloc(size_t wanted_size, void **ret_val)
+{
+  *ret_val = (void *)og_malloc(wanted_size);
 }
 
-void free( void * p){
+void free(void *p)
+{
   og_free(p);
 }
 
-void getFreeHeapSize(size_t * resp){
-    *resp = free_bytes_remaining;
+void getFreeHeapSize(size_t *resp)
+{
+  *resp = free_bytes_remaining;
 }
 
-void getTotalHeapSize(size_t * resp){
-    *resp = TOTAL_HEAP_SIZE;
+void getTotalHeapSize(size_t *resp)
+{
+  *resp = TOTAL_HEAP_SIZE;
 }
 
-void getTakenHeapSize(size_t * resp){
-    *resp = TOTAL_HEAP_SIZE - free_bytes_remaining;
+void getTakenHeapSize(size_t *resp)
+{
+  *resp = TOTAL_HEAP_SIZE - free_bytes_remaining;
 }
-
 
 //----------------------------SBRK & BRK-------------------------------------------------------------------------
 
+static char *heap_location = (char *)HEAP_START;
+char *const mem_end = (void *)(HEAP_START + TOTAL_HEAP_SIZE + 1);
+static char *mem_start = (void *)HEAP_START;
 
-static char * heap_location = (char *)HEAP_START;
-char *const mem_end = (void*)(HEAP_START + TOTAL_HEAP_SIZE + 1);
-static char * mem_start = (void*)HEAP_START;
-
-void * sbrk (int increment){
+void *sbrk(int increment)
+{
 
   char *const original = heap_location;
 
-  if (increment < mem_start - heap_location  ||  increment >= mem_end - heap_location){
-      return (void*)-1;
+  if (increment < mem_start - heap_location || increment >= mem_end - heap_location)
+  {
+    return (void *)-1;
   }
   heap_location += increment;
 
   return original;
 }
 
-int brk(char *new_location){
+int brk(char *new_location)
+{
 
-  if( new_location <= mem_end && new_location >= mem_start ){
+  if (new_location <= mem_end && new_location >= mem_start)
+  {
     heap_location = new_location;
     return 0;
   }
@@ -209,9 +215,12 @@ int brk(char *new_location){
  * front. It's only reserved when it's needed by calling this function. This
  * will return false if the memory could not be reserved.
  */
-static int update_max_ptr(uint8_t *new_value) {
-  if (new_value > max_ptr) {
-    if (brk((char*)new_value)) {
+static int update_max_ptr(uint8_t *new_value)
+{
+  if (new_value > max_ptr)
+  {
+    if (brk((char *)new_value))
+    {
       return 0;
     }
     max_ptr = new_value;
@@ -224,7 +233,8 @@ static int update_max_ptr(uint8_t *new_value) {
  * list is an entry where both links point to itself. This makes insertion
  * and removal simpler because they don't need any branches.
  */
-static void list_init(list_t *list) {
+static void list_init(list_t *list)
+{
   list->prev = list;
   list->next = list;
 }
@@ -233,7 +243,8 @@ static void list_init(list_t *list) {
  * Append the provided entry to the end of the list. This assumes the entry
  * isn't in a list already because it overwrites the linked list pointers.
  */
-static void list_push(list_t *list, list_t *entry) {
+static void list_push(list_t *list, list_t *entry)
+{
   list_t *prev = list->prev;
   entry->prev = prev;
   entry->next = list;
@@ -247,7 +258,8 @@ static void list_push(list_t *list, list_t *entry) {
  * because the lists are circular, so the list's pointers will automatically
  * be updated if the first or last entries are removed.
  */
-static void list_remove(list_t *entry) {
+static void list_remove(list_t *entry)
+{
   list_t *prev = entry->prev;
   list_t *next = entry->next;
   prev->next = next;
@@ -257,9 +269,11 @@ static void list_remove(list_t *entry) {
 /*
  * Remove and return the first entry in the list or NULL if the list is empty.
  */
-static list_t *list_pop(list_t *list) {
+static list_t *list_pop(list_t *list)
+{
   list_t *back = list->prev;
-  if (back == list) return NULL;
+  if (back == list)
+    return NULL;
   list_remove(back);
   return back;
 }
@@ -270,7 +284,8 @@ static list_t *list_pop(list_t *list) {
  * required to be provided here since having them means we can avoid the loop
  * and have this function return in constant time.
  */
-static uint8_t *ptr_for_node(size_t index, size_t bucket) {
+static uint8_t *ptr_for_node(size_t index, size_t bucket)
+{
   return base_ptr + ((index - (1 << bucket) + 1) << (MAX_ALLOC_LOG2 - bucket));
 }
 
@@ -279,13 +294,15 @@ static uint8_t *ptr_for_node(size_t index, size_t bucket) {
  * address. There are often many nodes that all map to the same address, so
  * the bucket is needed to uniquely identify a node.
  */
-static size_t node_for_ptr(uint8_t *ptr, size_t bucket) {
+static size_t node_for_ptr(uint8_t *ptr, size_t bucket)
+{
   return ((ptr - base_ptr) >> (MAX_ALLOC_LOG2 - bucket)) + (1 << bucket) - 1;
 }
 /*
  * Given the index of a node, this returns the "is split" flag of the parent.
  */
-static int parent_is_split(size_t index) {
+static int parent_is_split(size_t index)
+{
   index = (index - 1) / 2;
   return (node_is_split[index / 8] >> (index % 8)) & 1;
 }
@@ -293,7 +310,8 @@ static int parent_is_split(size_t index) {
 /*
  * Given the index of a node, this flips the "is split" flag of the parent.
  */
-static void flip_parent_is_split(size_t index) {
+static void flip_parent_is_split(size_t index)
+{
   index = (index - 1) / 2;
   node_is_split[index / 8] ^= 1 << (index % 8);
 }
@@ -302,11 +320,13 @@ static void flip_parent_is_split(size_t index) {
  * Given the requested size passed to "malloc", this function returns the index
  * of the smallest bucket that can fit that size.
  */
-static size_t bucket_for_request(size_t request) {
+static size_t bucket_for_request(size_t request)
+{
   size_t bucket = BUCKET_COUNT - 1;
   size_t size = MIN_ALLOC;
 
-  while (size < request) {
+  while (size < request)
+  {
     bucket--;
     size *= 2;
   }
@@ -319,8 +339,10 @@ static size_t bucket_for_request(size_t request) {
  * tree by repeatedly doubling it in size until the root lies at the provided
  * bucket index. Each doubling lowers the bucket limit by 1.
  */
-static int lower_bucket_limit(size_t bucket) {
-  while (bucket < bucket_limit) {
+static int lower_bucket_limit(size_t bucket)
+{
+  while (bucket < bucket_limit)
+  {
     size_t root = node_for_ptr(base_ptr, bucket_limit);
     uint8_t *right_child;
 
@@ -330,7 +352,8 @@ static int lower_bucket_limit(size_t bucket) {
      * clear the root free list, increase the bucket limit, and add a single
      * block with the newly-expanded address space to the new root free list.
      */
-    if (!parent_is_split(root)) {
+    if (!parent_is_split(root))
+    {
       list_remove((list_t *)base_ptr);
       list_init(&buckets[--bucket_limit]);
       list_push(&buckets[bucket_limit], (list_t *)base_ptr);
@@ -346,7 +369,8 @@ static int lower_bucket_limit(size_t bucket) {
      * checked it above).
      */
     right_child = ptr_for_node(root + 1, bucket_limit);
-    if (!update_max_ptr(right_child + sizeof(list_t))) {
+    if (!update_max_ptr(right_child + sizeof(list_t)))
+    {
       return 0;
     }
     list_push(&buckets[bucket_limit], (list_t *)right_child);
@@ -357,7 +381,8 @@ static int lower_bucket_limit(size_t bucket) {
      * again, we'll know that the new root node we just added is in use.
      */
     root = (root - 1) / 2;
-    if (root != 0) {
+    if (root != 0)
+    {
       flip_parent_is_split(root);
     }
   }
@@ -365,29 +390,15 @@ static int lower_bucket_limit(size_t bucket) {
   return 1;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //-------------------------------------------------------------------------------------------------------------
-void * og_malloc(size_t request) {
+void *og_malloc(size_t request)
+{
 
   //--------TEST----------
-  //printString("Entering malloc: ", 17);																	  
+  //printString("Entering malloc: ", 17);
   //printDec(free_bytes_remaining);
   //printNewLine();
   //--------TEST----------
-  
 
   size_t original_bucket, bucket;
 
@@ -396,11 +407,12 @@ void * og_malloc(size_t request) {
    * a hard-coded limit on the maximum allocation size because of the way this
    * allocator works.
    */
-  if (request + HEADER_SIZE > MAX_ALLOC) {
+  if (request + HEADER_SIZE > MAX_ALLOC)
+  {
 
     //--------TEST----------
-    //printString("Error in size: ", 17);	
-    //printDec(request + HEADER_SIZE);	
+    //printString("Error in size: ", 17);
+    //printDec(request + HEADER_SIZE);
     //printNewLine();
     //--------TEST----------
 
@@ -412,7 +424,8 @@ void * og_malloc(size_t request) {
    * beginning, the tree has a single node that represents the smallest
    * possible allocation size. More memory will be reserved later as needed.
    */
-  if (base_ptr == NULL) {
+  if (base_ptr == NULL)
+  {
     base_ptr = max_ptr = (uint8_t *)sbrk(0);
     bucket_limit = BUCKET_COUNT - 1;
     update_max_ptr(base_ptr + sizeof(list_t));
@@ -432,7 +445,8 @@ void * og_malloc(size_t request) {
    * than what we need. If there isn't an exact match, we'll need to split a
    * larger one to get a match.
    */
-  while (bucket + 1 != 0) {
+  while (bucket + 1 != 0)
+  {
     size_t size, bytes_needed, i;
     uint8_t *ptr;
 
@@ -440,7 +454,8 @@ void * og_malloc(size_t request) {
      * We may need to grow the tree to be able to fit an allocation of this
      * size. Try to grow the tree and stop here if we can't.
      */
-    if (!lower_bucket_limit(bucket)) {
+    if (!lower_bucket_limit(bucket))
+    {
       return NULL;
     }
 
@@ -449,12 +464,14 @@ void * og_malloc(size_t request) {
      * is empty, we're going to have to split a larger block instead.
      */
     ptr = (uint8_t *)list_pop(&buckets[bucket]);
-    if (!ptr) {
+    if (!ptr)
+    {
       /*
        * If we're not at the root of the tree or it's impossible to grow the
        * tree any more, continue on to the next bucket.
        */
-      if (bucket != bucket_limit || bucket == 0) {
+      if (bucket != bucket_limit || bucket == 0)
+      {
         bucket--;
         continue;
       }
@@ -466,7 +483,8 @@ void * og_malloc(size_t request) {
        * the SPLIT state and then add the new right child node to the free list
        * for this bucket. Popping the free list will give us this right child.
        */
-      if (!lower_bucket_limit(bucket - 1)) {
+      if (!lower_bucket_limit(bucket - 1))
+      {
         return NULL;
       }
       ptr = (uint8_t *)list_pop(&buckets[bucket]);
@@ -478,7 +496,8 @@ void * og_malloc(size_t request) {
      */
     size = (size_t)1 << (MAX_ALLOC_LOG2 - bucket);
     bytes_needed = bucket < original_bucket ? size / 2 + sizeof(list_t) : size;
-    if (!update_max_ptr(ptr + bytes_needed)) {
+    if (!update_max_ptr(ptr + bytes_needed))
+    {
       list_push(&buckets[bucket], (list_t *)ptr);
       return NULL;
     }
@@ -495,7 +514,8 @@ void * og_malloc(size_t request) {
      * wouldn't ever have been split in the first place).
      */
     i = node_for_ptr(ptr, bucket);
-    if (i != 0) {
+    if (i != 0)
+    {
       flip_parent_is_split(i);
     }
 
@@ -506,7 +526,8 @@ void * og_malloc(size_t request) {
      * child, splitting the parent, and then adding the right child to the free
      * list.
      */
-    while (bucket < original_bucket) {
+    while (bucket < original_bucket)
+    {
       i = i * 2 + 1;
       bucket++;
       flip_parent_is_split(i);
@@ -518,41 +539,29 @@ void * og_malloc(size_t request) {
      * of the allocation) and return the address immediately after the header.
      */
     *(size_t *)ptr = request;
-    
+
     free_bytes_remaining -= (size_t)1 << (MAX_ALLOC_LOG2 - bucket);
 
     //--------TEST----------
-    //printString("Exiting malloc: ", 16);																  
+    //printString("Exiting malloc: ", 16);
     //printDec(free_bytes_remaining);
     //printString(" - bucket: ", 11);
     //printDec(bucket);
     //printNewLine();
     //--------TEST----------
- 
+
     return ptr + HEADER_SIZE;
   }
 
   return NULL;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 //-------------------------------------------------------------------------------------------------------------
-void og_free(void *ptr) {
+void og_free(void *ptr)
+{
 
-  
   //--------TEST----------
-  //printString("Entering free: ", 15);																	  
+  //printString("Entering free: ", 15);
   //printDec(free_bytes_remaining);
   //printNewLine();
   //--------TEST----------
@@ -562,7 +571,8 @@ void og_free(void *ptr) {
   /*
    * Ignore any attempts to free a NULL pointer.
    */
-  if (!ptr) {
+  if (!ptr)
+  {
     return;
   }
 
@@ -574,7 +584,7 @@ void og_free(void *ptr) {
   ptr = (uint8_t *)ptr - HEADER_SIZE;
   original_bucket = bucket = bucket_for_request(*(size_t *)ptr + HEADER_SIZE);
   //--------TEST----------
-  // printString("need to free: ", 14);																	  
+  // printString("need to free: ", 14);
   // printDec(*(size_t *)ptr + HEADER_SIZE);
   // printNewLine();
   //--------TEST----------
@@ -584,7 +594,8 @@ void og_free(void *ptr) {
    * Traverse up to the root node, flipping USED blocks to UNUSED and merging
    * UNUSED buddies together into a single UNUSED parent.
    */
-  while (i != 0) {
+  while (i != 0)
+  {
     /*
      * Change this node from UNUSED to USED. This involves flipping our
      * parent's "is split" bit because that bit is the exclusive-or of the
@@ -601,7 +612,8 @@ void og_free(void *ptr) {
      * Also stop here if we're at the current root node, even if that root node
      * is now UNUSED. Root nodes don't have a buddy so we can't merge with one.
      */
-    if (parent_is_split(i) || bucket == bucket_limit) {
+    if (parent_is_split(i) || bucket == bucket_limit)
+    {
       break;
     }
 
@@ -625,19 +637,15 @@ void og_free(void *ptr) {
    */
   list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
 
-
   free_bytes_remaining += (size_t)1 << (MAX_ALLOC_LOG2 - original_bucket);
 
   //--------TEST----------
-  // printString("Exiting free: ", 14);																	  
+  // printString("Exiting free: ", 14);
   // printDec(free_bytes_remaining);
   // printString(" - bucket: ", 11);
   // printDec(original_bucket);
   // printNewLine();
   //--------TEST----------
-  
 }
-
-
 
 #endif
