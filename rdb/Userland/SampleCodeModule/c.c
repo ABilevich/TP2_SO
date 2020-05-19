@@ -21,6 +21,4 @@ void start_c(void)
     semClose(si);
 
     printf("C final counter: %d\n", *variable);
-
-    //while (1);
 }

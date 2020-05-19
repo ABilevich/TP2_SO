@@ -75,10 +75,6 @@ void startShell()
     setBackgroundColor(USER_BACKGROUND_COLOR);
     int real_buff_size = BUFFER_SIZE - strlen(user) - strlen(syst_name);
 
-    // printf("rsp es: ");
-    // print64Hex(_get_rsp());
-    // println("");
-
     while (1)
     {
         showCursor(1);
@@ -386,7 +382,6 @@ static void instructionHandler()
                     char *name2 = runable_name[i2];
 
                     pipe_info *pipe = openPipe(NULL);
-                    //printf("in shell pipe id: %d\n", pipe->id);
                     run(func1, name1, BG, STDIN, pipe->id);
                     run(func2, name2, BG, pipe->id, STDOUT);
                     closePipe(pipe);
@@ -422,7 +417,6 @@ static int instructionReader(char *cmd, char params[][LONGEST_PARAM])
     if (instr[i] == '\0')
         return params_read;
 
-    //en instr[i] me quedo un espacio
     if (i < COMMANDS_BUFFER_SIZE)
     {
         i++;
@@ -441,7 +435,7 @@ static int instructionReader(char *cmd, char params[][LONGEST_PARAM])
         }
         i++;
     }
-    if (instr[i] == '\0') //si corto porque se acabo el string --> me quedo un param mas
+    if (instr[i] == '\0')
         params[params_read++][j] = '\0';
 
     if (params_read > MAX_PARAMS)

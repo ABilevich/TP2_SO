@@ -7,26 +7,16 @@ void start_e(void)
 
     char *message = malloc(100 * sizeof(char));
 
-    scan_from(message,100, p->id);
+    scan_from(message, 100, p->id);
     printf("i read: %s\n", message);
-    scan_from(message,100, p->id);
+    scan_from(message, 100, p->id);
     printf("i read: %s\n", message);
-    scan_from(message,100, p->id);
+    scan_from(message, 100, p->id);
     printf("i read: %s\n", message);
 
     wait(1000);
-    printf("--------------\n", message);
-    
-    write("hola buendia test xdxdxdx", 1000);
 
-    printf("--------------\n", message);
-
-    // PrintAllPipeInfo();
-    // PrintAllSemInfo();
+    printf("byeee");
 
     closePipe(p);
-
-    // PrintAllPipeInfo();
-    // PrintAllSemInfo();
-    printf("byeee\n");
 }

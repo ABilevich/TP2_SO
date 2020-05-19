@@ -247,7 +247,6 @@ void testMem3()
     for (int i = 0; i < 40; i++)
     {
         aux[i] = malloc(i);
-        //printf("i: %d\n", i);
         if (aux[i] == NULL)
         {
             printf("ERROR(5)[%d] in Test-3: \n", i);
@@ -256,7 +255,6 @@ void testMem3()
 
     for (int i = 39; i >= 0; i--)
     {
-        //printf("free i: %d\n", i);
         free((void *)aux[i]);
     }
 
@@ -317,7 +315,7 @@ void mem()
 }
 
 void testProcess()
-{ //obsolete
+{
     printAllProcessInfo();
 }
 

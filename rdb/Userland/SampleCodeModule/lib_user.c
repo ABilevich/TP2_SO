@@ -135,7 +135,6 @@ int write_to(char *buffer, unsigned int buff_size, uint64_t output_id)
 	while (i < buff_size && !finished)
 	{
 		*c = buffer[i];
-		//printf("buffer[i] = %c, c = %c\n", buffer[i], *c);
 		_sys_read_write((void *)1, (void *)c, (void *)output_id, 0, 0);
 		i++;
 		if (*c == '\0')
@@ -617,7 +616,6 @@ sem_info *semOpen(char *name, uint64_t start_cont)
 
 int semClose(sem_info *si)
 {
-	//printf("asd6\n");
 	int pid = getPid();
 	uint64_t id = si->id;
 	int resp;

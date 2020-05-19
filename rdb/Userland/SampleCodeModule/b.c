@@ -22,6 +22,4 @@ void start_b(void)
     semClose(si);
 
     printf("B final counter: %d\n", *variable);
-
-    //while (1);
 }
