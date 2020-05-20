@@ -67,7 +67,7 @@ void p_createProcess(void *rip, uint64_t *params, char *name, int *resp_pid)
 	void *argc = 0;
 	void *argv = 0;
 
-	fn func_wrapper;
+	w_func func_wrapper;
 	func_wrapper = &wrapper;
 
 	_fillstack(bp, func_wrapper, argc, argv, rip);

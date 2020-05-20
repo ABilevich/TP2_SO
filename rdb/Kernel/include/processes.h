@@ -8,6 +8,7 @@
 #include <pipes.h>
 
 typedef void (*fn)(void);
+typedef void (*w_func)(int argc, char *argv[], fn to_be_run);
 
 int sys_process(void *option, void *arg1, void *arg2, void *arg3, void *arg4);
 void p_createProcess(void *rip, uint64_t *params, char *name, int *resp_pid);
