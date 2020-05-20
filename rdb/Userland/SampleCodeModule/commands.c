@@ -20,7 +20,7 @@ void printUserManual()
     println("| |_| \\__ \\  __/ |    | |  | | (_| | | | | |_| | (_| | |");
     println(" \\___/|___/\\___|_|    \\_|  |_/\\__,_|_| |_|\\__,_|\\__,_|_|");
     println("");
-    println("Commands are listed below:\n");
+    println("Original commands are listed below:\n");
     println("- aracnoid --> A classic brick breaker like game.");
     println("- clock    --> Information about the local time in Buenos Aires.");
     println("- inforeg  --> Prints registers status.");
@@ -35,15 +35,19 @@ void printUserManual()
     println("       + inv_op_code        --> Tests Invalid Op-code.");
     println("");
     println("New commands are listed below:\n");
-    println("- mem      --> Prints information about the memory state.");
-    println("- ps       --> lists all runing processes with aditional information.");
-    println("- run   [process name] (&)  --> command to run a new process | optional & to create the process in bg.");
-    println("- kill  [process pid]       --> Kills indicated process.");
-    println("- nice  [process pid]  [new priority]    --> Changes the priority of the process indicated");
-    println("- block [process pid]       --> switches state from READY to BLOCK or vice versa");
-    println("- phylo       --> starts philosophers dinning problem, pressing \"a\" will add a new philosopher and pressing \"r\" will ");
+    println("- mem                                  --> Prints information about the memory state.");
+    println("- pipe                                 --> Prints information about the pipes");
+    println("- sem                                  --> Prints information about the semaphores");
+    println("- ps                                   --> lists all runing processes with aditional information.");
+    println("- run   [process name] (&)             --> command to run a new process | optional & to create the process in bg.");
+    println("- kill  [process pid]                  --> Kills indicated process.");
+    println("- nice  [process pid]  [new priority]  --> Changes the priority of the process indicated");
+    println("- block [process pid]                  --> switches state from READY to BLOCK or vice versa");
+    println("- phylo                                --> starts philosophers dinning problem");
+    println("                                               pressing \"a\" will add a new philosopher");
+    println("                                               pressing \"r\" will remove a philosopher");
     println("");
-    println("Available processes:\n");
+    println("Available processes: (must be run with the \"run\" cmd)\n");
     println("  a            --> prints a message for testing with wc, filter and cat");
     println("  b            --> ");
     println("  c            --> counts forever printing every 100 (for testing priority)");
@@ -54,6 +58,9 @@ void printUserManual()
     println("  test_proc    --> runs teacher provided process creation stress test");
     println("  test_prio    --> runs teacher provided process priority test");
     println("  test_sem     --> runs teacher provided semaphore stress test");
+    println("  wc           --> counts the ammount of lines in input");
+    println("  filter       --> removes vowels from input");
+    println("  cat          --> prints input as it gets it");
     println("");
 }
 
