@@ -31,20 +31,11 @@ static size_t block_allocated_bit = 0;
 
 void malloc(size_t wanted_size, void ** ret_val){
 
-    //--------TEST----------
-    // printString("M", 1);
-    // printNewLine();	
-    //--------TEST----------
-
     block_link *block, *previous_block, *new_block_link;
    
     if( End == NULL ){
         HeapInit();
     }
-
-    //--------TEST----------
-    // _t_printFreeMem();
-    //--------TEST----------
 
     /* Check the requested block size is not so large that the top bit is
 	set.  The top bit of the block size member of the BlockLink_t structure
@@ -115,21 +106,11 @@ void malloc(size_t wanted_size, void ** ret_val){
                 *ret_val = NULL;
             }
 
-            //--------TEST----------
-            // _t_printFreeMem();
-            //--------TEST----------
-
         }
     }
 }
 
 void free(void * p){
-
-    //--------TEST----------
-    // printString("F", 1);
-    // printNewLine();
-    // _t_printFreeMem();
-    //--------TEST----------
 
     uint8_t *puc = ( uint8_t * ) p;
     block_link *link;
@@ -157,10 +138,6 @@ void free(void * p){
         }
     }
 
-    //--------TEST----------
-    // _t_printFreeMem();
-    //--------TEST----------
-
 }
 
 void getFreeHeapSize(size_t * resp){
@@ -175,7 +152,7 @@ void getTakenHeapSize(size_t * resp){
 	*resp = TOTAL_HEAP_SIZE - free_bytes_remaining;
 }
 
-//--------TEST----------
+
 void _t_printFreeMem(){
     block_link *aux_block;
 
@@ -189,7 +166,6 @@ void _t_printFreeMem(){
     printString("end", 3);
     printNewLine();
 }
- //--------TEST----------
 
 
 static void HeapInit(){

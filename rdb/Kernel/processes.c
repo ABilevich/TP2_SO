@@ -48,8 +48,6 @@ void p_createProcess(void *rip, uint64_t *params, char *name, int *resp_pid)
 	uint64_t input_id = params[2];
 	uint64_t output_id = params[3];
 
-	// printString("New Process: ", 13);
-	// printNewLine();
 	void *stack_start;
 	void *bp;
 	malloc(STACK_SIZE * 8, &stack_start);
@@ -62,15 +60,7 @@ void p_createProcess(void *rip, uint64_t *params, char *name, int *resp_pid)
 		return;
 	}
 
-	// printString("stack start: ", 13);
-	// print64Hex((uint64_t)stack_start);
-	// printNewLine();
-
 	bp = (void *)((uint64_t *)stack_start + STACK_SIZE + 1);
-
-	// printString("base pointer: ", 14);
-	// print64Hex((uint64_t)bp);
-	// printNewLine();
 
 	void *rsp = (void *)((uint64_t *)bp - 20);
 
@@ -83,27 +73,6 @@ void p_createProcess(void *rip, uint64_t *params, char *name, int *resp_pid)
 	_fillstack(bp, func_wrapper, argc, argv, rip);
 
 	*resp_pid = addPCB(rsp, priority, stack_start, bp, fg, name, input_id, output_id);
-
-	// for(int i = 0; i < 30; i++){
-	// 	printString("when i= ", 8);
-	// 	printDec(i);
-	// 	printString(" rsp = ", 7);
-	// 	print64Hex( (uint64_t *)bp - i );
-	// 	printString(" has: ", 6);
-	// 	print64Hex( * ( (uint64_t *)bp - i ) );
-	// 	printNewLine();
-	// }
-
-	// printString("stack pointer: ",15);
-	// print64Hex( (uint64_t)bp );
-	// printNewLine();
-
-	// printString("rip: ", 5);
-	// print64Hex((uint64_t)rip);
-	// printNewLine();
-	// printString("priority: ", 10);
-	// printDec(priority);
-	// printNewLine();
 
 	return;
 }

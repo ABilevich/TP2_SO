@@ -157,12 +157,6 @@ void RemoveProcessFromPipe(pipe *pipe, uint64_t pid)
 
 void p_closePipe(uint64_t id, uint64_t pid, uint64_t *resp)
 {
-    // printString("removing proces with pid: ", 26);
-    // printDec(pid);
-    // printString(" from pipe id: ", 15);
-    // printDec(id);
-    // printNewLine();
-
     pipe_node *iterator = current;
     for (int i = 0; i < total_pipes; i++)
     {
@@ -226,18 +220,6 @@ void pipeInit(char *name)
     current->next = current;
     current->prev = current;
 }
-
-// sem *p_getRSem(uint64_t id)
-// {
-//     pipe *aux = p_getPipe(id);
-//     return aux->r_sem;
-// }
-
-// sem *p_getWSem(uint64_t id)
-// {
-//     pipe *aux = p_getPipe(id);
-//     return aux->w_sem;
-// }
 
 int strcmp2(const char *s1, const char *s2)
 {

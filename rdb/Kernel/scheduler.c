@@ -18,13 +18,7 @@ void *scheduler(void *old_rsp)
 
     if ((uint64_t)old_rsp >= HEAP_START)
     {
-        //printString(" old: ", 6);
-        //print64Hex( ( (uint64_t)old_rsp) );
         curr->pcb->rsp = old_rsp;
-    }
-    else
-    {
-        printString("ESTO SOLO UNA VEZ", 17);
     }
 
     curr->pcb->p_counter--;
@@ -32,8 +26,6 @@ void *scheduler(void *old_rsp)
     {
         curr->pcb->p_counter = curr->pcb->priority;
         curr = findNextReady();
-        //printString("new: ", 5);
-        //print64Hex( ( (uint64_t)curr->pcb->rsp) );
     }
 
     void *new_rsp = curr->pcb->rsp;
@@ -62,14 +54,12 @@ s_node *findNextReady()
         aux = aux->next;
         counter++;
     }
-    //printString("looking", 7);
     counter = 0;
     aux = curr->next;
     while (counter < proc_counter)
     {
         if (aux->pcb->state == INIT)
         {
-            //printString("founditt", 8);
             return aux;
         }
         aux = aux->next;
@@ -80,8 +70,6 @@ s_node *findNextReady()
 
 int addPCB(void *rsp, size_t priority, void *stack_start, void *bp, char fg, char *name, uint64_t input_id, uint64_t output_id)
 {
-
-    //s_pcb new_pcb = {rsp, stack_start, next_pid, priority, priority, 1};
     s_pcb *new_pcb;
     malloc(sizeof(s_pcb), (void **)&new_pcb);
 
@@ -426,5 +414,3 @@ void printPCB(s_pcb *pcb)
     print64Hex(((uint64_t)pcb->stack_start));
     printNewLine();
 }
-
-//inicia el primer proceso

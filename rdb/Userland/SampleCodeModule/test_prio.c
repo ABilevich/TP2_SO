@@ -83,7 +83,7 @@ void test_prio()
   for (i = 0; i < TOTAL_PROCESSES; i++)
     my_prio_block(pids[i]);
 
-  printf("CHANGING PRIORITIES WHILE BLOCKED...\n");
+  printf("\nCHANGING PRIORITIES WHILE BLOCKED...\n");
   for (i = 0; i < TOTAL_PROCESSES; i++)
   {
     switch (i % 3)
@@ -100,7 +100,7 @@ void test_prio()
     }
   }
 
-  printf("UNBLOCKING...\n");
+  printf("\nUNBLOCKING...\n");
 
   for (i = 0; i < TOTAL_PROCESSES; i++)
     my_prio_unblock(pids[i]);

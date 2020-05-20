@@ -5,7 +5,7 @@
 
 void _irq00Handler(void);
 void timer_handler(void);
-void * int_20(void * rsp);
+void *int_20(void *rsp);
 
 void _irq01Handler(void);
 void keyboard_handler(void);
@@ -28,4 +28,4 @@ void _hlt(void);
 void picMasterMask(uint8_t mask);
 void picSlaveMask(uint8_t mask);
 
-#endif /* INTERRUPTS_H_ */
+#endif

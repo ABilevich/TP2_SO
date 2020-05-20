@@ -31,11 +31,6 @@ int sys_semaphore(void *option, void *arg1, void *arg2, void *arg3, void *arg4)
 
 void s_semOpen(char *name, uint64_t pid, uint64_t start_cont, uint64_t *resp_id)
 {
-    // printString("sem open: ", 10);
-    // printDec(pid);
-    // printNewLine();
-    // semPrintAll();
-    //buscar el semaforo
     if (first == NULL)
     { //si es el primero
         first = semCreate(name, pid, start_cont);
@@ -62,7 +57,6 @@ void s_semOpen(char *name, uint64_t pid, uint64_t start_cont, uint64_t *resp_id)
         prev->next = semCreate(name, pid, start_cont);
         *resp_id = prev->next->semaphore->id;
     }
-    //semPrintAll();
     return;
 }
 
@@ -71,7 +65,6 @@ uint64_t createEmptySem(uint64_t start_cont)
     if (first == NULL)
     {
         first = semCreate(NULL, -1, start_cont);
-        //semPrintAll();
         return first->semaphore->id;
     }
     else
@@ -84,7 +77,6 @@ uint64_t createEmptySem(uint64_t start_cont)
             iterator = iterator->next;
         }
         prev->next = semCreate(NULL, -1, start_cont);
-        //semPrintAll();
         return prev->next->semaphore->id;
     }
 }
@@ -219,9 +211,6 @@ sem_node *semCreate(char *name, uint64_t pid, uint64_t start_cont)
 
 void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp)
 {
-    //semPrintAll();
-    //toma el id
-    //busca el semaforo con ese id
 
     sem_node *iterator = first;
     sem_node *prev = NULL;
@@ -229,12 +218,11 @@ void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp)
     {
         if (iterator->semaphore->id == id)
         {
-            //printString("asd0", 4);
             //si lo encuentra
             //saca al proceso de la lista de procesos que lo usan
             RemoveProcessFromSem(iterator->semaphore, pid);
             //printString("asd1", 4);
-            if (/*iterator->semaphore->name == NULL &&*/ iterator->semaphore->procs == NULL)
+            if (iterator->semaphore->procs == NULL)
             {
                 //si ningun otro proceso lo usa y el nombre es NULL lo borra
                 if (prev == NULL)
@@ -249,12 +237,9 @@ void s_semClose(uint64_t id, uint64_t pid, uint64_t *resp)
                 free(iterator->semaphore);
                 free(iterator);
                 *resp = 2; //hay que hacer free a sem_info
-                //semPrintAll();
                 return;
-                //printString("asd2", 4);
             }
             *resp = 0; //se removio el pid
-            //semPrintAll();
             return;
         }
         prev = iterator;

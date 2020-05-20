@@ -394,12 +394,6 @@ static int lower_bucket_limit(size_t bucket)
 void *og_malloc(size_t request)
 {
 
-  //--------TEST----------
-  //printString("Entering malloc: ", 17);
-  //printDec(free_bytes_remaining);
-  //printNewLine();
-  //--------TEST----------
-
   size_t original_bucket, bucket;
 
   /*
@@ -409,13 +403,6 @@ void *og_malloc(size_t request)
    */
   if (request + HEADER_SIZE > MAX_ALLOC)
   {
-
-    //--------TEST----------
-    //printString("Error in size: ", 17);
-    //printDec(request + HEADER_SIZE);
-    //printNewLine();
-    //--------TEST----------
-
     return NULL;
   }
 
@@ -542,14 +529,6 @@ void *og_malloc(size_t request)
 
     free_bytes_remaining -= (size_t)1 << (MAX_ALLOC_LOG2 - bucket);
 
-    //--------TEST----------
-    //printString("Exiting malloc: ", 16);
-    //printDec(free_bytes_remaining);
-    //printString(" - bucket: ", 11);
-    //printDec(bucket);
-    //printNewLine();
-    //--------TEST----------
-
     return ptr + HEADER_SIZE;
   }
 
@@ -559,12 +538,6 @@ void *og_malloc(size_t request)
 //-------------------------------------------------------------------------------------------------------------
 void og_free(void *ptr)
 {
-
-  //--------TEST----------
-  //printString("Entering free: ", 15);
-  //printDec(free_bytes_remaining);
-  //printNewLine();
-  //--------TEST----------
 
   size_t original_bucket, bucket, i;
 
@@ -583,11 +556,6 @@ void og_free(void *ptr)
    */
   ptr = (uint8_t *)ptr - HEADER_SIZE;
   original_bucket = bucket = bucket_for_request(*(size_t *)ptr + HEADER_SIZE);
-  //--------TEST----------
-  // printString("need to free: ", 14);
-  // printDec(*(size_t *)ptr + HEADER_SIZE);
-  // printNewLine();
-  //--------TEST----------
   i = node_for_ptr((uint8_t *)ptr, bucket);
 
   /*
@@ -638,14 +606,6 @@ void og_free(void *ptr)
   list_push(&buckets[bucket], (list_t *)ptr_for_node(i, bucket));
 
   free_bytes_remaining += (size_t)1 << (MAX_ALLOC_LOG2 - original_bucket);
-
-  //--------TEST----------
-  // printString("Exiting free: ", 14);
-  // printDec(free_bytes_remaining);
-  // printString(" - bucket: ", 11);
-  // printDec(original_bucket);
-  // printNewLine();
-  //--------TEST----------
 }
 
 #endif

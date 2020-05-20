@@ -41,12 +41,19 @@ void printUserManual()
     println("- kill  [process pid]       --> Kills indicated process.");
     println("- nice  [process pid]  [new priority]    --> Changes the priority of the process indicated");
     println("- block [process pid]       --> switches state from READY to BLOCK or vice versa");
+    println("- phylo       --> starts philosophers dinning problem, pressing \"a\" will add a new philosopher and pressing \"r\" will ");
     println("");
     println("Available processes:\n");
-    println("  a        --> counts up to 3 waiting a bit in between");
-    println("  b        --> counts forever printing every 100 (for testing priority)");
-    println("  loop     --> runs forever printing a message untill killed");
-    println("  testmm   --> runs teacher provided memmory stress test");
+    println("  a            --> prints a message for testing with wc, filter and cat");
+    println("  b            --> ");
+    println("  c            --> counts forever printing every 100 (for testing priority)");
+    println("  d            --> creates the e process and sends 3 messages via a pipe");
+    println("  e            --> waits 3 messages from d and dies");
+    println("  loop         --> runs forever printing its pid every half a second");
+    println("  test_mem     --> runs teacher provided memory stress test");
+    println("  test_proc    --> runs teacher provided process creation stress test");
+    println("  test_prio    --> runs teacher provided process priority test");
+    println("  test_sem     --> runs teacher provided semaphore stress test");
     println("");
 }
 

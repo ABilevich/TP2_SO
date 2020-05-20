@@ -41,8 +41,8 @@ static char *commands[] = {"aracnoid", "clear", "clock", "help", "inforeg", "pri
 static char *void_func[] = {"help", "clock", "inforeg", "clear", "ps", "mem", "sem", "pipe", "phylo", "a", "r"};
 static void (*void_commands_func[])(void) = {printUserManual, getLocalTime, printRegistersInfo, clear, ps, mem, sem, pipe, startPhyloController, addPhylo, removePhylo};
 
-static char *runable_name[] = {"a", "b", "c", "d", "e", "test_mem", "test_sem", "loop", "test_proc", "test_prio", "test_sync_async", "wc", "filter", "cat"};
-static void (*runable_func[])(void) = {start_a, start_b, start_c, start_d, start_e, test_mm, test_sem, start_loop, test_processes, test_prio, test_sync_async, start_wc, start_filter, start_cat};
+static char *runable_name[] = {"a", "b", "c", "d", "e", "test_mem", "test_sem", "loop", "test_proc", "test_prio", "test_sem2", "wc", "filter", "cat"};
+static void (*runable_func[])(void) = {start_a, start_b, start_c, start_d, start_e, test_mm, test_sync_async, start_loop, test_processes, test_prio, test_sem, start_wc, start_filter, start_cat};
 
 static char *user = "dummie_user";
 static char *syst_name = "@rdb: ";

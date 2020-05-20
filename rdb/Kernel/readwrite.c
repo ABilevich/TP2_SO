@@ -32,13 +32,6 @@ void rw_read(void *c, uint64_t input_id, uint64_t *resp)
 	addProcessToSemViaId(r_sem_id, pid);
 	s_semWait(r_sem_id, pid, &auxresp);
 
-	//pipePrintAll();
-	if (*actual_buffer_size == 0)
-	{
-		printString("se rompio ", 9);
-		printDec(input_id);
-		//aca a veces entra
-	}
 	char ans = actual_buffer[0]; // Devuelvo el primer char
 	(*actual_buffer_size)--;
 	for (int j = 0; j < *actual_buffer_size; j++)

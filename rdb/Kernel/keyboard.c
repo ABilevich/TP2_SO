@@ -76,7 +76,6 @@ void keyboard_handler(void)
   addProcessToSemViaId(w_sem_id, pid);
 
   s_semWait(w_sem_id, pid, &auxresp);
-  //printString("test1", 5);
   uint8_t aux = kbGet();
   int spec = special_key(aux);
 

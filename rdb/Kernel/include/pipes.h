@@ -41,9 +41,6 @@ int p_deletePipe(uint64_t id);
 pipe *p_getPipe(uint64_t id);
 void pipeInit(char *name);
 
-// sem *p_getRSem(uint64_t id);
-// sem *p_getWSem(uint64_t id);
-
 void openPipeForProc(uint64_t id, uint64_t pid);
 
 void addProcessToPipe(pipe *pipe, uint64_t pid);

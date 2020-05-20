@@ -13,8 +13,6 @@ static void jump(EntryPoint e);
 
 void exceptionDispatcher(int exception, uint64_t *rsp)
 {
-	// uint64_t * rip = rsp[15];
-	// uint64_t * rbp = rsp[10];
 	switch (exception)
 	{
 
@@ -31,7 +29,6 @@ void exceptionDispatcher(int exception, uint64_t *rsp)
 
 	_outportb(0x20, 0x20);
 	_sti();
-	// _set_rsp((void *) rbp);
 	jump((EntryPoint)sampleCodeModuleAddress);
 }
 
