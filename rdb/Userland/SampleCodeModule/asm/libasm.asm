@@ -9,12 +9,9 @@ GLOBAL _sys_process
 GLOBAL _sys_semaphore
 GLOBAL _sys_pipe
 GLOBAL _get_rsp
-GLOBAL _my_halt
 
 GLOBAL getRegisters
 GLOBAL testDivException
-
-GLOBAL _sti_and_halt
 
 section .text
 ; rdi, rsi, rdx, rcx, r8, r9
@@ -177,12 +174,3 @@ SYS_SOUND_CODE equ 6
 SYS_PROCESS_CODE equ 7
 SYS_SEMAPHORE_CODE equ 8
 SYS_PIPE_CODE equ 9
-
-_sti_and_halt:
-    sti
-    hlt
-    ret
-
-_my_halt:
-    hlt
-    ret
