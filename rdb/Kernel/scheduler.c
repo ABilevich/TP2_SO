@@ -96,15 +96,16 @@ int addPCB(void *rsp, size_t priority, void *stack_start, void *bp, char fg, cha
     {
         new_pcb->caller_pid = new_pcb->pid;
         new_pcb->is_deletable = DURO_DE_MATAR;
-
         init(new_pcb);
     }
     else
     {
+        if (new_pcb->pid == 1)
+        {
+            new_pcb->is_deletable = DURO_DE_MATAR;
+        }
         new_pcb->caller_pid = curr->pcb->pid;
-
         addProcess(new_pcb);
-
         if (fg == 1)
         {
             blockCurrentProcess();

@@ -465,3 +465,24 @@ void semPrintProcs(prc_node *n)
         n = n->next;
     }
 }
+
+void printBlockedProcsInSem(uint64_t sem_id)
+{
+    sem *aux = getSem(sem_id);
+    prc_node *n = aux->procs;
+
+    if (n == NULL)
+    {
+        printString("NULL", 4);
+    }
+    while (n != NULL)
+    {
+        if (n->is_blocked)
+        {
+            printDec(n->pid);
+            printString(", ", 1);
+        }
+        n = n->next;
+    }
+    
+}

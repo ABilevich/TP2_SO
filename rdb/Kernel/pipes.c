@@ -285,7 +285,9 @@ void pipePrint(pipe *p)
     {
         printString("empty...", 8);
     }
-
+    printNewLine();
+    printString("Blocked Processes: ", 19);
+    printBlockedProcs(p->r_sem_id, p->w_sem_id);
     printNewLine();
 }
 
@@ -301,4 +303,12 @@ void pipePrintProcs(p_prc_node *n)
         printString(", ", 2);
         n = n->next;
     }
+}
+
+void printBlockedProcs(uint64_t r_sem_id, uint64_t w_sem_id)
+{
+    printString("reading: ", 9);
+    printBlockedProcsInSem(r_sem_id);
+    printString(" - writing: ", 12);
+    printBlockedProcsInSem(w_sem_id);
 }

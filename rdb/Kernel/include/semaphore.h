@@ -64,4 +64,6 @@ void _forceInt20();
 void _cli();
 void _sti();
 
+void printBlockedProcsInSem(uint64_t sem_id);
+
 #endif

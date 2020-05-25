@@ -52,4 +52,6 @@ void pipePrintProcs(p_prc_node *n);
 
 int strcmp2(const char *s1, const char *s2);
 
+void printBlockedProcs(uint64_t r_sem_id, uint64_t w_sem_id);
+
 #endif
