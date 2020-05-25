@@ -9,7 +9,7 @@ uint64_t my_sem_wait(sem_info *sem);
 uint64_t my_sem_post(sem_info *sem);
 uint64_t my_sem_close(sem_info *sem);
 
-#define N 1000000
+#define N 100000
 #define SEM_ID "sem"
 #define TOTAL_PAIR_PROCESSES 2
 
@@ -22,4 +22,8 @@ void my_process_inc_no_sem();
 void my_process_dec_no_sem();
 void test_no_sync();
 void test_sync_async();
+
+void run_test_sync();
+void run_test_async();
+
 #endif

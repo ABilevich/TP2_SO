@@ -48,8 +48,15 @@ uint64_t global; //shared memory
 
 void slowInc(uint64_t *p, uint64_t inc)
 {
+
   uint64_t aux = *p;
+  for (int i = 0; i < 100; i++)
+  {
+  }
   aux += inc;
+  for (int i = 0; i < 100; i++)
+  {
+  }
   *p = aux;
 }
 
@@ -157,5 +164,15 @@ void test_no_sync()
 void test_sync_async()
 {
   test_sync();
+  test_no_sync();
+}
+
+void run_test_sync()
+{
+  test_sync();
+}
+
+void run_test_async()
+{
   test_no_sync();
 }
