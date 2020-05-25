@@ -57,7 +57,8 @@ void printUserManual()
     println("  test_mem     --> runs teacher provided memory stress test");
     println("  test_proc    --> runs teacher provided process creation stress test");
     println("  test_prio    --> runs teacher provided process priority test");
-    println("  test_sem     --> runs teacher provided semaphore stress test");
+    println("  test_sync    --> runs teacher provided semaphore stress test (sync)");
+    println("  test_async   --> runs teacher provided semaphore stress test (stnc)");
     println("  wc           --> counts the ammount of lines in input");
     println("  filter       --> removes vowels from input");
     println("  cat          --> prints input as it gets it");

@@ -161,12 +161,6 @@ void test_no_sync()
   // The last one should not print 0
 }
 
-void test_sync_async()
-{
-  test_sync();
-  test_no_sync();
-}
-
 void run_test_sync()
 {
   test_sync();

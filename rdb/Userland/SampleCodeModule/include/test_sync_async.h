@@ -21,7 +21,6 @@ void test_sync();
 void my_process_inc_no_sem();
 void my_process_dec_no_sem();
 void test_no_sync();
-void test_sync_async();
 
 void run_test_sync();
 void run_test_async();
